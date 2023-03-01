@@ -1,15 +1,24 @@
-import adapter from '@sveltejs/adapter-static';
+import preprocess from "svelte-preprocess";
+import adapter from "@sveltejs/adapter-static";
 
-const dev = process.argv.includes('dev');
+const dev = process.argv.includes("dev");
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
-	kit: {
-		adapter: adapter(),
-		paths: {
-			base: dev ? '' : '/superglidetrainer',
-		}
-	}
+  kit: {
+    adapter: adapter(),
+    paths: {
+      base: dev ? "" : "/superglidetrainer",
+    },
+  },
+
+  preprocess: [
+    preprocess({
+      scss: {
+        prependData: '@use "src/variables.scss" as *;',
+      },
+    }),
+  ],
 };
 
 export default config;
