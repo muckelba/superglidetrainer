@@ -9,6 +9,7 @@
     });
 
     let modal = false;
+    let active = false;
 
     onMount(() => {
         const content = localStorage.getItem("content");
@@ -38,6 +39,10 @@
         event.preventDefault();
         $settings[setting] = event.key.toUpperCase();
         modal = false;
+    }
+
+    function toggleState() {
+        active = !active;
     }
 </script>
 
@@ -103,15 +108,18 @@
             <div class="box">
                 <div class="navbar-menu">
                     <div class="navbar-start">
-                        <!-- navbar items -->
                         <p class="title">Training</p>
                     </div>
 
                     <div class="navbar-end">
-                        <!-- navbar items -->
                         <p class="control">
-                            <button class="button is-success">
-                                Start/Stop
+                            <button
+                                class="button {active
+                                    ? 'is-danger'
+                                    : 'is-success'}"
+                                on:click={() => toggleState()}
+                            >
+                                {active ? "Stop" : "Start"}
                             </button>
                         </p>
                     </div>
