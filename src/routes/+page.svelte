@@ -41,8 +41,22 @@
         modal = false;
     }
 
+    function superglide(event) {}
+
+    function startGame() {
+        window.addEventListener("keydown", (event) => {
+            console.log(event);
+            superglide(event);
+        });
+    }
+
     function toggleState() {
         active = !active;
+        if (active) {
+            startGame();
+        } else {
+            stopGame();
+        }
     }
 </script>
 
