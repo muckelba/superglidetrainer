@@ -1,6 +1,7 @@
 <script>
     import { onMount } from "svelte";
     import { writable } from "svelte/store";
+    import { superglide } from "$lib/util";
 
     const settings = writable({
         jump: " ",
@@ -9,7 +10,9 @@
     });
 
     let modal = false;
-    let active = false;
+    let trainingActive = false;
+    let instructions = "Press jump to start";
+    let evenodd = 0;
 
     onMount(() => {
         const content = localStorage.getItem("content");
@@ -37,28 +40,49 @@
 
     function handleKeyDown(event, setting) {
         event.preventDefault();
-        $settings[setting] = event.key.toUpperCase();
+        $settings[setting] = event.key;
         modal = false;
     }
 
-    function superglide(event) {}
-
-    function startGame() {
-        window.addEventListener("keydown", (event) => {
-            console.log(event);
-            superglide(event);
-        });
-    }
-
     function toggleState() {
-        active = !active;
-        if (active) {
-            startGame();
-        } else {
-            stopGame();
-        }
+        this.blur(); // removes focus to disable activation by spacebar
+        trainingActive = !trainingActive;
     }
 </script>
+
+<svelte:head>
+    <title>Superglide Trainer</title>
+    <meta property="og:title" content="Superglide Trainer" />
+    <meta
+        property="og:description"
+        content="Train your superglide timings here!"
+    />
+    <meta
+        property="og:url"
+        content="https://muckelba.github.io/superglidetrainer/"
+    />
+    <meta property="og:type" content="website" />
+</svelte:head>
+
+<svelte:window
+    on:keydown={(event) => {
+        if (trainingActive) {
+            // superglide(event, evenodd);
+            console.log(`Pressed key "${event.key}" (${evenodd})`);
+            if (evenodd === 0) {
+                if (event.key === $settings.jump) {
+                    console.log("jump pressed");
+                    instructions = "Press crouch";
+                } else if (event.key === $settings.crouch) {
+                    console.log("crouch pressed");
+                    instructions = "Done";
+                } else {
+                    instructions = "";
+                }
+            }
+        }
+    }}
+/>
 
 <section class="section">
     <div class="container">
@@ -87,7 +111,7 @@
                             Jump:&nbsp;<span class="tag"
                                 >{$settings.jump === " "
                                     ? "SPACE"
-                                    : $settings.jump}</span
+                                    : $settings.jump.toUpperCase()}</span
                             >
                         </button>
                     </p>
@@ -99,7 +123,7 @@
                             Crouch:&nbsp;<span class="tag"
                                 >{$settings.crouch === " "
                                     ? "SPACE"
-                                    : $settings.crouch}</span
+                                    : $settings.crouch.toUpperCase()}</span
                             >
                         </button>
                     </p>
@@ -128,16 +152,19 @@
                     <div class="navbar-end">
                         <p class="control">
                             <button
-                                class="button {active
+                                class="button {trainingActive
                                     ? 'is-danger'
                                     : 'is-success'}"
-                                on:click={() => toggleState()}
+                                on:click={toggleState}
                             >
-                                {active ? "Stop" : "Start"}
+                                {trainingActive ? "Stop" : "Start"}
                             </button>
                         </p>
                     </div>
                 </div>
+                {#if trainingActive}
+                    <div>{instructions}</div>
+                {/if}
             </div>
         </div>
     </div>
