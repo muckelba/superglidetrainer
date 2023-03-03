@@ -237,6 +237,7 @@
                         class="input is-link is-outlined"
                         bind:value={$settings.fps}
                         type="number"
+                        min="0"
                     />
                 </p>
 
