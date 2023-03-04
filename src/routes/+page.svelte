@@ -12,9 +12,11 @@
     let trainingActive = false;
     let settingActive = false;
     $: frameTime = 1 / $settings.fps;
-    let instructions = "Lets go";
+    let instructions = "Waiting for jump input...";
+    let instructionColor = "";
+    let message = "";
     let state = "ready";
-    let lastState = "jump";
+    let lastState = "ready";
     let startTime = new Date();
     let chance = 0;
 
@@ -57,9 +59,10 @@
         this.blur(); // removes focus to disable activation by spacebar
         // reset to default values when stopping
         if (trainingActive) {
-            instructions = "Press jump to begin";
+            instructions = "Waiting for jump input...";
+            instructionColor = "";
             state = "ready";
-            lastState = "jump";
+            lastState = "ready";
             startTime = new Date();
             chance = 0;
         }
@@ -67,12 +70,14 @@
     }
 
     const superglide = (event) => {
-        console.log(`Pressed key "${event.key} state: ${state}"`);
+        console.log(`Pressed key "${event.key}"`);
         if (lastState != state) {
             if (state === "jump") {
                 instructions = "Press crouch";
+                instructionColor = "";
             } else if (state === "ready") {
                 instructions = "Press jump";
+                instructionColor = "";
             }
             lastState = state;
         }
@@ -81,7 +86,6 @@
             console.log("crouch pressed");
             let elapsedFrames = new Date();
             let differenceSeconds = 0;
-            let message = "";
             if (state === "ready") {
                 startTime = new Date();
                 state = "crouch";
@@ -90,38 +94,47 @@
                 const calucated = (now.getTime() - startTime.getTime()) / 1000;
                 elapsedFrames = calucated / frameTime;
                 differenceSeconds = frameTime - calucated;
-                console.log(calucated);
-                console.log(frameTime);
-                console.log(elapsedFrames);
-                console.log(differenceSeconds);
 
                 if (elapsedFrames < 1) {
                     chance = elapsedFrames * 100;
-                    message = `Crouch slightly *later* by ${differenceSeconds} seconds to improve`;
+                    message = `Crouch slightly <strong>later</strong> by <code>${differenceSeconds.toFixed(
+                        5
+                    )}</code> seconds to improve`;
                 } else if (elapsedFrames < 2) {
                     chance = (2 - elapsedFrames) * 100;
-                    message = `Crouch slightly *sooner* by ${
+                    message = `Crouch slightly <strong>sooner</strong> by <code>${(
                         differenceSeconds * -1
-                    } seconds to improve`;
+                    ).toFixed(5)}</code> seconds to improve`;
                 } else {
-                    message = `Crouched too late by ${
+                    message = `Crouched too late by <code>${(
                         differenceSeconds * -1
-                    } seconds`;
+                    ).toFixed(5)}</code> seconds`;
                     chance = 0;
                 }
 
-                console.log(`${elapsedFrames} frames have passed`);
+                console.log(`${elapsedFrames.toFixed(1)} frames have passed`);
 
                 if (chance > 0) {
-                    instructions = `${chance}% chance to hit`;
+                    instructions = `<code>${chance.toFixed(
+                        1
+                    )}%</code> chance to hit the superglide`;
+                    if (chance > 50) {
+                        instructionColor = "is-success";
+                    } else if (chance > 25) {
+                        instructionColor = "is-warning";
+                    } else {
+                        instructionColor = "is-danger";
+                    }
                 } else {
-                    instructions = `0% chance to hit`;
+                    instructions = `<code>0%</code> chance to hit`;
+                    instructionColor = "is-danger";
                 }
 
-                console.log(message);
+                message;
                 state = "ready";
             } else if (state === "crouch") {
                 instructions = "Double Crouch Input, resetting";
+                instructionColor = "is-danger";
                 chance = 0;
                 state = "ready";
             }
@@ -134,10 +147,12 @@
                 state = "jumpwarned";
                 instructions =
                     "Warning: Multiple jumps detected, results may not reflect ingame behavior.";
+                instructionColor = "is-warning";
             } else if (state === "jumpwarned") {
                 state = "jumpwarned";
             } else if (state === "crouch") {
                 instructions = "You must jump before you crouch";
+                instructionColor = "is-danger";
                 const now = new Date();
                 const delta = (now - startTime) / 1000 + frameTime;
                 const earlyBy = delta / frameTime;
@@ -145,12 +160,15 @@
                 chance = 0;
 
                 console.log(
-                    `Press crouch later by ${earlyBy} frames (${delta}s)`
+                    `Press crouch later by ${earlyBy.toFixed(
+                        2
+                    )} frames (${delta.toFixed(5)}s)`
                 );
                 state = "ready";
             }
         } else {
             instructions = "Other key pressed, ignoring";
+            instructionColor = "is-warning";
         }
     };
 </script>
@@ -273,9 +291,37 @@
                     </div>
                 </div>
                 {#if trainingActive}
-                    <div>{instructions}</div>
+                    <div class="columns">
+                        <div class="column">
+                            Placeholder, there will be a history of inputs soon
+                        </div>
+                        <div class="column">
+                            <div
+                                class="notification is-light {instructionColor}"
+                            >
+                                <blockquote>
+                                    {@html instructions}
+                                </blockquote>
+                            </div>
+                            {#if message}
+                                <div class="content">
+                                    <blockquote>{@html message}</blockquote>
+                                </div>
+                            {/if}
+                        </div>
+                    </div>
                 {/if}
             </div>
         </div>
     </div>
 </section>
+<footer class="footer">
+    <div class="content has-text-centered">
+        <p>
+            This is a webversion of the <a
+                href="https://github.com/AngryGroceries/Apex_Superglide_Practice_Tool"
+                >Apex Superglide Practice powershell script</a
+            >. Thanks for their work!
+        </p>
+    </div>
+</footer>
