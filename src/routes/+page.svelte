@@ -139,7 +139,7 @@
 
                 if (chance > 0) {
                     instructions = `<code>${chance.toFixed(
-                        1
+                        5
                     )}%</code> chance to hit the superglide`;
                     if (chance > 50) {
                         instructionColor = "is-success";
@@ -205,8 +205,8 @@
 </script>
 
 <svelte:head>
-    <title>Superglide Trainer</title>
-    <meta property="og:title" content="Superglide Trainer" />
+    <title>Apex Legends Superglide Trainer</title>
+    <meta property="og:title" content="Apex Legends Superglide Trainer" />
     <meta
         property="og:description"
         content="Train your superglide timings here!"
@@ -234,7 +234,16 @@
 />
 
 <section class="section">
-    <h1 class="title is-1">Superglide Trainer</h1>
+    <h1 class="title is-1">Apex Legends Superglide Trainer</h1>
+    <h2 class="subtitle is-6">
+        A Superglide needs a jump input first and then a crouch input 1 frame
+        later.
+        <br /> You need to do the whole Superglide in the last 0.1-0.2 sec of a
+        mantle. <br /> <br />That makes the correct timing of Jump -> Crouch way
+        harder then timing the whole Superglide in the Mantle.
+        <br />This Trainer will help you hit that much harder Jump-> Crouch
+        timing.
+    </h2>
 </section>
 
 <section class="section">
@@ -391,7 +400,9 @@
         </p>
     </div>
     <div class="content">
-        <h5 class="title is-5">Some Tips?</h5>
+        <h5 class="title is-5">
+            Do you have tips to get better at the Jump -> Crouch Timing?
+        </h5>
         <strong>Mouse and Keyboard:</strong>
         <ol type="1">
             <li>
@@ -422,14 +433,27 @@
         For controller the eastiest way is to press either A+B with one finger or
         X+Square with one finger.
     </div>
-</section>
-<footer class="footer">
-    <div class="content has-text-centered">
-        <p>
-            This is a webversion of the <a
+    <div class="content">
+        <h5 class="title is-5">
+            Do you have tips to better time the superglide during the mantle?
+        </h5>
+        <p class="subtitle is-6">yadadadad</p>
+    </div>
+    <div class="content">
+        <h5 class="title is-5">Who made this Trainer?</h5>
+        <p class="subtitle is-6">
+            This website is made by <a href="https://github.com/muckelba"
+                >@muckelba</a
+            >
+            and based on a
+            <a
                 href="https://github.com/AngryGroceries/Apex_Superglide_Practice_Tool"
-                >Apex Superglide Practice powershell script</a
-            >. Thanks for their work!
+                >powershell script</a
+            >
+            that
+            <a href="https://github.com/AngryGroceries">@AngryGroceries</a> and
+            <a href="https://github.com/JayTheYggdrasil">@JayTheYggdrasil</a>
+            made.
         </p>
     </div>
-</footer>
+</section>
