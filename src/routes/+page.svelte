@@ -235,15 +235,17 @@
 
 <section class="section">
     <h1 class="title is-1">Apex Legends Superglide Trainer</h1>
-    <h2 class="subtitle is-6">
-        A Superglide needs a jump input first and then a crouch input 1 frame
-        later.
-        <br /> You need to do the whole Superglide in the last 0.1-0.2 sec of a
-        mantle. <br /> <br />That makes the correct timing of Jump -> Crouch way
-        harder then timing the whole Superglide in the Mantle.
-        <br />This Trainer will help you hit that much harder Jump-> Crouch
-        timing.
-    </h2>
+    <div class="box">
+        <blockquote>
+            A Superglide needs a jump input first and then a crouch input 1
+            frame later.
+            <br /> You need to do the whole Superglide in the last 0.1-0.2 sec
+            of a mantle. <br /> <br />That makes the correct timing of Jump ->
+            Crouch way harder then timing the whole Superglide in the Mantle.
+            <br />This Trainer will help you hit that much harder Jump -> Crouch
+            timing.
+        </blockquote>
+    </div>
 </section>
 
 <section class="section">
@@ -385,9 +387,14 @@
                 activation point, and putting different switches on your <code
                     >C</code
                 >,<code>V</code> and <code>B</code> then on Spacebar might help with
-                activation as well. The Ultimate Hardware Change would be to get
-                a Keyboard with activation points you can change. Like from Wooting
-                or the Apex Mini Pro from Steelseries.
+                activation as well.
+            </li>
+            <li>
+                The Ultimate Hardware Change would be to get a new Keyboard.
+                Either to get away from a low polling rate, which introduces
+                further randomness. Or to get a Keyboard with activation points
+                you can change. Like from Wooting or the Apex Mini Pro from
+                Steelseries
             </li>
         </ol>
         <strong>Controller:</strong> <br />
@@ -407,18 +414,17 @@
             of the ledge with speed but not a Superglide you hit it too late.
         </div>
     </div>
-</section>
-<section class="section">
+    <br />
     <h1 class="title is-3">FAQ</h1>
     <div class="content">
-        <h5 class="title is-5">What is a Superglide?</h5>
+        <h5 class="title is-5">
+            What is a Superglide and why should i care about learning it?
+        </h5>
         <p class="subtitle is-6">
-            A Superglide is an instant 1 Frame acceleration out of a Mantle. It
-            needs a jump input first and then a crouch input 1 frame later. You
-            need to do the whole Superglide in the last 0.1-0.2 sec of a Mantle,
-            that makes the correct timing of the whole Superglide way easier
-            then the correct timing of jump -> crouch. That's what this Trainer
-            is for.
+            A Superglide is an instant 1 Frame acceleration out of a Mantle.
+            Beyond just being fun this is a great way to throw of your enemies
+            aim, escape and/or chase someone or even get across gaps that are
+            not possible to gap without the usage of movement abilities.
         </p>
     </div>
     <div class="content">
@@ -449,12 +455,7 @@
             />
         </p>
     </div>
-    <div class="content">
-        <h5 class="title is-5">
-            Do you have tips to better time the superglide during the mantle?
-        </h5>
-        <p class="subtitle is-6">yadadadad</p>
-    </div>
+
     <div class="content">
         <h5 class="title is-5">Who made this Trainer?</h5>
         <p class="subtitle is-6">
