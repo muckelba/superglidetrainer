@@ -4,7 +4,7 @@ A website based on [this powershell script](https://github.com/AngryGroceries/Ap
 
 ## TODO
 
-- [ ] Actually implementing the trainer
+- [x] Actually implementing the trainer
 - [ ] Don't allow double binds
 - [ ] Track performance over time 
   - [ ] Add graphs

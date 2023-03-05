@@ -1,4 +1,5 @@
-/* Write your global styles here, in SCSS syntax. Variables and mixins from the src/variables.scss file are available here without importing */ /* Import only what you need from Bulma */
+/* Write your global styles here, in SCSS syntax. Variables and mixins from the src/variables.scss file are available here without importing */
+/* Import only what you need from Bulma */
 @import "bulma/sass/utilities/_all";
 @import "bulma/sass/base/_all";
 @import "bulma/sass/elements/_all";
@@ -7,3 +8,16 @@
 @import "bulma/sass/grid/_all";
 @import "bulma/sass/helpers/_all";
 @import "bulma/sass/layout/_all";
+
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 10px;
+    padding: 0;
+}
+
+p.history {
+    padding: 3px;
+}

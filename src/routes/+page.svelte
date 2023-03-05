@@ -1,5 +1,5 @@
 <script>
-    import { onMount } from "svelte";
+    import { onMount, afterUpdate } from "svelte";
     import { writable } from "svelte/store";
 
     const settings = writable({
@@ -15,12 +15,17 @@
     let instructions = "Waiting for jump input...";
     let instructionColor = "";
     let message = "";
+    let history = [];
+    let historydiv;
     let state = "ready";
     let lastState = "ready";
     let startTime = new Date();
     let chance = 0;
 
     onMount(() => {
+        if (trainingActive) {
+            historydiv.scrollTop = historydiv.scrollHeight;
+        }
         const content = localStorage.getItem("content");
         if (content) {
             $settings = JSON.parse(content);
@@ -31,6 +36,12 @@
         });
 
         return unsubscribe;
+    });
+
+    afterUpdate(() => {
+        if (trainingActive) {
+            historydiv.scrollTop = historydiv.scrollHeight;
+        }
     });
 
     function setSetting(setting) {
@@ -61,6 +72,7 @@
         if (trainingActive) {
             instructions = "Waiting for jump input...";
             instructionColor = "";
+            history = [];
             state = "ready";
             lastState = "ready";
             startTime = new Date();
@@ -70,6 +82,7 @@
     }
 
     const superglide = (event) => {
+        event.preventDefault();
         console.log(`Pressed key "${event.key}"`);
         if (lastState != state) {
             if (state === "jump") {
@@ -83,7 +96,10 @@
         }
 
         if (event.key === $settings.crouch) {
-            console.log("crouch pressed");
+            history = [
+                ...history,
+                { line: "crouch pressed", color: "success", finished: false },
+            ];
             let elapsedFrames = new Date();
             let differenceSeconds = 0;
             if (state === "ready") {
@@ -112,7 +128,14 @@
                     chance = 0;
                 }
 
-                console.log(`${elapsedFrames.toFixed(1)} frames have passed`);
+                history = [
+                    ...history,
+                    {
+                        line: `${elapsedFrames.toFixed(1)} frames have passed`,
+                        color: "light",
+                        finished: true,
+                    },
+                ];
 
                 if (chance > 0) {
                     instructions = `<code>${chance.toFixed(
@@ -130,7 +153,6 @@
                     instructionColor = "is-danger";
                 }
 
-                message;
                 state = "ready";
             } else if (state === "crouch") {
                 instructions = "Double Crouch Input, resetting";
@@ -139,7 +161,10 @@
                 state = "ready";
             }
         } else if (event.key === $settings.jump) {
-            console.log("jump pressed");
+            history = [
+                ...history,
+                { line: "jump pressed", color: "success", finished: false },
+            ];
             if (state === "ready") {
                 startTime = new Date();
                 state = "jump";
@@ -159,11 +184,17 @@
 
                 chance = 0;
 
-                console.log(
-                    `Press crouch later by ${earlyBy.toFixed(
-                        2
-                    )} frames (${delta.toFixed(5)}s)`
-                );
+                history = [
+                    ...history,
+                    {
+                        line: `Press crouch later by ${earlyBy.toFixed(
+                            2
+                        )} frames (${delta.toFixed(5)}s)`,
+                        color: "light",
+                        finished: true,
+                    },
+                ];
+
                 state = "ready";
             }
         } else {
@@ -203,19 +234,13 @@
 />
 
 <section class="section">
-    <div class="container">
-        <h1 class="title">Superglide Trainer</h1>
-        <p class="subtitle">
-            Jump and crouch must be exactly 1 frame apart for the highest chance
-            at superglide success.
-        </p>
-    </div>
+    <h1 class="title is-1">Superglide Trainer</h1>
 </section>
 
 <section class="section">
-    <div class="columns">
-        <div class="column is-narrow">
-            <div class="box" style="width: 400px;">
+    <div class="tile is-ancestor">
+        <div class="tile is-4 is-vertical is-parent">
+            <div class="tile is-child box">
                 <h3 class="title is-3">
                     <span class="icon-text"
                         ><span class="icon"><i class="fas fa-cogs" /></span
@@ -264,8 +289,8 @@
                 {/if}
             </div>
         </div>
-        <div class="column">
-            <div class="box">
+        <div class="tile is-parent">
+            <div class="tile is-child box">
                 <div class="navbar-menu">
                     <div class="navbar-start">
                         <h3 class="title is-3">
@@ -292,20 +317,29 @@
                 </div>
                 {#if trainingActive}
                     <div class="columns">
-                        <div class="column">
-                            Placeholder, there will be a history of inputs soon
+                        <div
+                            class="column is-one-third"
+                            bind:this={historydiv}
+                            style="height:200px; overflow:auto; flex-direction: column-reverse;"
+                        >
+                            {#each history as { line, color, finished }}
+                                <p class="history">
+                                    <span class="tag is-{color}">{line}</span>
+                                </p>
+                                {#if finished}
+                                    <hr />
+                                {/if}
+                            {/each}
                         </div>
                         <div class="column">
                             <div
                                 class="notification is-light {instructionColor}"
                             >
-                                <blockquote>
-                                    {@html instructions}
-                                </blockquote>
+                                {@html instructions}
                             </div>
                             {#if message}
-                                <div class="content">
-                                    <blockquote>{@html message}</blockquote>
+                                <div class="notification is-light">
+                                    {@html message}
                                 </div>
                             {/if}
                         </div>
@@ -313,6 +347,80 @@
                 {/if}
             </div>
         </div>
+    </div>
+</section>
+<section class="section">
+    <h1 class="title is-3">FAQ</h1>
+    <div class="content">
+        <h5 class="title is-5">What is a Superglide?</h5>
+        <p class="subtitle is-6">
+            A Superglide is an instant 1 Frame acceleration out of a Mantle. It
+            needs a jump input first and then a crouch input 1 frame later. You
+            need to do the whole Superglide in the last 0.1-0.2 sec of a Mantle,
+            that makes the correct timing of the whole Superglide way easier
+            then the correct timing of jump -> crouch. That's what this Trainer
+            is for.
+        </p>
+    </div>
+    <div class="content">
+        <h5 class="title is-5">
+            Why is there a Chance? I thought it just needed Frame perfect
+            inputs?
+        </h5>
+        <p class="subtitle is-6">
+            Because of the way Apex handles Input data, you might have timed
+            your jump and crouch input very close to 1 FPS apart. But they might
+            still be processed by the engine on the same Frame. Or 2 Frames
+            apart. When it only works when they are processed 1 Frame apart.
+            That is also the reason why the feedback can say to crouch later or
+            sooner. Because of that randomness you can never reach 100%
+            Superglide consistency. Max is 99%. Here is a fantastic video
+            explaining the exact same Problem in Titanfall 2:
+        </p>
+        <p>
+            <iframe
+                class="has-ratio"
+                width="560"
+                height="315"
+                src="https://www.youtube-nocookie.com/embed/Cwa0qbDx2dA?start=423"
+                title="YouTube video player"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen
+            />
+        </p>
+    </div>
+    <div class="content">
+        <h5 class="title is-5">Some Tips?</h5>
+        <strong>Mouse and Keyboard:</strong>
+        <ol type="1">
+            <li>
+                It's common to put your crouch on a button next to your jump
+                input, so you can press them both with 1 finger at the same
+                time. <code>C</code>,<code>V</code> or <code>B</code> with spacebar
+                for example.
+            </li>
+            <li>
+                Different keycap profiles will naturally alter which button you
+                hit first. So flipping over your crouch keycap can help. As well
+                as getting different keycaps. Or taping stuff to your existing
+                keycaps.
+            </li>
+            <li>Some folks have seen success by jumping with Scrollwheel.</li>
+            <li>
+                Your keyboard switches will also alter when a key is activated.
+                Tactile switches like MX blues make it much easier to feel the
+                activation point, and putting different switches on your <code
+                    >C</code
+                >,<code>V</code> and <code>B</code> then on Spacebar might help with
+                activation as well. The Ultimate Hardware Change would be to get
+                a Keyboard with activation points you can change. Like from Wooting
+                or the Apex Mini Pro from Steelseries.
+            </li>
+        </ol>
+        <strong>Controller:</strong> <br />
+        For controller the eastiest way is to press either A+B with one finger or
+        X+Square with one finger.
     </div>
 </section>
 <footer class="footer">
