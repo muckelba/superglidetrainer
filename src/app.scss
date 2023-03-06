@@ -1,4 +1,7 @@
-/* Write your global styles here, in SCSS syntax. Variables and mixins from the src/variables.scss file are available here without importing */
+@import "lib/darkly/variables.scss";
+
+$body-overflow-y: auto;
+
 /* Import only what you need from Bulma */
 @import "bulma/sass/utilities/_all";
 @import "bulma/sass/base/_all";

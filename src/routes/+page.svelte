@@ -307,7 +307,7 @@
                             </div>
                             <div class="field has-addons">
                                 <p class="control">
-                                    <button class="button is-static"
+                                    <button class="button is-link"
                                         >FPS:
                                     </button>
                                 </p>
@@ -328,7 +328,7 @@
                         </div>
                     {/if}
                     {#if trainingActive}
-                        <div class="notification is-light {instructionColor}">
+                        <div class="notification {instructionColor}">
                             {@html instructions}
                         </div>
                         {#if message}
