@@ -256,7 +256,7 @@
 
             <p>
                 That makes the correct timing of Jump -> Crouch way harder then
-                timing the whole Superglide in the Mantle. This Trainer will
+                timing the whole Superglide in the mantle. This trainer will
                 help you learn that much harder Jump -> Crouch timing.
             </p>
         </blockquote>

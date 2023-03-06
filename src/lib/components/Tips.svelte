@@ -47,11 +47,11 @@
                     as well.
                 </li>
                 <li>
-                    The Ultimate Hardware Change would be to get a new Keyboard.
+                    The ultimate Hardware Change would be to get a new keyboard.
                     Either to get away from a low polling rate, which introduces
-                    further randomness. Or to get a Keyboard with activation
-                    points you can change. Like from Wooting or the Apex Mini
-                    Pro from Steelseries
+                    further randomness. Or to get a keyboard with activation
+                    points you can change. Like from Wooting or the Apex Pro
+                    Mini from Steelseries.
                 </li>
             </ol>
             <strong>Controller:</strong> <br />
@@ -65,9 +65,9 @@
             <div class="subtitle is-6">
                 <ul>
                     <li>Audio cue</li>
-                    <li>Camera Shake</li>
+                    <li>Camera shake</li>
                 </ul>
-                If you don't gain any Speed you hit the Superglide to early. If you
+                If you don't gain any speed you hit the Superglide to early. If you
                 jump of the ledge with speed but not a Superglide you hit it too
                 late.
             </div>
