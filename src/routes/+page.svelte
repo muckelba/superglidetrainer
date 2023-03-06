@@ -72,11 +72,12 @@
         if (trainingActive) {
             instructions = "Waiting for jump input...";
             instructionColor = "";
-            history = [];
             state = "ready";
             lastState = "ready";
             startTime = new Date();
             chance = 0;
+        } else {
+            history = [];
         }
         trainingActive = !trainingActive;
     }
@@ -249,92 +250,118 @@
 </section>
 
 <section class="section">
-    <div class="tile is-ancestor">
-        <div class="tile is-4 is-vertical is-parent">
-            <div class="tile is-child box">
-                <h3 class="title is-3">
-                    <span class="icon-text"
-                        ><span class="icon"><i class="fas fa-cogs" /></span
-                        >&nbsp;<span>Settings</span></span
+    <div class="container is-widescreen">
+        <div class="columns">
+            <div class="column">
+                <div class="box has-text-centered">
+                    <h3 class="title is-3">
+                        <span class="icon-text"
+                            ><span class="icon"
+                                ><i class="fas fa-dumbbell" /></span
+                            >&nbsp;<span>Training</span></span
+                        >
+                    </h3>
+                    <p class="subtitle">Click on the buttons to re-bind them</p>
+                    <div class="field">
+                        <div class="field-body">
+                            <div class="field">
+                                <p class="control">
+                                    <button
+                                        class="button is-link is-outlined"
+                                        on:click={() => setSetting("jump")}
+                                    >
+                                        Jump:&nbsp;<span class="tag"
+                                            >{$settings.jump === " "
+                                                ? "SPACE"
+                                                : $settings.jump.toUpperCase()}</span
+                                        >
+                                    </button>
+                                </p>
+                            </div>
+                            <div class="field">
+                                <p class="control">
+                                    <button
+                                        class="button is-link is-outlined"
+                                        on:click={() => setSetting("crouch")}
+                                    >
+                                        Crouch:&nbsp;<span class="tag"
+                                            >{$settings.crouch === " "
+                                                ? "SPACE"
+                                                : $settings.crouch.toUpperCase()}</span
+                                        >
+                                    </button>
+                                </p>
+                            </div>
+                            <div class="field has-addons">
+                                <p class="control">
+                                    <button class="button is-static"
+                                        >FPS:
+                                    </button>
+                                </p>
+                                <p class="control">
+                                    <input
+                                        class="input is-link is-outlined"
+                                        bind:value={$settings.fps}
+                                        type="number"
+                                        min="1"
+                                    />
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    {#if modal}
+                        <div>Press a button you want to assign</div>
+                    {/if}
+                    {#if trainingActive}
+                        <div class="notification is-light {instructionColor}">
+                            {@html instructions}
+                        </div>
+                        {#if message}
+                            <div class="notification is-light">
+                                {@html message}
+                            </div>
+                        {/if}
+                    {/if}
+                    <button
+                        class="button {trainingActive
+                            ? 'is-danger'
+                            : 'is-success'}"
+                        on:click={toggleState}
                     >
-                </h3>
-                <p class="subtitle">Click on the buttons to re-bind them</p>
-                <div class="field is-grouped">
-                    <p class="control">
-                        <button
-                            class="button is-link is-outlined"
-                            on:click={() => setSetting("jump")}
-                        >
-                            Jump:&nbsp;<span class="tag"
-                                >{$settings.jump === " "
-                                    ? "SPACE"
-                                    : $settings.jump.toUpperCase()}</span
-                            >
-                        </button>
-                    </p>
-                    <p class="control">
-                        <button
-                            class="button is-link is-outlined"
-                            on:click={() => setSetting("crouch")}
-                        >
-                            Crouch:&nbsp;<span class="tag"
-                                >{$settings.crouch === " "
-                                    ? "SPACE"
-                                    : $settings.crouch.toUpperCase()}</span
-                            >
-                        </button>
-                    </p>
+                        {trainingActive ? "Stop" : "Start"}
+                    </button>
                 </div>
-
-                <p>
-                    FPS: <input
-                        class="input is-link is-outlined"
-                        bind:value={$settings.fps}
-                        type="number"
-                        min="0"
-                    />
-                </p>
-
-                {#if modal}
-                    <div class="">Press a button you want to assign</div>
-                {/if}
             </div>
-        </div>
-        <div class="tile is-parent">
-            <div class="tile is-child box">
-                <div class="navbar-menu">
-                    <div class="navbar-start">
-                        <h3 class="title is-3">
-                            <span class="icon-text"
-                                ><span class="icon"
-                                    ><i class="fas fa-dumbbell" /></span
-                                >&nbsp;<span>Training</span></span
-                            >
-                        </h3>
-                    </div>
-
-                    <div class="navbar-end">
-                        <p class="control">
-                            <button
-                                class="button {trainingActive
-                                    ? 'is-danger'
-                                    : 'is-success'}"
-                                on:click={toggleState}
-                            >
-                                {trainingActive ? "Stop" : "Start"}
-                            </button>
-                        </p>
-                    </div>
-                </div>
-                {#if trainingActive}
-                    <div class="columns">
-                        <div
-                            class="column is-one-third"
-                            bind:this={historydiv}
-                            style="height:200px; overflow:auto; flex-direction: column-reverse;"
+            <div class="column">
+                <div class="box">
+                    <h3 class="title has-text-centered is-3">
+                        <span class="icon-text"
+                            ><span class="icon"
+                                ><i class="fas fa-chart-bar" /></span
+                            >&nbsp;<span>Anlalytics</span></span
                         >
+                    </h3>
+                    <div class="columns">
+                        <div class="column">
+                            <p>Attemtps: 145</p>
+                            <p>Potentials Superglides: 95%</p>
+                            <p>Average Change: 68%</p>
+                            <p>Overall Superglide concistency: 95%</p>
+                            <br />
+                            <p>You got 0% because:</p>
+                            <p>Wrong input first: 12%</p>
+                            <p>Crouch too late: 78%</p>
+                            <br />
+                            <p>On a potential superglide</p>
+                            <p>Your crouch is on average:</p>
+                            <p>too late</p>
+                            <p>by</p>
+                            <p>0.0134ms or 0.4FPS</p>
+                        </div>
+                        <div class="divider is-vertical" />
+                        <div class="column history" bind:this={historydiv}>
                             {#each history as { line, color, finished }}
-                                <p class="history">
+                                <p>
                                     <span class="tag is-{color}">{line}</span>
                                 </p>
                                 {#if finished}
@@ -342,20 +369,8 @@
                                 {/if}
                             {/each}
                         </div>
-                        <div class="column">
-                            <div
-                                class="notification is-light {instructionColor}"
-                            >
-                                {@html instructions}
-                            </div>
-                            {#if message}
-                                <div class="notification is-light">
-                                    {@html message}
-                                </div>
-                            {/if}
-                        </div>
                     </div>
-                {/if}
+                </div>
             </div>
         </div>
     </div>

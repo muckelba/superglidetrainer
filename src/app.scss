@@ -9,6 +9,16 @@
 @import "bulma/sass/helpers/_all";
 @import "bulma/sass/layout/_all";
 
+$divider-margin-inner-size: 0px;
+$divider-margin-size: 0px;
+
+@import "@creativebulma/bulma-divider";
+
+.divider.is-vertical {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
 hr {
     display: block;
     height: 1px;
@@ -18,6 +28,14 @@ hr {
     padding: 0;
 }
 
-p.history {
-    padding: 3px;
+
+.history {
+    height: 360px;
+    overflow: auto;
+    flex-direction: column-reverse;
+
+    p {
+        padding-top: 3px;
+        padding-bottom: 3px;
+    }
 }
