@@ -261,9 +261,7 @@
             </p>
         </blockquote>
     </div>
-</section>
-
-<section class="section">
+    <br />
     <div class="container is-widescreen">
         <div class="columns">
             <div class="column">

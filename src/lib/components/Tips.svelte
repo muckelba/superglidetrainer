@@ -14,7 +14,7 @@
         <button class="card-header-icon" aria-label="collapse helpful tips">
             <i class="fa fa-angle-{tipsHidden ? 'down' : 'up'}" />
         </button>
-        <p class="card-header-title title is-4">Helpful Tips to get better</p>
+        <p class="card-header-title title is-4">Helpful tips to get better</p>
     </a>
     <div class="card-content {tipsHidden ? 'is-hidden' : ''}">
         <div class="content">
