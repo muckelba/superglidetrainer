@@ -62,6 +62,22 @@
             <p class="subtitle is-6">blablabla replace me</p>
         </div>
         <div class="content">
+            <h5 class="title is-5">
+                Why do i keep consistently hitting the exact same Frame Delay?
+            </h5>
+            <p class="subtitle is-6">
+                Find out the Polling Rate of your Keyboard. That + some other
+                small system delays is the lowest Frame delay you can hit. The
+                numbers still don't make sense? A Faulty USB Port or other
+                System related Latency Issues can be the cause of that. Check if
+                your device drivers are up to date. Try if the same happens when
+                you use a Keyboard Key and a Mousebutton for the inputs and or
+                switch the USB Ports. In extreme cases problems with other
+                components like your motherboard, CPU or operating system
+                install could be the cause.
+            </p>
+        </div>
+        <div class="content">
             <h5 class="title is-5">Who made this Trainer?</h5>
             <p class="subtitle is-6">
                 This website is made by <a href="https://github.com/muckelba"

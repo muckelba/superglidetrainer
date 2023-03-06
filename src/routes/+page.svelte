@@ -1,15 +1,8 @@
 <script>
     import { onMount, afterUpdate } from "svelte";
     import { writable } from "svelte/store";
-
-    let tipsHidden = true;
-    let faqHidden = true;
-    function toggleHidden() {
-        tipsHidden = !tipsHidden;
-    }
-    function toggleFaq() {
-        faqHidden = !faqHidden;
-    }
+    import Faq from "../lib/components/Faq.svelte";
+    import Tips from "../lib/components/Tips.svelte";
 
     // default settings
     const settings = writable({
@@ -31,6 +24,7 @@
     let lastState = "ready";
     let startTime = new Date();
     let chance = 0;
+    let attempts = 0;
 
     onMount(() => {
         // keep the scrollbar at the bottom
@@ -105,9 +99,10 @@
             } else if (state === "ready") {
                 instructions = "Press jump";
                 instructionColor = "";
+                attempts += 1;
             }
-            lastState = state;
         }
+        lastState = state;
 
         if (event.key === $settings.crouch) {
             history = [
@@ -172,6 +167,7 @@
                 instructions = "Double Crouch Input, resetting";
                 instructionColor = "is-danger";
                 chance = 0;
+                attempts -= 1;
                 state = "ready";
             }
         } else if (event.key === $settings.jump) {
@@ -251,13 +247,18 @@
     <h1 class="title is-1">Apex Legends Superglide Trainer</h1>
     <div class="box">
         <blockquote>
-            A Superglide needs a jump input first and then a crouch input 1
-            frame later.
-            <br /> You need to do the whole Superglide in the last 0.1-0.2 sec
-            of a mantle. <br /> <br />That makes the correct timing of Jump ->
-            Crouch way harder then timing the whole Superglide in the Mantle.
-            <br />This Trainer will help you hit that much harder Jump -> Crouch
-            timing.
+            <p>
+                A Superglide needs a jump input first and then a crouch input 1
+                frame later. You need to do the whole Superglide in the last
+                0.1-0.2 sec of a mantle.
+            </p>
+            <br />
+
+            <p>
+                That makes the correct timing of Jump -> Crouch way harder then
+                timing the whole Superglide in the Mantle. This Trainer will
+                help you learn that much harder Jump -> Crouch timing.
+            </p>
         </blockquote>
     </div>
 </section>
@@ -307,8 +308,10 @@
                             </div>
                             <div class="field has-addons">
                                 <p class="control">
-                                    <button class="button is-link"
-                                        >FPS:
+                                    <button
+                                        class="button is-link is-outlined no-hover"
+                                    >
+                                        FPS:
                                     </button>
                                 </p>
                                 <p class="control">
@@ -338,7 +341,7 @@
                         {/if}
                     {/if}
                     <button
-                        class="button {trainingActive
+                        class="button is-medium is-fullwidth {trainingActive
                             ? 'is-danger'
                             : 'is-success'}"
                         on:click={toggleState}
@@ -353,27 +356,27 @@
                         <span class="icon-text"
                             ><span class="icon"
                                 ><i class="fas fa-chart-bar" /></span
-                            >&nbsp;<span>Anlalytics</span></span
+                            >&nbsp;<span>Analytics</span></span
                         >
                     </h3>
                     <div class="columns">
                         <div class="column">
-                            <p>Attemtps: <code> 145</code></p>
-                            <p>Potentials Superglides: <code>95%</code></p>
-                            <p>Average Change: <code>68%</code></p>
+                            <p>Attempts: <code> {attempts}</code></p>
+                            <p>Potential superglides: <code>95%</code></p>
+                            <p>Average chance: <code>68%</code></p>
                             <p>
-                                Overall Superglide concistency: <code>95%</code>
+                                Overall superglide concistency: <code>95%</code>
                             </p>
                             <br />
                             <p>You got <code>0%</code> because:</p>
                             <p>Wrong input first: <code>12%</code></p>
                             <p>Crouch too late: <code>78%</code></p>
                             <br />
-                            <p>On a potential superglide</p>
-                            <p>Your crouch is on average:</p>
-                            <p>too late</p>
-                            <p>by</p>
-                            <p><code>0.0134ms</code> or <code>0.4FPS</code></p>
+                            <p>
+                                On a potential superglide your crouch is too
+                                late by
+                                <code>0.0134ms</code> or <code>0.4FPS</code> on average
+                            </p>
                         </div>
                         <div class="divider is-vertical" />
                         <div class="column history" bind:this={historydiv}>
@@ -391,157 +394,8 @@
             </div>
         </div>
     </div>
-</section>
-<section class="section">
-    <div class="card">
-        <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <!-- svelte-ignore a11y-missing-attribute -->
-        <a class="card-header" on:click={toggleHidden}>
-            <button class="card-header-icon" aria-label="collapse helpful tips">
-                <i class="fa fa-angle-{tipsHidden ? 'down' : 'up'}" />
-            </button>
-            <p class="card-header-title title is-4">
-                Helpful Tips to get better
-            </p>
-        </a>
-        <div class="card-content {tipsHidden ? 'is-hidden' : ''}">
-            <div class="content">
-                <h5 class="title is-5">
-                    Get better at hitting the Jump -> Crouch Timing
-                </h5>
-                <strong>Mouse and Keyboard:</strong>
-                <ol type="1">
-                    <li>
-                        It's common to put your crouch on a button next to your
-                        jump input, so you can press them both with 1 finger at
-                        the same time. <code>C</code>,<code>V</code>
-                        or <code>B</code> with spacebar for example.
-                    </li>
-                    <li>
-                        Different keycap profiles will naturally alter which
-                        button you hit first. So flipping over your crouch
-                        keycap can help. As well as getting different keycaps.
-                        Or taping stuff to your existing keycaps.
-                    </li>
-                    <li>
-                        Some folks have seen success by jumping with
-                        Scrollwheel.
-                    </li>
-                    <li>
-                        Your keyboard switches will also alter when a key is
-                        activated. Tactile switches like MX blues make it much
-                        easier to feel the activation point, and putting
-                        different switches on your <code>C</code>,<code>V</code>
-                        and <code>B</code> then on Spacebar might help with activation
-                        as well.
-                    </li>
-                    <li>
-                        The Ultimate Hardware Change would be to get a new
-                        Keyboard. Either to get away from a low polling rate,
-                        which introduces further randomness. Or to get a
-                        Keyboard with activation points you can change. Like
-                        from Wooting or the Apex Mini Pro from Steelseries
-                    </li>
-                </ol>
-                <strong>Controller:</strong> <br />
-                For controller the eastiest way is to press either A+B with one finger
-                or X+Square with one finger.
-            </div>
-            <div class="content">
-                <h5 class="title is-5">
-                    Get better at timing the Superglide during the Mantle
-                </h5>
-                <div class="subtitle is-6">
-                    <ul>
-                        <li>Audio cue</li>
-                        <li>Camera Shake</li>
-                    </ul>
-                    If you don't gain any Speed you hit the Superglide to early.
-                    If you jump of the ledge with speed but not a Superglide you
-                    hit it too late.
-                </div>
-            </div>
-        </div>
-    </div>
     <br />
-    <div class="card">
-        <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <!-- svelte-ignore a11y-missing-attribute -->
-        <a class="card-header" on:click={toggleFaq}>
-            <button class="card-header-icon" aria-label="collapse the FAQ">
-                <i class="fa fa-angle-{faqHidden ? 'down' : 'up'}" />
-            </button>
-            <p class="card-header-title title is-4">FAQ</p>
-        </a>
-        <div class="card-content {faqHidden ? 'is-hidden' : ''}">
-            <div class="content">
-                <h5 class="title is-5">
-                    What is a Superglide and why should i care about learning
-                    it?
-                </h5>
-                <p class="subtitle is-6">
-                    A Superglide is an instant 1 Frame acceleration out of a
-                    Mantle. Beyond just being fun this is a great way to throw
-                    of your enemies aim, escape and/or chase someone or even get
-                    across gaps that are not possible to gap without the usage
-                    of movement abilities.
-                </p>
-            </div>
-            <div class="content">
-                <h5 class="title is-5">
-                    Why is there a Chance? I thought it just needed Frame
-                    perfect inputs?
-                </h5>
-                <p class="subtitle is-6">
-                    Because of the way Apex handles Input data, you might have
-                    timed your jump and crouch input very close to 1 FPS apart.
-                    But they might still be processed by the engine on the same
-                    Frame. Or 2 Frames apart. When it only works when they are
-                    processed 1 Frame apart. That is also the reason why the
-                    feedback can say to crouch later or sooner. Because of that
-                    randomness you can never reach 100% Superglide consistency.
-                    Max is 99%. Here is a fantastic video explaining the exact
-                    same Problem in Titanfall 2:
-                </p>
-                <p>
-                    <iframe
-                        class="has-ratio"
-                        width="560"
-                        height="315"
-                        src="https://www.youtube-nocookie.com/embed/Cwa0qbDx2dA?start=423"
-                        title="YouTube video player"
-                        frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        allowfullscreen
-                    />
-                </p>
-            </div>
-            <div class="content">
-                <h5 class="title is-5">What do the Analytics mean?</h5>
-                <p class="subtitle is-6">blablabla replace me</p>
-            </div>
-            <div class="content">
-                <h5 class="title is-5">Who made this Trainer?</h5>
-                <p class="subtitle is-6">
-                    This website is made by <a
-                        href="https://github.com/muckelba">@muckelba</a
-                    >
-                    and based on a
-                    <a
-                        href="https://github.com/AngryGroceries/Apex_Superglide_Practice_Tool"
-                        >powershell script</a
-                    >
-                    that
-                    <a href="https://github.com/AngryGroceries"
-                        >@AngryGroceries</a
-                    >
-                    and
-                    <a href="https://github.com/JayTheYggdrasil"
-                        >@JayTheYggdrasil</a
-                    >
-                    made.
-                </p>
-            </div>
-        </div>
-    </div>
+    <Tips />
+    <br />
+    <Faq />
 </section>
