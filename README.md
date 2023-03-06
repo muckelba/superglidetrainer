@@ -5,11 +5,12 @@ A website based on [this powershell script](https://github.com/AngryGroceries/Ap
 ## TODO
 
 - [x] Actually implementing the trainer
-- [ ] Darkmode 
-- [ ] Don't allow double binds
+- [x] Darkmode 
+- [x] Don't allow double binds
 - [ ] Track performance over time 
   - [ ] Add graphs
 - [ ] Show session stats
+- [ ] Use a pop-up modal for setting keybinds
 - [ ] Add controller support (<https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API>)
 
 ## Local development
