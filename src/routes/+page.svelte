@@ -356,20 +356,22 @@
                     </h3>
                     <div class="columns">
                         <div class="column">
-                            <p>Attemtps: 145</p>
-                            <p>Potentials Superglides: 95%</p>
-                            <p>Average Change: 68%</p>
-                            <p>Overall Superglide concistency: 95%</p>
+                            <p>Attemtps: <code> 145</code></p>
+                            <p>Potentials Superglides: <code>95%</code></p>
+                            <p>Average Change: <code>68%</code></p>
+                            <p>
+                                Overall Superglide concistency: <code>95%</code>
+                            </p>
                             <br />
-                            <p>You got 0% because:</p>
-                            <p>Wrong input first: 12%</p>
-                            <p>Crouch too late: 78%</p>
+                            <p>You got <code>0%</code> because:</p>
+                            <p>Wrong input first: <code>12%</code></p>
+                            <p>Crouch too late: <code>78%</code></p>
                             <br />
                             <p>On a potential superglide</p>
                             <p>Your crouch is on average:</p>
                             <p>too late</p>
                             <p>by</p>
-                            <p>0.0134ms or 0.4FPS</p>
+                            <p><code>0.0134ms</code> or <code>0.4FPS</code></p>
                         </div>
                         <div class="divider is-vertical" />
                         <div class="column history" bind:this={historydiv}>
@@ -396,7 +398,7 @@
                 Helpful Tips to get better
             </p>
             <button class="card-header-icon" aria-label="collapse helpful tips">
-                <i class="fa fa-angle-down" />
+                <i class="fa fa-angle-{tipsHidden ? 'down' : 'up'}" />
             </button>
         </header>
         <div class="card-content {tipsHidden ? 'is-hidden' : ''}">
@@ -464,7 +466,7 @@
         <header class="card-header" on:click={toggleFaq}>
             <p class="card-header-title title is-4">FAQ</p>
             <button class="card-header-icon" aria-label="collapse the FAQ">
-                <i class="fa fa-angle-down" />
+                <i class="fa fa-angle-{faqHidden ? 'down' : 'up'}" />
             </button>
         </header>
         <div class="card-content {faqHidden ? 'is-hidden' : ''}">
