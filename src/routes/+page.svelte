@@ -2,6 +2,7 @@
     import { onMount, afterUpdate } from "svelte";
     import { writable } from "svelte/store";
     import Faq from "../lib/components/Faq.svelte";
+    import Footer from "../lib/components/Footer.svelte";
     import Tips from "../lib/components/Tips.svelte";
 
     // default settings
@@ -11,7 +12,8 @@
         fps: 144,
     });
 
-    let modal = false;
+    let modalNotification = false;
+    let assignWarning = false;
     let trainingActive = false;
     let settingActive = false;
     $: frameTime = 1 / $settings.fps;
@@ -52,25 +54,30 @@
     });
 
     function setSetting(setting) {
-        modal = true;
-        if (!settingActive) {
-            window.addEventListener(
-                "keydown",
-                (event) => {
-                    handleKeyDown(event, setting);
-                },
-                { once: true }
-            );
-        } else {
-            modal = false;
-        }
-    }
+        function handleKeyDown(event) {
+            event.preventDefault();
+            const otherSetting = setting === "jump" ? "crouch" : "jump";
+            const otherValue = $settings[otherSetting];
 
-    function handleKeyDown(event, setting) {
-        event.preventDefault();
-        $settings[setting] = event.key;
-        modal = false;
-        event.target.blur();
+            if (event.key !== otherValue) {
+                $settings[setting] = event.key;
+                modalNotification = false;
+                assignWarning = false;
+                window.removeEventListener("keydown", handleKeyDown);
+            } else {
+                assignWarning = true;
+            }
+            event.target.blur();
+        }
+
+        if (!modalNotification) {
+            modalNotification = true;
+            window.addEventListener("keydown", handleKeyDown);
+        } else {
+            window.removeEventListener("keydown", handleKeyDown);
+            modalNotification = false;
+            settingActive = false;
+        }
     }
 
     function toggleState() {
@@ -323,9 +330,14 @@
                             </div>
                         </div>
                     </div>
-                    {#if modal}
-                        <div class="notification is-info is-light">
+                    {#if modalNotification}
+                        <div class="notification is-info">
                             Press a button you want to assign
+                        </div>
+                    {/if}
+                    {#if assignWarning}
+                        <div class="notification is-danger">
+                            This key is already assigned
                         </div>
                     {/if}
                     {#if trainingActive}
@@ -397,3 +409,5 @@
     <br />
     <Faq />
 </section>
+
+<Footer />
