@@ -323,7 +323,9 @@
                         </div>
                     </div>
                     {#if modal}
-                        <div>Press a button you want to assign</div>
+                        <div class="notification is-info is-light">
+                            Press a button you want to assign
+                        </div>
                     {/if}
                     {#if trainingActive}
                         <div class="notification is-light {instructionColor}">
@@ -393,14 +395,15 @@
 <section class="section">
     <div class="card">
         <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <header class="card-header" on:click={toggleHidden}>
-            <p class="card-header-title title is-4">
-                Helpful Tips to get better
-            </p>
+        <!-- svelte-ignore a11y-missing-attribute -->
+        <a class="card-header" on:click={toggleHidden}>
             <button class="card-header-icon" aria-label="collapse helpful tips">
                 <i class="fa fa-angle-{tipsHidden ? 'down' : 'up'}" />
             </button>
-        </header>
+            <p class="card-header-title title is-4">
+                Helpful Tips to get better
+            </p>
+        </a>
         <div class="card-content {tipsHidden ? 'is-hidden' : ''}">
             <div class="content">
                 <h5 class="title is-5">
@@ -463,12 +466,13 @@
     <br />
     <div class="card">
         <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <header class="card-header" on:click={toggleFaq}>
-            <p class="card-header-title title is-4">FAQ</p>
+        <!-- svelte-ignore a11y-missing-attribute -->
+        <a class="card-header" on:click={toggleFaq}>
             <button class="card-header-icon" aria-label="collapse the FAQ">
                 <i class="fa fa-angle-{faqHidden ? 'down' : 'up'}" />
             </button>
-        </header>
+            <p class="card-header-title title is-4">FAQ</p>
+        </a>
         <div class="card-content {faqHidden ? 'is-hidden' : ''}">
             <div class="content">
                 <h5 class="title is-5">
