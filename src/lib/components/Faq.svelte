@@ -21,7 +21,7 @@
                 What is a Superglide and why should i care about learning it?
             </h5>
             <p class="subtitle is-6">
-                A Superglide is an instant 1 Frame acceleration out of a Mantle.
+                A Superglide is an instant 1 frame acceleration out of a mantle.
                 Beyond just being fun this is a great way to throw of your
                 enemies aim, escape and/or chase someone or even get across gaps
                 that are not possible to gap without the usage of movement
