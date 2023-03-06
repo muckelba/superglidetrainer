@@ -510,7 +510,10 @@
                     />
                 </p>
             </div>
-
+            <div class="content">
+                <h5 class="title is-5">What do the Analytics mean?</h5>
+                <p class="subtitle is-6">blablabla replace me</p>
+            </div>
             <div class="content">
                 <h5 class="title is-5">Who made this Trainer?</h5>
                 <p class="subtitle is-6">
