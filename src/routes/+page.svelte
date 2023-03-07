@@ -367,11 +367,11 @@
                     {/if}
                     {#if trainingActive}
                         <div class="notification is-{instructionColor}">
-                            {@html instructions}
+                            {instructions}
                         </div>
                         {#if message}
                             <div class="notification is-light">
-                                {@html message}
+                                {message}
                             </div>
                         {/if}
                     {/if}
