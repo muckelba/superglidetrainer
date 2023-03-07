@@ -27,6 +27,7 @@
     let startTime = new Date();
     let chance = 0;
     let attempts = 0;
+    let potentialSuperglides = 0;
 
     onMount(() => {
         // keep the scrollbar at the bottom
@@ -164,6 +165,7 @@
                     )}% chance to hit the superglide`;
                     if (chance > 50) {
                         instructionColor = "success";
+                        potentialSuperglides += 1;
                     } else if (chance > 25) {
                         instructionColor = "warning";
                     } else {
@@ -395,7 +397,14 @@
                     <div class="columns">
                         <div class="column">
                             <p>Attempts: <code> {attempts}</code></p>
-                            <p>Potential superglides: <code>95%</code></p>
+                            <p>
+                                Potential superglides: <code
+                                    >{(
+                                        (potentialSuperglides / attempts) *
+                                            100 || 0
+                                    ).toFixed(2)}%</code
+                                >
+                            </p>
                             <p>Average chance: <code>68%</code></p>
                             <p>
                                 Overall superglide concistency: <code>95%</code>
