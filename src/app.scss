@@ -2,6 +2,10 @@
 
 $body-overflow-y: auto;
 
+section.section {
+    padding-bottom: 1.5rem;
+}
+
 /* Import only what you need from Bulma */
 @import "bulma/sass/utilities/_all";
 @import "bulma/sass/base/_all";
@@ -17,24 +21,15 @@ $divider-margin-size: 0px;
 
 @import "@creativebulma/bulma-divider";
 
-.divider.is-vertical {
+.divider {
     margin-top: 10px;
     margin-bottom: 10px;
 }
 
-hr {
-    display: block;
-    height: 1px;
-    border: 0;
-    border-top: 1px solid #ccc;
-    margin: 10px;
-    padding: 0;
-}
-
-
 .history {
     height: 360px;
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
     flex-direction: column-reverse;
 
     p {

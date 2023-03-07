@@ -48,6 +48,7 @@
     });
 
     afterUpdate(() => {
+        // keep the scrollbar at the bottom
         if (trainingActive) {
             historydiv.scrollTop = historydiv.scrollHeight;
         }
@@ -97,7 +98,10 @@
     }
 
     const superglide = (event) => {
-        event.preventDefault();
+        // only prevent default for the two set keys
+        if ([$settings.jump, $settings.crouch].find((v) => event.key === v)) {
+            event.preventDefault();
+        }
         console.log(`Pressed key "${event.key}"`);
         if (lastState != state) {
             if (state === "jump") {
@@ -112,10 +116,6 @@
         lastState = state;
 
         if (event.key === $settings.crouch) {
-            history = [
-                ...history,
-                { line: "crouch pressed", color: "success", finished: false },
-            ];
             let elapsedFrames = new Date();
             let differenceSeconds = 0;
             if (state === "ready") {
@@ -129,72 +129,91 @@
 
                 if (elapsedFrames < 1) {
                     chance = elapsedFrames * 100;
-                    message = `Crouch slightly <strong>later</strong> by <code>${differenceSeconds.toFixed(
+                    message = `Crouch later by XX frames (${differenceSeconds.toFixed(
                         5
-                    )}</code> seconds to improve`;
+                    )}s)`;
                 } else if (elapsedFrames < 2) {
                     chance = (2 - elapsedFrames) * 100;
-                    message = `Crouch slightly <strong>sooner</strong> by <code>${(
+                    message = `Crouch sooner by XX frames (${(
                         differenceSeconds * -1
-                    ).toFixed(5)}</code> seconds to improve`;
+                    ).toFixed(5)}s)`;
                 } else {
-                    message = `Crouched too late by <code>${(
+                    message = `Crouched too late by XX frames (${(
                         differenceSeconds * -1
-                    ).toFixed(5)}</code> seconds`;
+                    ).toFixed(5)}s)`;
                     chance = 0;
                 }
 
                 history = [
                     ...history,
                     {
+                        line: message,
+                        color: "light",
+                        finished: false,
+                    },
+                    {
                         line: `${elapsedFrames.toFixed(1)} frames have passed`,
                         color: "light",
-                        finished: true,
+                        finished: false,
                     },
                 ];
 
                 if (chance > 0) {
-                    instructions = `<code>${chance.toFixed(
+                    instructions = `${chance.toFixed(
                         5
-                    )}%</code> chance to hit the superglide`;
+                    )}% chance to hit the superglide`;
                     if (chance > 50) {
-                        instructionColor = "is-success";
+                        instructionColor = "success";
                     } else if (chance > 25) {
-                        instructionColor = "is-warning";
+                        instructionColor = "warning";
                     } else {
-                        instructionColor = "is-danger";
+                        instructionColor = "danger";
                     }
                 } else {
-                    instructions = `<code>0%</code> chance to hit`;
-                    instructionColor = "is-danger";
+                    instructions = `0% chance to hit the superglide`;
+                    instructionColor = "danger";
                 }
+
+                history = [
+                    ...history,
+                    {
+                        line: instructions,
+                        color: instructionColor,
+                        finished: true,
+                    },
+                ];
 
                 state = "ready";
             } else if (state === "crouch") {
                 instructions = "Double Crouch Input, resetting";
-                instructionColor = "is-danger";
+                instructionColor = "danger";
                 chance = 0;
                 attempts -= 1;
                 state = "ready";
             }
         } else if (event.key === $settings.jump) {
-            history = [
-                ...history,
-                { line: "jump pressed", color: "success", finished: false },
-            ];
             if (state === "ready") {
                 startTime = new Date();
                 state = "jump";
             } else if (state === "jump") {
                 state = "jumpwarned";
                 instructions =
-                    "Warning: Multiple jumps detected, results may not reflect ingame behavior.";
-                instructionColor = "is-warning";
+                    "Multiple jumps detected, results may not reflect ingame behavior.";
+                instructionColor = "warning";
             } else if (state === "jumpwarned") {
                 state = "jumpwarned";
             } else if (state === "crouch") {
                 instructions = "You must jump before you crouch";
-                instructionColor = "is-danger";
+                instructionColor = "danger";
+                history = [
+                    ...history,
+                    {
+                        line: instructions,
+                        color: instructionColor,
+                        finished: false,
+                    },
+                ];
+
                 const now = new Date();
                 const delta = (now - startTime) / 1000 + frameTime;
                 const earlyBy = delta / frameTime;
@@ -204,10 +223,15 @@
                 history = [
                     ...history,
                     {
-                        line: `Press crouch later by ${earlyBy.toFixed(
+                        line: `Crouch later by ${earlyBy.toFixed(
                             2
                         )} frames (${delta.toFixed(5)}s)`,
                         color: "light",
+                        finished: false,
+                    },
+                    {
+                        line: "0% chance to hit the superglide",
+                        color: "danger",
                         finished: true,
                     },
                 ];
@@ -216,7 +240,7 @@
             }
         } else {
             instructions = "Other key pressed, ignoring";
-            instructionColor = "is-warning";
+            instructionColor = "warning";
         }
     };
 </script>
@@ -268,8 +292,7 @@
             </p>
         </blockquote>
     </div>
-    <br />
-    <div class="container is-widescreen">
+    <div class="container ">
         <div class="columns">
             <div class="column">
                 <div class="box has-text-centered">
@@ -321,7 +344,7 @@
                                 </p>
                                 <p class="control">
                                     <input
-                                        class="input is-link is-outlined"
+                                        class="input is-link is-outlined has-background-dark has-text-white"
                                         bind:value={$settings.fps}
                                         type="number"
                                         min="1"
@@ -341,7 +364,7 @@
                         </div>
                     {/if}
                     {#if trainingActive}
-                        <div class="notification {instructionColor}">
+                        <div class="notification is-{instructionColor}">
                             {@html instructions}
                         </div>
                         {#if message}
@@ -395,7 +418,7 @@
                                     <span class="tag is-{color}">{line}</span>
                                 </p>
                                 {#if finished}
-                                    <hr />
+                                    <div class="divider" />
                                 {/if}
                             {/each}
                         </div>
@@ -409,5 +432,4 @@
     <br />
     <Faq />
 </section>
-
 <Footer />
