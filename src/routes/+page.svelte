@@ -28,6 +28,8 @@
     let chance = 0;
     let attempts = 0;
     let potentialSuperglides = 0;
+    let wrongInputCount = 0;
+    let crouchTooLateCount = 0;
 
     onMount(() => {
         // keep the scrollbar at the bottom
@@ -143,6 +145,7 @@
                         differenceSeconds * -1
                     ).toFixed(5)}s)`;
                     chance = 0;
+                    crouchTooLateCount += 1;
                 }
 
                 history = [
@@ -237,7 +240,7 @@
                         finished: true,
                     },
                 ];
-
+                wrongInputCount += 1;
                 state = "ready";
             }
         } else {
@@ -411,13 +414,27 @@
                             </p>
                             <br />
                             <p>You got <code>0%</code> because:</p>
-                            <p>Wrong input first: <code>12%</code></p>
-                            <p>Crouch too late: <code>78%</code></p>
+                            <p>
+                                Wrong input first: <code
+                                    >{(
+                                        (wrongInputCount / attempts) * 100 || 0
+                                    ).toFixed(2)}%</code
+                                >
+                            </p>
+                            <p>
+                                Crouch too late: <code
+                                    >{(
+                                        (crouchTooLateCount / attempts) * 100 ||
+                                        0
+                                    ).toFixed(2)}%</code
+                                >
+                            </p>
                             <br />
                             <p>
                                 On a potential superglide your crouch is too
                                 late by
-                                <code>0.0134ms</code> or <code>0.4FPS</code> on average
+                                <code>0.0134</code> ms or <code>0.4</code> FPS on
+                                average
                             </p>
                         </div>
                         <div class="divider is-vertical" />
