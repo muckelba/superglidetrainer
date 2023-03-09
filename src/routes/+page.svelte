@@ -1,6 +1,7 @@
 <script>
     import { onMount, afterUpdate } from "svelte";
     import { writable } from "svelte/store";
+    import { siteLink } from "../lib/config";
     import Faq from "../lib/components/Faq.svelte";
     import Footer from "../lib/components/Footer.svelte";
     import Tips from "../lib/components/Tips.svelte";
@@ -23,13 +24,20 @@
     let history = [];
     let historydiv;
     let state = "ready";
-    let lastState = "ready";
+    let lastState = "jump";
     let startTime = new Date();
     let chance = 0;
-    let attempts = 0;
-    let potentialSuperglides = 0;
-    let wrongInputCount = 0;
-    let crouchTooLateCount = 0;
+    let attempts = [];
+    let potentialSuperglides = [];
+    $: potentialSuperglidesPercentage =
+        (potentialSuperglides.length / attempts.length) * 100 || 0;
+    $: potentialSum = potentialSuperglides.reduce((a, b) => a + b, 0);
+    $: potentialAvg = potentialSum / potentialSuperglides.length || 0;
+    $: superglideConsistency = potentialSum / attempts.length || 0;
+    // let wrongInputCount = 0;
+    // let crouchTooLateCount = 0;
+    // $: wrongInputPercentage = (wrongInputCount / attempts.length) * 100 || 0;
+    // $: crouchTooLatePercentage = (crouchTooLateCount / attempts.length) * 100 || 0;
 
     onMount(() => {
         // keep the scrollbar at the bottom
@@ -46,6 +54,20 @@
         const unsubscribe = settings.subscribe((value) => {
             localStorage.setItem("content", JSON.stringify(value));
         });
+
+        // Only enable tracking for prod
+        if (window.location.origin === siteLink) {
+            var script = document.createElement("script");
+            script.type = "text/javascript";
+            script.src = "https://umami.anton.wtf/umami.js";
+            script.defer = true;
+            script.async = true;
+            script.setAttribute(
+                "data-website-id",
+                "4e7c534d-4079-424b-aef5-cd74274718dc"
+            );
+            document.head.appendChild(script);
+        }
 
         return unsubscribe;
     });
@@ -113,7 +135,6 @@
             } else if (state === "ready") {
                 instructions = "Press jump";
                 instructionColor = "";
-                attempts += 1;
             }
         }
         lastState = state;
@@ -129,23 +150,24 @@
                 const calucated = (now.getTime() - startTime.getTime()) / 1000;
                 elapsedFrames = calucated / frameTime;
                 differenceSeconds = frameTime - calucated;
+                const lateBy = Math.abs($settings.fps - elapsedFrames);
 
                 if (elapsedFrames < 1) {
                     chance = elapsedFrames * 100;
-                    message = `Crouch later by XX frames (${differenceSeconds.toFixed(
-                        5
-                    )}s)`;
+                    message = `Crouch later by ${lateBy.toFixed(
+                        1
+                    )} frames (${differenceSeconds.toFixed(5)}s)`;
                 } else if (elapsedFrames < 2) {
                     chance = (2 - elapsedFrames) * 100;
-                    message = `Crouch sooner by XX frames (${(
+                    message = `Crouch sooner by ${lateBy.toFixed(1)} frames (${(
                         differenceSeconds * -1
                     ).toFixed(5)}s)`;
                 } else {
-                    message = `Crouched too late by XX frames (${(
-                        differenceSeconds * -1
-                    ).toFixed(5)}s)`;
+                    message = `Crouched too late by ${lateBy.toFixed(
+                        1
+                    )} frames (${(differenceSeconds * -1).toFixed(5)}s)`;
                     chance = 0;
-                    crouchTooLateCount += 1;
+                    // crouchTooLateCount += 1;
                 }
 
                 history = [
@@ -163,12 +185,12 @@
                 ];
 
                 if (chance > 0) {
+                    potentialSuperglides = [...potentialSuperglides, chance];
                     instructions = `${chance.toFixed(
                         5
                     )}% chance to hit the superglide`;
                     if (chance > 50) {
                         instructionColor = "success";
-                        potentialSuperglides += 1;
                     } else if (chance > 25) {
                         instructionColor = "warning";
                     } else {
@@ -188,12 +210,12 @@
                     },
                 ];
 
+                attempts = [...attempts, chance];
                 state = "ready";
             } else if (state === "crouch") {
                 instructions = "Double Crouch Input, resetting";
                 instructionColor = "danger";
                 chance = 0;
-                attempts -= 1;
                 state = "ready";
             }
         } else if (event.key === $settings.jump) {
@@ -240,11 +262,11 @@
                         finished: true,
                     },
                 ];
-                wrongInputCount += 1;
+                // wrongInputCount += 1;
                 state = "ready";
             }
         } else {
-            instructions = "Other key pressed, ignoring";
+            instructions = `Other key (${event.key.toUpperCase()}) pressed, ignoring`;
             instructionColor = "warning";
         }
     };
@@ -257,10 +279,7 @@
         property="og:description"
         content="Train your superglide timings here!"
     />
-    <meta
-        property="og:url"
-        content="https://muckelba.github.io/superglidetrainer/"
-    />
+    <meta property="og:url" content={siteLink} />
     <meta property="og:type" content="website" />
     <link
         rel="stylesheet"
@@ -399,34 +418,34 @@
                     </h3>
                     <div class="columns">
                         <div class="column">
-                            <p>Attempts: <code> {attempts}</code></p>
+                            <p>Attempts: <code> {attempts.length}</code></p>
                             <p>
                                 Potential superglides: <code
-                                    >{(
-                                        (potentialSuperglides / attempts) *
-                                            100 || 0
-                                    ).toFixed(2)}%</code
+                                    >{potentialSuperglidesPercentage.toFixed(
+                                        2
+                                    )}%</code
                                 >
                             </p>
-                            <p>Average chance: <code>68%</code></p>
                             <p>
-                                Overall superglide concistency: <code>95%</code>
+                                Average chance: <code
+                                    >{potentialAvg.toFixed(2)}%</code
+                                >
                             </p>
-                            <br />
+                            <p>
+                                Overall superglide consistency: <code
+                                    >{superglideConsistency.toFixed(2)}%</code
+                                >
+                            </p>
+                            <!-- <br />
                             <p>You got <code>0%</code> because:</p>
                             <p>
                                 Wrong input first: <code
-                                    >{(
-                                        (wrongInputCount / attempts) * 100 || 0
-                                    ).toFixed(2)}%</code
+                                    >{wrongInputPercentage.toFixed(2)}%</code
                                 >
                             </p>
                             <p>
                                 Crouch too late: <code
-                                    >{(
-                                        (crouchTooLateCount / attempts) * 100 ||
-                                        0
-                                    ).toFixed(2)}%</code
+                                    >{crouchTooLatePercentage.toFixed(2)}%</code
                                 >
                             </p>
                             <br />
@@ -435,7 +454,11 @@
                                 late by
                                 <code>0.0134</code> ms or <code>0.4</code> FPS on
                                 average
-                            </p>
+                            </p> -->
+                            <br />
+                            <div class="notification">
+                                More stats coming soon
+                            </div>
                         </div>
                         <div class="divider is-vertical" />
                         <div class="column history" bind:this={historydiv}>

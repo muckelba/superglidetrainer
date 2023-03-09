@@ -1,0 +1,1 @@
+export const siteLink = 'https://muckelba.github.io/superglidetrainer/'

@@ -41,3 +41,23 @@ $divider-margin-size: 0px;
 .no-hover {
     pointer-events: none;
 }
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: $white-ter;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: $grey-darker;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: $grey-darker;
+}
