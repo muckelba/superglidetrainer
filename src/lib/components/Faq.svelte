@@ -10,7 +10,10 @@
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <!-- svelte-ignore a11y-missing-attribute -->
     <a class="card-header" on:click={toggleFaq}>
-        <button class="card-header-icon" aria-label="collapse the FAQ">
+        <button
+            class="button card-header-icon is-large"
+            aria-label="collapse the FAQ"
+        >
             <i class="fa fa-angle-{faqHidden ? 'down' : 'up'}" />
         </button>
         <p class="card-header-title title is-3">FAQ</p>

@@ -34,10 +34,11 @@
     $: potentialSum = potentialSuperglides.reduce((a, b) => a + b, 0);
     $: potentialAvg = potentialSum / potentialSuperglides.length || 0;
     $: superglideConsistency = potentialSum / attempts.length || 0;
-    // let wrongInputCount = 0;
-    // let crouchTooLateCount = 0;
-    // $: wrongInputPercentage = (wrongInputCount / attempts.length) * 100 || 0;
-    // $: crouchTooLatePercentage = (crouchTooLateCount / attempts.length) * 100 || 0;
+    let wrongInputCount = 0;
+    let crouchTooLateCount = 0;
+    $: wrongInputPercentage = (wrongInputCount / attempts.length) * 100 || 0;
+    $: crouchTooLatePercentage =
+        (crouchTooLateCount / attempts.length) * 100 || 0;
 
     onMount(() => {
         // keep the scrollbar at the bottom
@@ -167,7 +168,7 @@
                         1
                     )} frames (${(differenceSeconds * -1).toFixed(5)}s)`;
                     chance = 0;
-                    // crouchTooLateCount += 1;
+                    crouchTooLateCount += 1;
                 }
 
                 history = [
@@ -262,7 +263,8 @@
                         finished: true,
                     },
                 ];
-                // wrongInputCount += 1;
+                wrongInputCount += 1;
+                attempts = [...attempts, chance];
                 state = "ready";
             }
         } else {
@@ -305,7 +307,7 @@
             <p>
                 A Superglide needs a jump input first and then a crouch input 1
                 frame later. You need to do the whole Superglide in the last
-                0.1-0.2 sec of a mantle.
+                0.1-0.2 second of a mantle.
             </p>
             <br />
 
@@ -437,8 +439,8 @@
                                     >{potentialAvg.toFixed(2)}%</code
                                 >
                             </p>
-                            <!-- <br />
-                            <p>You got <code>0%</code> because:</p>
+                            <br />
+                            <!-- <p>You got <code>0%</code> because:</p> -->
                             <p>
                                 Wrong input first: <code
                                     >{wrongInputPercentage.toFixed(2)}%</code
@@ -449,7 +451,7 @@
                                     >{crouchTooLatePercentage.toFixed(2)}%</code
                                 >
                             </p>
-                            <br />
+                            <!-- <br />
                             <p>
                                 On a potential superglide your crouch is too
                                 late by

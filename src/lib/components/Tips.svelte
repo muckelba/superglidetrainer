@@ -11,7 +11,10 @@
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <!-- svelte-ignore a11y-missing-attribute -->
     <a class="card-header" on:click={toggleHidden}>
-        <button class="card-header-icon" aria-label="collapse helpful tips">
+        <button
+            class="button card-header-icon is-large"
+            aria-label="collapse helpful tips"
+        >
             <i class="fa fa-angle-{tipsHidden ? 'down' : 'up'}" />
         </button>
         <p class="card-header-title title is-3">Helpful tips to get better</p>
