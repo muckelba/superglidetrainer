@@ -49,15 +49,15 @@ $divider-margin-size: 0px;
 
 /* Track */
 ::-webkit-scrollbar-track {
-    background: $white-ter;
+    background: $grey-darker;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-    background: $grey-darker;
+    background: $white-ter;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-    background: $grey-darker;
+    background: $white-ter;
 }

@@ -161,7 +161,7 @@
                     chance = (2 - elapsedFrames) * 100;
                     message = `Crouch sooner by ${lateBy.toFixed(1)} frames (${(
                         differenceSeconds * -1
-                    ).toFixed(5)}s)`;
+                    ).toFixed(1)}s)`;
                 } else {
                     message = `Crouched too late by ${lateBy.toFixed(
                         1
@@ -187,7 +187,7 @@
                 if (chance > 0) {
                     potentialSuperglides = [...potentialSuperglides, chance];
                     instructions = `${chance.toFixed(
-                        5
+                        2
                     )}% chance to hit the superglide`;
                     if (chance > 50) {
                         instructionColor = "success";
@@ -418,6 +418,12 @@
                     </h3>
                     <div class="columns">
                         <div class="column">
+                            <p class="has-text-weight-bold is-size-5">
+                                Overall superglide consistency: <code
+                                    >{superglideConsistency.toFixed(2)}%</code
+                                >
+                            </p>
+                            <div class="divider" />
                             <p>Attempts: <code> {attempts.length}</code></p>
                             <p>
                                 Potential superglides: <code
@@ -427,13 +433,8 @@
                                 >
                             </p>
                             <p>
-                                Average chance: <code
+                                Average successful chance: <code
                                     >{potentialAvg.toFixed(2)}%</code
-                                >
-                            </p>
-                            <p>
-                                Overall superglide consistency: <code
-                                    >{superglideConsistency.toFixed(2)}%</code
                                 >
                             </p>
                             <!-- <br />
@@ -455,7 +456,7 @@
                                 <code>0.0134</code> ms or <code>0.4</code> FPS on
                                 average
                             </p> -->
-                            <br />
+                            <div class="divider" />
                             <div class="notification">
                                 More stats coming soon
                             </div>
