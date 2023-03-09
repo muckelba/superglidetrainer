@@ -390,14 +390,6 @@
     />
 </svelte:head>
 
-<!-- <svelte:window
-    on:keydown={(event) => {
-        if (trainingActive) {
-            superglide(event);
-        }
-    }}
-/> -->
-
 <section class="section">
     <h1 class="title is-1">Apex Legends Superglide Trainer</h1>
     <div class="box">
