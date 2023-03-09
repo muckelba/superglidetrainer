@@ -1,7 +1,7 @@
 <script>
     import { onMount, afterUpdate } from "svelte";
     import { writable } from "svelte/store";
-    import { siteLink } from "../lib/config";
+    import { siteDomain } from "../lib/config";
     import Faq from "../lib/components/Faq.svelte";
     import Footer from "../lib/components/Footer.svelte";
     import Tips from "../lib/components/Tips.svelte";
@@ -64,7 +64,7 @@
         });
 
         // Only enable tracking for prod
-        if (window.location.origin === siteLink) {
+        if (window.location.origin === siteDomain) {
             var script = document.createElement("script");
             script.type = "text/javascript";
             script.src = "https://umami.anton.wtf/umami.js";

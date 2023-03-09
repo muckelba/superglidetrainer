@@ -1,1 +1,1 @@
-export const siteLink = 'https://muckelba.github.io/superglidetrainer/'
+export const siteDomain = 'https://muckelba.github.io'
