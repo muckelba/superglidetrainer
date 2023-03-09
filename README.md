@@ -8,7 +8,7 @@ A website based on [this powershell script](https://github.com/AngryGroceries/Ap
 - [x] Actually implementing the trainer
 - [x] Darkmode 
 - [x] Don't allow double binds
-- [ ] Show # of attempts and a overall superglide consistency
+- [x] Show # of attempts and a overall superglide consistency
 - [ ] Mousebutton support
 ### Additional, non-critial
 - [ ] Show session stats
