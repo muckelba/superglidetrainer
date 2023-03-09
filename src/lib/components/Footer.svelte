@@ -4,6 +4,7 @@
             This website is made by <a href="https://github.com/muckelba"
                 >@muckelba</a
             >
+            with the help from <a href="https://github.com/Pvn31">@Pvn31</a>
             and based on a
             <a
                 href="https://github.com/AngryGroceries/Apex_Superglide_Practice_Tool"

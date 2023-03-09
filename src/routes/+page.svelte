@@ -8,10 +8,17 @@
 
     // default settings
     const settings = writable({
-        jump: " ",
-        crouch: "Control",
+        jump: { type: "keyboard", bind: " " },
+        crouch: { type: "keyboard", bind: "Control" },
         fps: 144,
     });
+
+    const states = {
+        Ready: "ready", // Initial State
+        Jump: "jump", // Partial Sequence
+        JumpWarned: "jumpwarned", // Multi-Jump Warning Sent
+        Crouch: "crouch", // Incorrect Sequence, let it play out for a bit
+    };
 
     let modalNotification = false;
     let assignWarning = false;
@@ -23,8 +30,8 @@
     let message = "";
     let history = [];
     let historydiv;
-    let state = "ready";
-    let lastState = "jump";
+    let state = states.Ready;
+    let lastState = states.Jump;
     let startTime = new Date();
     let chance = 0;
     let attempts = [];
@@ -80,198 +87,290 @@
         }
     });
 
-    function setSetting(setting) {
-        function handleKeyDown(event) {
-            event.preventDefault();
-            const otherSetting = setting === "jump" ? "crouch" : "jump";
-            const otherValue = $settings[otherSetting];
+    $: prettyBind = (setting) => {
+        let buttonText = "";
+        if ($settings[setting].type === "keyboard") {
+            buttonText =
+                $settings[setting].bind === " "
+                    ? "SPACE"
+                    : $settings[setting].bind.toUpperCase();
+        } else if ($settings[setting].type === "mouse") {
+            buttonText = `Mousebutton ${$settings[setting].bind}`;
+        }
 
-            if (event.key !== otherValue) {
-                $settings[setting] = event.key;
+        return `${buttonText}&nbsp;&nbsp;<span class="icon">
+                    <i class="fas fa-${$settings[setting].type}"></i>
+                </span>
+                `;
+    };
+
+    // always go to the first forward history, which does not exist.
+    function disableHistory() {
+        window.history.go(1);
+    }
+
+    function toggleState() {
+        trainingActive = !trainingActive;
+        // removes focus to disable activation by spacebar
+        this.blur();
+        // reset to default values when stopping
+        if (!trainingActive) {
+            window.removeEventListener("popstate", disableHistory);
+        } else {
+            history = [];
+            // clear forward history
+            window.history.pushState(null, null, window.location.href);
+            window.addEventListener("popstate", disableHistory);
+            superglide();
+        }
+    }
+
+    function getOtherKey(setting) {
+        const otherSetting = setting === "jump" ? "crouch" : "jump";
+        return $settings[otherSetting].bind;
+    }
+
+    function setSetting(setting) {
+        function removeListeners() {
+            window.removeEventListener("keydown", handleKeyboard);
+            window.removeEventListener("mousedown", handleMouse);
+        }
+
+        function handleKeyboard(event) {
+            event.preventDefault();
+
+            if (event.key !== getOtherKey(setting)) {
+                $settings[setting].type = "keyboard";
+                $settings[setting].bind = event.key;
                 modalNotification = false;
                 assignWarning = false;
-                window.removeEventListener("keydown", handleKeyDown);
+                removeListeners();
             } else {
                 assignWarning = true;
             }
             event.target.blur();
         }
 
+        function handleMouse(event) {
+            event.preventDefault();
+
+            if (event.button !== getOtherKey(setting)) {
+                $settings[setting].type = "mouse";
+                $settings[setting].bind = event.button;
+                modalNotification = false;
+                assignWarning = false;
+                removeListeners();
+            } else {
+                assignWarning = true;
+            }
+        }
+
         if (!modalNotification) {
             modalNotification = true;
-            window.addEventListener("keydown", handleKeyDown);
+            window.addEventListener("keydown", handleKeyboard);
+            window.addEventListener("mousedown", handleMouse);
         } else {
-            window.removeEventListener("keydown", handleKeyDown);
+            removeListeners();
             modalNotification = false;
             settingActive = false;
         }
     }
 
-    function toggleState() {
-        this.blur(); // removes focus to disable activation by spacebar
-        // reset to default values when stopping
-        if (trainingActive) {
-            instructions = "Waiting for jump input...";
-            instructionColor = "";
-            state = "ready";
-            lastState = "ready";
-            startTime = new Date();
-            chance = 0;
-        } else {
-            history = [];
+    function get_device_props(device_type, e = null) {
+        switch (device_type) {
+            case "keyboard":
+                return ["keydown", e?.key];
+            case "mouse":
+                return ["mouseup", e?.button];
         }
-        trainingActive = !trainingActive;
     }
 
-    const superglide = (event) => {
-        // only prevent default for the two set keys
-        if ([$settings.jump, $settings.crouch].find((v) => event.key === v)) {
-            event.preventDefault();
-        }
-        console.log(`Pressed key "${event.key}"`);
-        if (lastState != state) {
-            if (state === "jump") {
-                instructions = "Press crouch";
-                instructionColor = "";
-            } else if (state === "ready") {
-                instructions = "Press jump";
-                instructionColor = "";
-            }
-        }
-        lastState = state;
-
-        if (event.key === $settings.crouch) {
-            let elapsedFrames = new Date();
-            let differenceSeconds = 0;
-            if (state === "ready") {
-                startTime = new Date();
-                state = "crouch";
-            } else if (state === "jump" || state == "jumpwarned") {
-                const now = new Date();
-                const calucated = (now.getTime() - startTime.getTime()) / 1000;
-                elapsedFrames = calucated / frameTime;
-                differenceSeconds = frameTime - calucated;
-                const lateBy = Math.abs($settings.fps - elapsedFrames);
-
-                if (elapsedFrames < 1) {
-                    chance = elapsedFrames * 100;
-                    message = `Crouch later by ${lateBy.toFixed(
-                        1
-                    )} frames (${differenceSeconds.toFixed(5)}s)`;
-                } else if (elapsedFrames < 2) {
-                    chance = (2 - elapsedFrames) * 100;
-                    message = `Crouch sooner by ${lateBy.toFixed(1)} frames (${(
-                        differenceSeconds * -1
-                    ).toFixed(1)}s)`;
-                } else {
-                    message = `Crouched too late by ${lateBy.toFixed(
-                        1
-                    )} frames (${(differenceSeconds * -1).toFixed(5)}s)`;
-                    chance = 0;
-                    crouchTooLateCount += 1;
+    function waitingKeypress() {
+        const devices = [$settings.jump.type, $settings.crouch.type];
+        return new Promise((resolve) => {
+            devices.forEach((dev) => {
+                const [event_name, _] = get_device_props(dev, null);
+                window.addEventListener(event_name, onEventHandler);
+                function onEventHandler(e) {
+                    window.removeEventListener(event_name, onEventHandler);
+                    const [_, return_value] = get_device_props(dev, e);
+                    // only prevent default for the two set keys (only works for keyboard events)
+                    if (
+                        return_value === $settings.jump.bind ||
+                        return_value === $settings.crouch.bind
+                    ) {
+                        e.preventDefault();
+                    }
+                    resolve(return_value);
                 }
+            });
+        });
+    }
 
-                history = [
-                    ...history,
-                    {
-                        line: message,
-                        color: "light",
-                        finished: false,
-                    },
-                    {
-                        line: `${elapsedFrames.toFixed(1)} frames have passed`,
-                        color: "light",
-                        finished: false,
-                    },
-                ];
+    async function superglide() {
+        instructions = "Waiting for jump input...";
+        instructionColor = "";
+        startTime = new Date();
+        chance = 0;
 
-                if (chance > 0) {
-                    potentialSuperglides = [...potentialSuperglides, chance];
-                    instructions = `${chance.toFixed(
-                        2
-                    )}% chance to hit the superglide`;
-                    if (chance > 50) {
-                        instructionColor = "success";
-                    } else if (chance > 25) {
-                        instructionColor = "warning";
+        // console.log(trainingActive);
+        while (trainingActive) {
+            if (lastState !== state) {
+                if (state === states.Jump) {
+                    instructions = "Press crouch";
+                    instructionColor = "";
+                } else if (state === states.Ready) {
+                    instructions = "Press jump";
+                    instructionColor = "";
+                }
+            }
+
+            lastState = state;
+            let key = await waitingKeypress();
+            console.log(`Pressed key "${key}"`);
+
+            if (key === $settings.crouch.bind) {
+                if (state === "ready") {
+                    startTime = new Date();
+                    state = states.Crouch;
+                } else if (
+                    state === states.Jump ||
+                    state === states.JumpWarned
+                ) {
+                    const now = new Date();
+                    const calucated =
+                        (now.getTime() - startTime.getTime()) / 1000;
+                    const elapsedFrames = calucated / frameTime;
+                    const differenceSeconds = frameTime - calucated;
+                    const lateBy = Math.abs($settings.fps - elapsedFrames);
+
+                    if (elapsedFrames < 1) {
+                        chance = elapsedFrames * 100;
+                        message = `Crouch later by ${lateBy.toFixed(
+                            1
+                        )} frames (${differenceSeconds.toFixed(5)}s)`;
+                    } else if (elapsedFrames < 2) {
+                        chance = (2 - elapsedFrames) * 100;
+                        message = `Crouch sooner by ${lateBy.toFixed(
+                            1
+                        )} frames (${(differenceSeconds * -1).toFixed(1)}s)`;
                     } else {
+                        message = `Crouched too late by ${lateBy.toFixed(
+                            1
+                        )} frames (${(differenceSeconds * -1).toFixed(5)}s)`;
+                        chance = 0;
+                        crouchTooLateCount += 1;
+                    }
+
+                    history = [
+                        ...history,
+                        {
+                            line: message,
+                            color: "light",
+                            finished: false,
+                        },
+                        {
+                            line: `${elapsedFrames.toFixed(
+                                1
+                            )} frames have passed`,
+                            color: "light",
+                            finished: false,
+                        },
+                    ];
+
+                    if (chance > 0) {
+                        potentialSuperglides = [
+                            ...potentialSuperglides,
+                            chance,
+                        ];
+                        instructions = `${chance.toFixed(
+                            2
+                        )}% chance to hit the superglide`;
+                        if (chance > 50) {
+                            instructionColor = "success";
+                        } else if (chance > 25) {
+                            instructionColor = "warning";
+                        } else {
+                            instructionColor = "danger";
+                        }
+                    } else {
+                        instructions = `0% chance to hit the superglide`;
                         instructionColor = "danger";
                     }
-                } else {
-                    instructions = `0% chance to hit the superglide`;
+
+                    history = [
+                        ...history,
+                        {
+                            line: instructions,
+                            color: instructionColor,
+                            finished: true,
+                        },
+                    ];
+
+                    attempts = [...attempts, chance];
+                    state = states.Ready;
+                } else if (state === states.Crouch) {
+                    instructions = "Double Crouch Input, resetting";
                     instructionColor = "danger";
+                    chance = 0;
+                    state = states.Ready;
                 }
+            } else if (key === $settings.jump.bind) {
+                if (state === states.Ready) {
+                    startTime = new Date();
+                    state = states.Jump;
+                } else if (state === states.Jump) {
+                    state = states.JumpWarned;
+                    instructions =
+                        "Multiple jumps detected, results may not reflect ingame behavior.";
+                    instructionColor = "warning";
+                } else if (state === states.JumpWarned) {
+                    state = states.JumpWarned;
+                } else if (state === states.Crouch) {
+                    instructions = "You must jump before you crouch";
+                    instructionColor = "danger";
+                    history = [
+                        ...history,
+                        {
+                            line: instructions,
+                            color: instructionColor,
+                            finished: false,
+                        },
+                    ];
 
-                history = [
-                    ...history,
-                    {
-                        line: instructions,
-                        color: instructionColor,
-                        finished: true,
-                    },
-                ];
+                    const now = new Date();
+                    const delta =
+                        (now.getTime() - startTime) / 1000 + frameTime;
+                    const earlyBy = delta / frameTime;
 
-                attempts = [...attempts, chance];
-                state = "ready";
-            } else if (state === "crouch") {
-                instructions = "Double Crouch Input, resetting";
-                instructionColor = "danger";
-                chance = 0;
-                state = "ready";
-            }
-        } else if (event.key === $settings.jump) {
-            if (state === "ready") {
-                startTime = new Date();
-                state = "jump";
-            } else if (state === "jump") {
-                state = "jumpwarned";
-                instructions =
-                    "Multiple jumps detected, results may not reflect ingame behavior.";
+                    chance = 0;
+
+                    message = `Crouch later by ${earlyBy.toFixed(
+                        2
+                    )} frames (${delta.toFixed(5)}s)`;
+                    history = [
+                        ...history,
+                        {
+                            line: message,
+                            color: "light",
+                            finished: false,
+                        },
+                        {
+                            line: "0% chance to hit the superglide",
+                            color: "danger",
+                            finished: true,
+                        },
+                    ];
+                    wrongInputCount += 1;
+                    attempts = [...attempts, chance];
+                    state = states.Ready;
+                }
+            } else {
+                instructions = `Other key pressed, ignoring`;
                 instructionColor = "warning";
-            } else if (state === "jumpwarned") {
-                state = "jumpwarned";
-            } else if (state === "crouch") {
-                instructions = "You must jump before you crouch";
-                instructionColor = "danger";
-                history = [
-                    ...history,
-                    {
-                        line: instructions,
-                        color: instructionColor,
-                        finished: false,
-                    },
-                ];
-
-                const now = new Date();
-                const delta = (now - startTime) / 1000 + frameTime;
-                const earlyBy = delta / frameTime;
-
-                chance = 0;
-
-                history = [
-                    ...history,
-                    {
-                        line: `Crouch later by ${earlyBy.toFixed(
-                            2
-                        )} frames (${delta.toFixed(5)}s)`,
-                        color: "light",
-                        finished: false,
-                    },
-                    {
-                        line: "0% chance to hit the superglide",
-                        color: "danger",
-                        finished: true,
-                    },
-                ];
-                wrongInputCount += 1;
-                attempts = [...attempts, chance];
-                state = "ready";
             }
-        } else {
-            instructions = `Other key (${event.key.toUpperCase()}) pressed, ignoring`;
-            instructionColor = "warning";
         }
-    };
+    }
 </script>
 
 <svelte:head>
@@ -292,13 +391,13 @@
     />
 </svelte:head>
 
-<svelte:window
+<!-- <svelte:window
     on:keydown={(event) => {
         if (trainingActive) {
             superglide(event);
         }
     }}
-/>
+/> -->
 
 <section class="section">
     <h1 class="title is-1">Apex Legends Superglide Trainer</h1>
@@ -338,10 +437,8 @@
                                         class="button is-link is-outlined"
                                         on:click={() => setSetting("jump")}
                                     >
-                                        Jump:&nbsp;<span class="tag"
-                                            >{$settings.jump === " "
-                                                ? "SPACE"
-                                                : $settings.jump.toUpperCase()}</span
+                                        Jump:&nbsp;<span class="tag">
+                                            {@html prettyBind("jump")}</span
                                         >
                                     </button>
                                 </p>
@@ -353,9 +450,7 @@
                                         on:click={() => setSetting("crouch")}
                                     >
                                         Crouch:&nbsp;<span class="tag"
-                                            >{$settings.crouch === " "
-                                                ? "SPACE"
-                                                : $settings.crouch.toUpperCase()}</span
+                                            >{@html prettyBind("crouch")}</span
                                         >
                                     </button>
                                 </p>
@@ -381,7 +476,7 @@
                     </div>
                     {#if modalNotification}
                         <div class="notification is-info">
-                            Press a button you want to assign
+                            Press any key or mouse button to bind
                         </div>
                     {/if}
                     {#if assignWarning}

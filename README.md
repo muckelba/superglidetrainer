@@ -19,7 +19,6 @@ A website based on [this powershell script](https://github.com/AngryGroceries/Ap
 - [ ] Sharing feature
 - [ ] Expand the protocol for better screenshots
 - [ ] Add a ? next to analytics to scroll down to the website FAQ section
-- [ ] 
 
 ## Local development
 
