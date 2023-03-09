@@ -380,7 +380,6 @@
         property="og:description"
         content="Train your superglide timings here!"
     />
-    <meta property="og:url" content={siteLink} />
     <meta property="og:type" content="website" />
     <link
         rel="stylesheet"
