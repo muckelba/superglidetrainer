@@ -441,8 +441,10 @@
 </svelte:head>
 
 <section class="section">
-    <h1 class="title is-1">Apex Legends Superglide Trainer</h1>
-    <div class="box">
+    <h1 class="title is-1 has-text-centered">
+        Apex Legends Superglide Trainer
+    </h1>
+    <div class="box has-text-centered">
         <blockquote>
             <p>
                 A Superglide needs a jump input first and then a crouch input 1
