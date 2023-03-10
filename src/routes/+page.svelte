@@ -6,10 +6,15 @@
     import Footer from "../lib/components/Footer.svelte";
     import Tips from "../lib/components/Tips.svelte";
 
+    const devices = {
+        Keyboard: "keyboard",
+        Mouse: "mouse",
+        Wheel: "wheel",
+    };
     // default settings
     const settings = writable({
-        jump: { type: "keyboard", bind: " " },
-        crouch: { type: "keyboard", bind: "Control" },
+        jump: { type: devices.Keyboard, bind: " " },
+        crouch: { type: devices.Keyboard, bind: "Control" },
         fps: 144,
     });
 
@@ -18,6 +23,12 @@
         Jump: "jump", // Partial Sequence
         JumpWarned: "jumpwarned", // Multi-Jump Warning Sent
         Crouch: "crouch", // Incorrect Sequence, let it play out for a bit
+    };
+    const events = {
+        Keydown: "keydown",
+        Mousedown: "mousedown",
+        Wheel: "wheel",
+        Popstate: "popstate",
     };
 
     let modalNotification = false;
@@ -91,17 +102,33 @@
 
     $: prettyBind = (setting) => {
         let buttonText = "";
-        if ($settings[setting].type === "keyboard") {
-            buttonText =
-                $settings[setting].bind === " "
-                    ? "SPACE"
-                    : $settings[setting].bind.toUpperCase();
-        } else if ($settings[setting].type === "mouse") {
-            buttonText = `Mousebutton ${$settings[setting].bind}`;
+        switch ($settings[setting].type) {
+            case devices.Keyboard:
+                buttonText =
+                    $settings[setting].bind === " "
+                        ? "SPACE"
+                        : $settings[setting].bind.toUpperCase();
+                break;
+            case devices.Mouse:
+                buttonText = `Mousebutton ${$settings[setting].bind}`;
+                break;
+            case devices.Wheel:
+                buttonText = `Mousewheel ${
+                    $settings[setting].bind > 0 ? "DOWN" : "UP"
+                }`;
+                break;
+            default:
+                break;
         }
 
+        const icon_map = {
+            keyboard: "keyboard",
+            mouse: "mouse",
+            wheel: "mouse",
+        };
+        const icon_class = `fas fa-${icon_map[$settings[setting].type]}`;
         return `${buttonText}&nbsp;&nbsp;<span class="icon">
-                    <i class="fas fa-${$settings[setting].type}"></i>
+                    <i class="${icon_class}"></i>
                 </span>
                 `;
     };
@@ -117,11 +144,11 @@
         this.blur();
         // reset to default values when stopping
         if (!trainingActive) {
-            window.removeEventListener("popstate", disableHistory);
+            window.removeEventListener(events.Popstate, disableHistory);
         } else {
             // clear forward history
             window.history.pushState(null, null, window.location.href);
-            window.addEventListener("popstate", disableHistory);
+            window.addEventListener(events.Popstate, disableHistory);
             message = "";
             superglideText = "";
             superglide();
@@ -135,15 +162,16 @@
 
     function setSetting(setting) {
         function removeListeners() {
-            window.removeEventListener("keydown", handleKeyboard);
-            window.removeEventListener("mousedown", handleMouse);
+            window.removeEventListener(events.Keydown, handleKeyboard);
+            window.removeEventListener(events.Mousedown, handleMouse);
+            window.removeEventListener(events.Wheel, handleWheel);
         }
 
         function handleKeyboard(event) {
             event.preventDefault();
 
             if (event.key !== getOtherKey(setting)) {
-                $settings[setting].type = "keyboard";
+                $settings[setting].type = devices.Keyboard;
                 $settings[setting].bind = event.key;
                 modalNotification = false;
                 assignWarning = false;
@@ -158,8 +186,21 @@
             event.preventDefault();
 
             if (event.button !== getOtherKey(setting)) {
-                $settings[setting].type = "mouse";
+                $settings[setting].type = devices.Mouse;
                 $settings[setting].bind = event.button;
+                modalNotification = false;
+                assignWarning = false;
+                removeListeners();
+            } else {
+                assignWarning = true;
+            }
+        }
+
+        function handleWheel(event) {
+            event.preventDefault();
+            if (event.button !== getOtherKey(setting)) {
+                $settings[setting].type = devices.Wheel;
+                $settings[setting].bind = Math.sign(event.deltaY);
                 modalNotification = false;
                 assignWarning = false;
                 removeListeners();
@@ -170,8 +211,13 @@
 
         if (!modalNotification) {
             modalNotification = true;
-            window.addEventListener("keydown", handleKeyboard);
-            window.addEventListener("mousedown", handleMouse);
+            window.addEventListener(events.Keydown, handleKeyboard);
+            window.addEventListener(events.Mousedown, handleMouse);
+            window.addEventListener(events.Wheel, handleWheel, {
+                passive: false,
+            });
+            // Unable to preventDefault in passive event listner, which causes page to scroll down when binding it to the input.
+            // https://chromestatus.com/feature/6662647093133312
         } else {
             removeListeners();
             modalNotification = false;
@@ -181,10 +227,12 @@
 
     function get_device_props(device_type, e = null) {
         switch (device_type) {
-            case "keyboard":
-                return ["keydown", e?.key];
-            case "mouse":
-                return ["mouseup", e?.button];
+            case devices.Keyboard:
+                return [events.Keydown, e?.key];
+            case devices.Mouse:
+                return [events.Mousedown, e?.button];
+            case devices.Wheel:
+                return [events.Wheel, Math.sign(e?.deltaY)];
         }
     }
 
@@ -193,7 +241,9 @@
         return new Promise((resolve) => {
             devices.forEach((dev) => {
                 const [event_name, _] = get_device_props(dev, null);
-                window.addEventListener(event_name, onEventHandler);
+                window.addEventListener(event_name, onEventHandler, {
+                    passive: false,
+                });
                 function onEventHandler(e) {
                     window.removeEventListener(event_name, onEventHandler);
                     const [_, return_value] = get_device_props(dev, e);
