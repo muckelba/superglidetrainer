@@ -9,8 +9,8 @@
     const devices = {
         Keyboard: "keyboard",
         Mouse: "mouse",
-        Wheel: "wheel"
-    }
+        Wheel: "wheel",
+    };
     // default settings
     const settings = writable({
         jump: { type: devices.Keyboard, bind: " " },
@@ -25,11 +25,11 @@
         Crouch: "crouch", // Incorrect Sequence, let it play out for a bit
     };
     const events = {
-        Keydown:"keydown",
-        Mousedown:"mousedown",
-        Wheel:"wheel",
-        Popstate:"popstate"
-    }
+        Keydown: "keydown",
+        Mousedown: "mousedown",
+        Wheel: "wheel",
+        Popstate: "popstate",
+    };
 
     let inputListeners = []
     let modalNotification = false;
@@ -37,8 +37,10 @@
     let trainingActive = false;
     let settingActive = false;
     $: frameTime = 1 / $settings.fps;
-    let instructions = "Waiting for jump input...";
+    let instructions = "";
     let instructionColor = "";
+    let superglideText = "";
+    let superglideTextColor = "";
     let message = "";
     let history = [];
     let historydiv;
@@ -101,9 +103,10 @@
 
     $: prettyBind = (setting) => {
         let buttonText = "";
-        switch($settings[setting].type){
+        switch ($settings[setting].type) {
             case devices.Keyboard:
-                buttonText = $settings[setting].bind === " "
+                buttonText =
+                    $settings[setting].bind === " "
                         ? "SPACE"
                         : $settings[setting].bind.toUpperCase();
                 break;
@@ -111,18 +114,20 @@
                 buttonText = `Mousebutton ${$settings[setting].bind}`;
                 break;
             case devices.Wheel:
-                buttonText = `Mousewheel ${$settings[setting].bind > 0 ? 'DOWN' : 'UP'}`;
+                buttonText = `Mousewheel ${
+                    $settings[setting].bind > 0 ? "DOWN" : "UP"
+                }`;
                 break;
             default:
                 break;
         }
 
         const icon_map = {
-            keyboard:"keyboard",
-            mouse:"mouse",
-            wheel:"mouse"
-        }
-        const icon_class = `fas fa-${icon_map[$settings[setting].type]}`
+            keyboard: "keyboard",
+            mouse: "mouse",
+            wheel: "mouse",
+        };
+        const icon_class = `fas fa-${icon_map[$settings[setting].type]}`;
         return `${buttonText}&nbsp;&nbsp;<span class="icon">
                     <i class="${icon_class}"></i>
                 </span>
@@ -146,10 +151,11 @@
             window.removeEventListener(inputListeners[1][0], inputListeners[1][1]);
             inputListeners = []
         } else {
-            history = [];
             // clear forward history
             window.history.pushState(null, null, window.location.href);
             window.addEventListener(events.Popstate, disableHistory);
+            message = "";
+            superglideText = "";
             superglide();
         }
     }
@@ -214,7 +220,9 @@
             modalNotification = true;
             window.addEventListener(events.Keydown, handleKeyboard);
             window.addEventListener(events.Mousedown, handleMouse);
-            window.addEventListener(events.Wheel, handleWheel,{passive:false});
+            window.addEventListener(events.Wheel, handleWheel, {
+                passive: false,
+            });
             // Unable to preventDefault in passive event listner, which causes page to scroll down when binding it to the input.
             // https://chromestatus.com/feature/6662647093133312
         } else {
@@ -241,7 +249,9 @@
         return new Promise((resolve) => {
             devices.forEach((dev) => {
                 const [event_name, _] = get_device_props(dev, null);
-                window.addEventListener(event_name, onEventHandler,{passive:false});
+                window.addEventListener(event_name, onEventHandler, {
+                    passive: false,
+                });
                 function onEventHandler(e) {
                     window.removeEventListener(event_name, onEventHandler);
                     const [_, return_value] = get_device_props(dev, e);
@@ -260,12 +270,6 @@
     }
 
     async function superglide() {
-        instructions = "Waiting for jump input...";
-        instructionColor = "";
-        startTime = new Date();
-        chance = 0;
-
-        // console.log(trainingActive);
         while (trainingActive) {
             if (lastState !== state) {
                 if (state === states.Jump) {
@@ -283,7 +287,7 @@
 
             if (key === $settings.crouch.bind) {
                 if (state === states.Ready) {
-                    startTime = new Date();
+                    // startTime = new Date();
                     state = states.Crouch;
                 } else if (
                     state === states.Jump ||
@@ -294,7 +298,7 @@
                         (now.getTime() - startTime.getTime()) / 1000;
                     const elapsedFrames = calucated / frameTime;
                     const differenceSeconds = frameTime - calucated;
-                    const lateBy = Math.abs($settings.fps - elapsedFrames);
+                    const lateBy = Math.abs(1 - elapsedFrames);
 
                     if (elapsedFrames < 1) {
                         chance = elapsedFrames * 100;
@@ -335,26 +339,26 @@
                             ...potentialSuperglides,
                             chance,
                         ];
-                        instructions = `${chance.toFixed(
+                        superglideText = `${chance.toFixed(
                             2
                         )}% chance to hit the superglide`;
                         if (chance > 50) {
-                            instructionColor = "success";
+                            superglideTextColor = "success";
                         } else if (chance > 25) {
-                            instructionColor = "warning";
+                            superglideTextColor = "warning";
                         } else {
-                            instructionColor = "danger";
+                            superglideTextColor = "danger";
                         }
                     } else {
-                        instructions = `0% chance to hit the superglide`;
-                        instructionColor = "danger";
+                        superglideText = `0% chance to hit the superglide`;
+                        superglideTextColor = "danger";
                     }
 
                     history = [
                         ...history,
                         {
-                            line: instructions,
-                            color: instructionColor,
+                            line: superglideText,
+                            color: superglideTextColor,
                             finished: true,
                         },
                     ];
@@ -376,6 +380,7 @@
                     instructions =
                         "Multiple jumps detected, results may not reflect ingame behavior.";
                     instructionColor = "warning";
+                    superglideText = "";
                 } else if (state === states.JumpWarned) {
                     state = states.JumpWarned;
                 } else if (state === states.Crouch) {
@@ -397,6 +402,8 @@
 
                     chance = 0;
 
+                    superglideText = "0% chance to hit the superglide";
+                    superglideTextColor = "danger";
                     message = `Crouch later by ${earlyBy.toFixed(
                         2
                     )} frames (${delta.toFixed(5)}s)`;
@@ -408,7 +415,7 @@
                             finished: false,
                         },
                         {
-                            line: "0% chance to hit the superglide",
+                            line: superglideText,
                             color: "danger",
                             finished: true,
                         },
@@ -443,8 +450,10 @@
 </svelte:head>
 
 <section class="section">
-    <h1 class="title is-1">Apex Legends Superglide Trainer</h1>
-    <div class="box">
+    <h1 class="title is-1 has-text-centered">
+        Apex Legends Superglide Trainer
+    </h1>
+    <div class="box has-text-centered">
         <blockquote>
             <p>
                 A Superglide needs a jump input first and then a crouch input 1
@@ -532,7 +541,12 @@
                             {instructions}
                         </div>
                         {#if message}
-                            <div class="notification is-light">
+                            <div class="notification is-{superglideTextColor}">
+                                {#if superglideText}
+                                    <p class="has-text-weight-bold is-size-5">
+                                        {superglideText}
+                                    </p>
+                                {/if}
                                 {message}
                             </div>
                         {/if}

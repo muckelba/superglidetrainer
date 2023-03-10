@@ -1,6 +1,6 @@
 # Superglidetrainer
 
-A website based on [this powershell script](https://github.com/AngryGroceries/Apex_Superglide_Practice_Tool) to train your superglide timings.
+A website based on [this powershell script](https://github.com/AngryGroceries/Apex_Superglide_Practice_Tool) to train your superglide timings. Built with [svelte](https://svelte.dev/) and [bulma](https://bulma.io/).
 
 ## TODO
 
@@ -9,10 +9,10 @@ A website based on [this powershell script](https://github.com/AngryGroceries/Ap
 - [x] Darkmode 
 - [x] Don't allow double binds
 - [x] Show # of attempts and a overall superglide consistency
-- [ ] Mousebutton support
+- [x] Mousebutton support
+
 ### Additional, non-critial
-- [ ] Show session stats
-- [ ] Track performance over time 
+- [ ] More session stats
   - [ ] Add graphs
 - [ ] Use a pop-up modal for setting keybinds
 - [ ] Add controller support (<https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API>)
