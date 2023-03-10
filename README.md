@@ -9,7 +9,7 @@ A website based on [this powershell script](https://github.com/AngryGroceries/Ap
 - [x] Darkmode 
 - [x] Don't allow double binds
 - [x] Show # of attempts and a overall superglide consistency
-- [ ] Mousebutton support
+- [x] Mousebutton support
 ### Additional, non-critial
 - [ ] Show session stats
 - [ ] Track performance over time 
