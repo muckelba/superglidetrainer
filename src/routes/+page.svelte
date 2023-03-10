@@ -199,10 +199,12 @@
             } else {
                 assignWarning = true;
             }
-            event.target.blur();
+            event.target.parentElement.blur();
         }
 
         function handleWheel(event) {
+            console.log(event.target.parentElement)
+            
             event.preventDefault();
             if (event.button !== getOtherKey(setting)) {
                 $settings[setting].type = devices.Wheel;
@@ -213,7 +215,7 @@
             } else {
                 assignWarning = true;
             }
-            event.target.blur();
+            event.target.parentElement.blur();
         }
 
         if (!modalNotification) {
