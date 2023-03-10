@@ -25,8 +25,10 @@
     let trainingActive = false;
     let settingActive = false;
     $: frameTime = 1 / $settings.fps;
-    let instructions = "Waiting for jump input...";
+    let instructions = "";
     let instructionColor = "";
+    let superglideText = "";
+    let superglideTextColor = "";
     let message = "";
     let history = [];
     let historydiv;
@@ -117,10 +119,11 @@
         if (!trainingActive) {
             window.removeEventListener("popstate", disableHistory);
         } else {
-            history = [];
             // clear forward history
             window.history.pushState(null, null, window.location.href);
             window.addEventListener("popstate", disableHistory);
+            message = "";
+            superglideText = "";
             superglide();
         }
     }
@@ -208,12 +211,6 @@
     }
 
     async function superglide() {
-        instructions = "Waiting for jump input...";
-        instructionColor = "";
-        startTime = new Date();
-        chance = 0;
-
-        // console.log(trainingActive);
         while (trainingActive) {
             if (lastState !== state) {
                 if (state === states.Jump) {
@@ -230,8 +227,8 @@
             console.log(`Pressed key "${key}"`);
 
             if (key === $settings.crouch.bind) {
-                if (state === "ready") {
-                    startTime = new Date();
+                if (state === states.Ready) {
+                    // startTime = new Date();
                     state = states.Crouch;
                 } else if (
                     state === states.Jump ||
@@ -242,7 +239,7 @@
                         (now.getTime() - startTime.getTime()) / 1000;
                     const elapsedFrames = calucated / frameTime;
                     const differenceSeconds = frameTime - calucated;
-                    const lateBy = Math.abs($settings.fps - elapsedFrames);
+                    const lateBy = Math.abs(1 - elapsedFrames);
 
                     if (elapsedFrames < 1) {
                         chance = elapsedFrames * 100;
@@ -283,26 +280,26 @@
                             ...potentialSuperglides,
                             chance,
                         ];
-                        instructions = `${chance.toFixed(
+                        superglideText = `${chance.toFixed(
                             2
                         )}% chance to hit the superglide`;
                         if (chance > 50) {
-                            instructionColor = "success";
+                            superglideTextColor = "success";
                         } else if (chance > 25) {
-                            instructionColor = "warning";
+                            superglideTextColor = "warning";
                         } else {
-                            instructionColor = "danger";
+                            superglideTextColor = "danger";
                         }
                     } else {
-                        instructions = `0% chance to hit the superglide`;
-                        instructionColor = "danger";
+                        superglideText = `0% chance to hit the superglide`;
+                        superglideTextColor = "danger";
                     }
 
                     history = [
                         ...history,
                         {
-                            line: instructions,
-                            color: instructionColor,
+                            line: superglideText,
+                            color: superglideTextColor,
                             finished: true,
                         },
                     ];
@@ -324,6 +321,7 @@
                     instructions =
                         "Multiple jumps detected, results may not reflect ingame behavior.";
                     instructionColor = "warning";
+                    superglideText = "";
                 } else if (state === states.JumpWarned) {
                     state = states.JumpWarned;
                 } else if (state === states.Crouch) {
@@ -345,6 +343,8 @@
 
                     chance = 0;
 
+                    superglideText = "0% chance to hit the superglide";
+                    superglideTextColor = "danger";
                     message = `Crouch later by ${earlyBy.toFixed(
                         2
                     )} frames (${delta.toFixed(5)}s)`;
@@ -356,7 +356,7 @@
                             finished: false,
                         },
                         {
-                            line: "0% chance to hit the superglide",
+                            line: superglideText,
                             color: "danger",
                             finished: true,
                         },
@@ -480,7 +480,12 @@
                             {instructions}
                         </div>
                         {#if message}
-                            <div class="notification is-light">
+                            <div class="notification is-{superglideTextColor}">
+                                {#if superglideText}
+                                    <p class="has-text-weight-bold is-size-5">
+                                        {superglideText}
+                                    </p>
+                                {/if}
                                 {message}
                             </div>
                         {/if}
