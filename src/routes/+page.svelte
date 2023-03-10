@@ -188,6 +188,7 @@
             } else {
                 assignWarning = true;
             }
+            event.target.blur();
         }
 
         function handleWheel(event) {
@@ -201,6 +202,7 @@
             } else {
                 assignWarning = true;
             }
+            event.target.blur();
         }
 
         if (!modalNotification) {
