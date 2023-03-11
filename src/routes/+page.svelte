@@ -31,7 +31,7 @@
         Popstate: "popstate",
     };
 
-    let inputListeners = []
+    let inputListeners = [];
     let modalNotification = false;
     let assignWarning = false;
     let trainingActive = false;
@@ -146,10 +146,15 @@
         // reset to default values when stopping
         if (!trainingActive) {
             window.removeEventListener(events.Popstate, disableHistory);
-            console.log(inputListeners)
-            window.removeEventListener(inputListeners[0][0], inputListeners[0][1]);
-            window.removeEventListener(inputListeners[1][0], inputListeners[1][1]);
-            inputListeners = []
+            window.removeEventListener(
+                inputListeners[0][0],
+                inputListeners[0][1]
+            );
+            window.removeEventListener(
+                inputListeners[1][0],
+                inputListeners[1][1]
+            );
+            inputListeners = [];
         } else {
             // clear forward history
             window.history.pushState(null, null, window.location.href);
@@ -203,8 +208,6 @@
         }
 
         function handleWheel(event) {
-            console.log(event.target.parentElement)
-            
             event.preventDefault();
             if (event.button !== getOtherKey(setting)) {
                 $settings[setting].type = devices.Wheel;
@@ -247,7 +250,7 @@
 
     function waitingKeypress() {
         const devices = [$settings.jump.type, $settings.crouch.type];
-        inputListeners = []
+        inputListeners = [];
         return new Promise((resolve) => {
             devices.forEach((dev) => {
                 const [event_name, _] = get_device_props(dev, null);
@@ -266,7 +269,7 @@
                     }
                     resolve(return_value);
                 }
-                inputListeners.push([event_name,onEventHandler])
+                inputListeners.push([event_name, onEventHandler]);
             });
         });
     }
