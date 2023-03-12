@@ -292,7 +292,7 @@
 
             if (key === $settings.crouch.bind) {
                 if (state === states.Ready) {
-                    // startTime = new Date();
+                    startTime = new Date();
                     state = states.Crouch;
                 } else if (
                     state === states.Jump ||
