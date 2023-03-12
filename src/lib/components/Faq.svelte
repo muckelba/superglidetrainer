@@ -31,10 +31,10 @@
                 might still be processed by the engine on the same frame. Or 2
                 frames apart. When it only works when they are processed 1 frame
                 apart. That is also the reason why the feedback can say to
-                crouch later or sooner. Because of that randomness you can never
-                reach 100% Superglide consistency. Max is 99%. Here is a
-                fantastic video explaining the exact same problem in Titanfall
-                2:
+                crouch later to get a higher chance. Because of that randomness
+                you can never reach 100% Superglide consistency. Maximum is 99%.
+                Here is a fantastic video explaining the exact same problem in
+                Titanfall 2, for another frame dependent technique:
             </p>
             <p>
                 <iframe
@@ -59,15 +59,44 @@
                 numbers still don't make sense? A faulty USB port or other
                 system related latency Issues can be the cause of that. Check if
                 your device drivers are up to date. Try if the same happens when
-                you use a keyboard-key and a mouse-button for the inputs and/or
-                switch the USB ports. In extreme cases problems with other
-                components like your motherboard, CPU or operating system
-                install could be the cause.
+                you switch away from spacebar as jump input. Try to use a
+                keyboard-key for one input and a mouse-button for the other
+                and/or switch the USB ports. In extreme cases, problems with
+                other components like your motherboard, CPU or operating system
+                could be the cause.
             </p>
         </div>
         <div class="content">
             <h5 class="title is-5">What do the Analytics mean?</h5>
-            <p class="subtitle is-6">blablabla replace me</p>
+            <p class="subtitle is-6">
+                All our analytics are only in relation to hitting your Jump ->
+                Crouch timing. Your timing within the mantle is still totally up
+                to you....Yet 😉
+            </p>
+            <ul>
+                <li>
+                    <strong>Overall superglide consistency:</strong> Is the average
+                    chance out of all your attempts. 0% or 95% it gets counted. This
+                    gives you a % number for the following question: If i attempted
+                    a Superglide in Game, how likely am i to hit that Superglide?
+                </li>
+                <li>
+                    <strong>Attempts:</strong> Number of attempts this session. Reload
+                    the page to reset everything.
+                </li>
+                <li>
+                    <strong>Potential Superglides:</strong> How often you hit over
+                    0% chance and thereby have the potential to hit a Superglide.
+                </li>
+                <li>
+                    <strong>Average successful chance:</strong> Your average chance
+                    for potential Superglides
+                </li>
+                <li>
+                    <strong>Wrong input first/Crouch too late:</strong> Why you messed
+                    up your Superglide and got a 0% chance.
+                </li>
+            </ul>
         </div>
         <h4 class="title is-4 is-underlined">General Superglide Questions:</h4>
         <div class="content">
