@@ -115,7 +115,18 @@
             <h5 class="title is-5">
                 How do i know if i hit a Superglide in game?
             </h5>
-            <p class="subtitle is-6">foo</p>
+            <p class="subtitle is-6">
+                The immediate speed feels very different to every other slide or
+                jump of a ledge or mantle. The biggest indicator is the change
+                in FOV. If your FOV didn't change. You didn't hit a Superglide.
+                Go to the fire range to the long metal box at the top. A
+                Superglide will clear it from one side to the other without
+                scraping your feet. If you can't clear that box. You are not
+                supergliding.<br />
+                <a href="https://youtu.be/i7jfEFrJ4sw?t=23"
+                    >Here is how that looks and sounds.</a
+                >
+            </p>
         </div>
     </div>
 </div>

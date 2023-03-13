@@ -81,7 +81,7 @@
                         that timing feels between your headset/speaker latency
                         and hand-ear/eye coordination might be different. So you
                         might time it with or before the Audio-cue happens.
-                        <a href="https://youtu.be/fS6ygSiuz1U">Here</a> is what that
+                        <a href="https://youtu.be/i7jfEFrJ4sw">Here</a> is what that
                         sounds and looks like.
                     </li>
                     <li>
@@ -91,7 +91,7 @@
                         a few frames before the Superglide-window closes. So
                         some people time it using that. I zoomed into the
                         corners in the
-                        <a href="https://youtu.be/fS6ygSiuz1U"
+                        <a href="https://youtu.be/i7jfEFrJ4sw"
                             >audio-trigger video</a
                         > to make it more obvious.
                     </li>
