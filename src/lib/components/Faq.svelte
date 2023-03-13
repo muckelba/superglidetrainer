@@ -69,9 +69,9 @@
         <div class="content">
             <h5 class="title is-5">What do the Analytics mean?</h5>
             <p class="subtitle is-6">
-                All our analytics are only in relation to hitting your Jump ->
+                All our analytics are only in relation to hitting your jump ->
                 Crouch timing. Your timing within the mantle is still totally up
-                to you....Yet 😉
+                to you....for now 😉
             </p>
             <ul>
                 <li>
@@ -89,8 +89,8 @@
                     0% chance and thereby have the potential to hit a Superglide.
                 </li>
                 <li>
-                    <strong>Average successful chance:</strong> Your average chance
-                    for potential Superglides
+                    <strong>Average successful chance:</strong> The average chance
+                    of all attempts over 0%.
                 </li>
                 <li>
                     <strong>Wrong input first/Crouch too late:</strong> Why you messed

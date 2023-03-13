@@ -1,6 +1,4 @@
 <script>
-    import Faq from "./Faq.svelte";
-
     let tipsHidden = true;
     function toggleHidden() {
         tipsHidden = !tipsHidden;
@@ -66,13 +64,45 @@
                 Get better at timing the Superglide during the Mantle
             </h5>
             <div class="subtitle is-6">
+                You need to do the Superglide Inputs in the last 0.1-0.2 sec of
+                a Mantle. For a start it can help to practice this on the same
+                ledge over and over till you are consistent with that. It also
+                helps to practice with the same legend. Since they have
+                different body heights it's easier to get used how a mantle
+                looks on the same legend. Additionally you can use different
+                cues to help with the timing:
                 <ul>
-                    <li>Audio cue</li>
-                    <li>Camera shake</li>
+                    <li>
+                        <strong>Audio cue</strong><br />There is a distinct,
+                        higher pitched hand grab sound effect at the end of a
+                        mantle. That starts at around 0.3-0.25 sec before the
+                        mantle finishes. So timing your Superglide just as its
+                        about to end or slightly after it ended is perfect. How
+                        that timing feels between your headset/speaker latency
+                        and hand-ear/eye coordination might be different. So you
+                        might time it with or before the Audio-cue happens.
+                        <a href="https://youtu.be/fS6ygSiuz1U">Here</a> is what that
+                        sounds and looks like.
+                    </li>
+                    <li>
+                        <strong>Visual cue</strong><br />You can also time it
+                        with the camera movement. Check in the top left or right
+                        corner. You view goes from wobbling to completely still
+                        a few frames before the Superglide-window closes. So
+                        some people time it using that. I zoomed into the
+                        corners in the
+                        <a href="https://youtu.be/fS6ygSiuz1U"
+                            >audio-trigger video</a
+                        > to make it more obvious.
+                    </li>
                 </ul>
-                If you don't gain any speed you hit the Superglide to early. If you
-                jump of the ledge with speed but not a Superglide you hit it too
-                late.
+                <br />
+                Using these cues is only good for practice. Trying to do Superglides
+                in game during gunfights with cues is almost impossible. So use the
+                cues to practise the timing and then start to get used to it by feeling.
+                <br />
+                One last timing tip: If you don't gain any speed of the ledge you
+                hit the Superglide to early in the mantle.
             </div>
         </div>
     </div>
