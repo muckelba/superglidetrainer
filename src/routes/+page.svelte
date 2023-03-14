@@ -128,10 +128,10 @@
             wheel: "mouse",
         };
         const icon_class = `fas fa-${icon_map[$settings[setting].type]}`;
-        return `${buttonText}&nbsp;&nbsp;<span class="icon">
+        return `${buttonText}&nbsp;&nbsp;
+                <span class="icon">
                     <i class="${icon_class}"></i>
-                </span>
-                `;
+                </span>`;
     };
 
     // always go to the first forward history, which does not exist.
@@ -488,27 +488,38 @@
                     <p class="subtitle">Click on the buttons to re-bind them</p>
                     <div class="field">
                         <div class="field-body">
-                            <div class="field">
+                            <div class="field has-addons">
                                 <p class="control">
                                     <button
-                                        class="button is-link is-outlined"
-                                        on:click={() => setSetting("jump")}
+                                        class="button is-link is-outlined no-hover"
                                     >
-                                        Jump:&nbsp;<span class="tag">
-                                            {@html prettyBind("jump")}</span
-                                        >
+                                        Jump
                                     </button>
                                 </p>
-                            </div>
-                            <div class="field">
                                 <p class="control">
                                     <button
-                                        class="button is-link is-outlined"
-                                        on:click={() => setSetting("crouch")}
+                                        class="button setting-button is-link is-outlined"
+                                        on:click={() => setSetting("jump")}
                                     >
-                                        Crouch:&nbsp;<span class="tag"
-                                            >{@html prettyBind("crouch")}</span
-                                        >
+                                        {@html prettyBind("jump")}
+                                    </button>
+                                    <!-- <span class="tag" /> -->
+                                </p>
+                            </div>
+                            <div class="field has-addons">
+                                <p class="control">
+                                    <button
+                                        class="button is-link is-outlined no-hover"
+                                    >
+                                        Crouch
+                                    </button>
+                                </p>
+                                <p class="control">
+                                    <button
+                                        class="button is-link is-outlined setting-button"
+                                        on:click={() => setSetting("crouch")}
+                                        >{@html prettyBind("crouch")}
+                                        <!-- <span class="tag" /> -->
                                     </button>
                                 </p>
                             </div>
@@ -517,7 +528,7 @@
                                     <button
                                         class="button is-link is-outlined no-hover"
                                     >
-                                        FPS:
+                                        FPS
                                     </button>
                                 </p>
                                 <p class="control">

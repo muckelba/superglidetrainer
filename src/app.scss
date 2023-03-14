@@ -8,6 +8,11 @@ section.section {
     padding-bottom: 1.5rem;
 }
 
+button.setting-button {
+    background-color: $grey-darker !important;
+    color: white !important;
+}
+
 /* Import only what you need from Bulma */
 @import "bulma/sass/utilities/_all";
 @import "bulma/sass/base/_all";
