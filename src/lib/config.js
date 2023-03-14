@@ -1,1 +1,1 @@
-export const siteDomain = 'https://muckelba.github.io'
+export const siteDomain = 'https://apexmovement.tech'
