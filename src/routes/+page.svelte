@@ -628,7 +628,8 @@
                             </p> -->
                             <div class="divider" />
                             <div class="notification">
-                                More stats coming soon
+                                <p>The analytics are explained in the FAQ</p>
+                                <p>More stats coming soon</p>
                             </div>
                         </div>
                         <div class="divider is-vertical" />
