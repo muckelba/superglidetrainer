@@ -209,7 +209,8 @@
 
         function handleWheel(event) {
             event.preventDefault();
-            if (event.button !== getOtherKey(setting)) {
+
+            if (Math.sign(event.deltaY) !== getOtherKey(setting)) {
                 $settings[setting].type = devices.Wheel;
                 $settings[setting].bind = Math.sign(event.deltaY);
                 modalNotification = false;
@@ -218,7 +219,6 @@
             } else {
                 assignWarning = true;
             }
-            event.target.parentElement.blur();
         }
 
         if (!modalNotification) {
