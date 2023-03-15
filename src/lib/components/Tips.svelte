@@ -20,9 +20,9 @@
     <div class="card-content {tipsHidden ? 'is-hidden' : ''}">
         <div class="content">
             <h5 class="title is-5">
-                Get better at hitting the Jump -> Crouch Timing
+                Get better at hitting the Jump -> Crouch timing
             </h5>
-            <strong>Mouse and Keyboard:</strong>
+            <strong>Mouse and keyboard:</strong>
             <ol type="1">
                 <li>
                     It's common to put your crouch on a button next to your jump
@@ -48,7 +48,7 @@
                     as well.
                 </li>
                 <li>
-                    The ultimate Hardware Change would be to get a new keyboard.
+                    The ultimate hardware change would be to get a new keyboard.
                     Either to get away from a low polling rate, which introduces
                     further randomness. Or to get a keyboard with activation
                     points you can change. Like from Wooting or the Apex Pro
@@ -61,11 +61,11 @@
         </div>
         <div class="content">
             <h5 class="title is-5">
-                Get better at timing the Superglide during the Mantle
+                Get better at timing the Superglide during the mantle
             </h5>
             <div class="subtitle is-6">
                 You need to do the Superglide Inputs in the last 0.1-0.2 sec of
-                a Mantle. For a start it can help to practice this on the same
+                a mantle. For a start it can help to practice this on the same
                 ledge over and over till you are consistent with that. It also
                 helps to practice with the same legend. Since they have
                 different body heights it's easier to get used how a mantle
@@ -80,7 +80,7 @@
                         about to end or slightly after it ended is perfect. How
                         that timing feels between your headset/speaker latency
                         and hand-ear/eye coordination might be different. So you
-                        might time it with or before the Audio-cue happens.
+                        might time it with or before the audio-cue happens.
                         <a href="https://youtu.be/i7jfEFrJ4sw">Here</a> is what that
                         sounds and looks like.
                     </li>

@@ -19,10 +19,10 @@
         <p class="card-header-title title is-3">FAQ</p>
     </a>
     <div class="card-content {faqHidden ? 'is-hidden' : ''}">
-        <h4 class="title is-4 is-underlined">Superglide Trainer Questions:</h4>
+        <h4 class="title is-4 is-underlined">Superglide Trainer questions:</h4>
         <div class="content">
             <h5 class="title is-5">
-                Why is there a Chance? I thought it just needed Frame perfect
+                Why is there a Chance? I thought it just needed frame perfect
                 inputs?
             </h5>
             <p class="subtitle is-6">
@@ -51,7 +51,8 @@
         </div>
         <div class="content">
             <h5 class="title is-5">
-                Why do i keep consistently hitting the exact same Frame Delay?
+                Why do i keep consistently hitting the exact same frame delay?
+                Why can't i go lower then that?
             </h5>
             <p class="subtitle is-6">
                 Find out the polling rate of your keyboard. That + some other
@@ -67,7 +68,7 @@
             </p>
         </div>
         <div class="content">
-            <h5 class="title is-5">What do the Analytics mean?</h5>
+            <h5 class="title is-5">What do the analytics mean?</h5>
             <p class="subtitle is-6">
                 All our analytics are only in relation to hitting your jump ->
                 Crouch timing. Your timing within the mantle is still totally up
@@ -78,7 +79,7 @@
                     <strong>Overall superglide consistency:</strong> Is the average
                     chance out of all your attempts. 0% or 95% it gets counted. This
                     gives you a % number for the following question: If i attempted
-                    a Superglide in Game, how likely am i to hit that Superglide?
+                    a Superglide in game, how likely am i to hit that Superglide?
                 </li>
                 <li>
                     <strong>Attempts:</strong> Number of attempts this session. Reload
@@ -98,7 +99,7 @@
                 </li>
             </ul>
         </div>
-        <h4 class="title is-4 is-underlined">General Superglide Questions:</h4>
+        <h4 class="title is-4 is-underlined">General Superglide questions:</h4>
         <div class="content">
             <h5 class="title is-5">
                 What is a Superglide and why should i care about learning it?
