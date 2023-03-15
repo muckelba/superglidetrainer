@@ -11,6 +11,7 @@ section.section {
 button.setting-button {
     background-color: $grey-darker !important;
     color: white !important;
+    display: block;
 }
 
 /* Import only what you need from Bulma */
