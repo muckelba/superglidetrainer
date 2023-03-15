@@ -25,7 +25,7 @@
                 Sourcecode
             </a>
             <span class="icon"> <i class="fab fa-reddit" /></span>
-            <a href="http://reddit.com/r/apexrollouts">Subreddit</a>
+            <a href="https://reddit.com/r/apexrollouts">Subreddit</a>
             <span class="icon"> <i class="fab fa-discord" /></span>
             <a href="https://discord.gg/7RshRDZ">Discordserver</a>
         </p>
