@@ -55,16 +55,30 @@
                 Why can't i go lower then that?
             </h5>
             <p class="subtitle is-6">
+                <strong>Keyboard issues:</strong>
+            </p>
+            <p class="subtitle is-6">
                 Find out the polling rate of your keyboard. That + some other
                 small system delays is the lowest frame delay you can hit. The
-                numbers still don't make sense? A faulty USB port or other
-                system related latency Issues can be the cause of that. Check if
-                your device drivers are up to date. Try if the same happens when
-                you switch away from spacebar as jump input. Try to use a
-                keyboard-key for one input and a mouse-button for the other
-                and/or switch the USB ports. In extreme cases, problems with
-                other components like your motherboard, CPU or operating system
-                could be the cause.
+                numbers still don't make sense? Your keyboard might scan the
+                inputs in a weird way. In key clusters, in a direction like from
+                left to right, different scan rates or delays on your modifier
+                keys (Spacebar, Shift, Ctrl etc.). Try if the same happens when
+                you switch away from spacebar as jump input. Try out keys next
+                to each other, in different orders and keys far apart from each
+                other. Try to use a keyboard-key for one input and a
+                mouse-button for the other. This should help you narrow down the
+                issue.
+            </p>
+            <p class="subtitle is-6">
+                <strong>Other hardware issues:</strong>
+            </p>
+            <p class="subtitle is-6">
+                A faulty USB port or other system related latency Issues can be
+                the cause of that. Switch USB ports. Check if your device
+                drivers are up to date. In extreme cases, problems with other
+                components like your motherboard, CPU or operating system could
+                be the cause.
             </p>
         </div>
         <div class="content">
