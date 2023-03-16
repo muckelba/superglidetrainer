@@ -349,10 +349,8 @@
                         )}% chance to hit the superglide`;
                         if (chance > 50) {
                             superglideTextColor = "success";
-                        } else if (chance > 25) {
-                            superglideTextColor = "warning";
                         } else {
-                            superglideTextColor = "danger";
+                            superglideTextColor = "warning";
                         }
                     } else {
                         superglideText = `0% chance to hit the superglide`;
