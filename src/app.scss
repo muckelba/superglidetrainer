@@ -14,6 +14,12 @@ button.setting-button {
     display: block;
 }
 
+.white-code {
+    code {
+        color: white
+    }
+}
+
 /* Import only what you need from Bulma */
 @import "bulma/sass/utilities/_all";
 @import "bulma/sass/base/_all";

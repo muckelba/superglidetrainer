@@ -586,25 +586,29 @@
                     </h3>
                     <div class="columns">
                         <div class="column">
-                            <p class="has-text-weight-bold is-size-5">
-                                Overall superglide consistency: <code
-                                    >{superglideConsistency.toFixed(2)}%</code
-                                >
-                            </p>
-                            <div class="divider" />
-                            <p>Attempts: <code> {attempts.length}</code></p>
-                            <p>
-                                Potential superglides: <code
-                                    >{potentialSuperglidesPercentage.toFixed(
-                                        2
-                                    )}%</code
-                                >
-                            </p>
-                            <p>
-                                Average successful chance: <code
-                                    >{potentialAvg.toFixed(2)}%</code
-                                >
-                            </p>
+                            <div class="white-code">
+                                <p class="has-text-weight-bold is-size-5">
+                                    Overall superglide consistency: <code
+                                        >{superglideConsistency.toFixed(
+                                            2
+                                        )}%</code
+                                    >
+                                </p>
+                                <div class="divider" />
+                                <p>Attempts: <code> {attempts.length}</code></p>
+                                <p>
+                                    Potential superglides: <code
+                                        >{potentialSuperglidesPercentage.toFixed(
+                                            2
+                                        )}%</code
+                                    >
+                                </p>
+                                <p>
+                                    Average successful chance: <code
+                                        >{potentialAvg.toFixed(2)}%</code
+                                    >
+                                </p>
+                            </div>
                             <br />
                             <!-- <p>You got <code>0%</code> because:</p> -->
                             <p>

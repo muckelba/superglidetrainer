@@ -37,7 +37,8 @@
                     your existing keycaps.
                 </li>
                 <li>
-                    Some folks have seen success by jumping with Scrollwheel.
+                    Some folks have seen success by jumping or crouching with
+                    Scrollwheel.
                 </li>
                 <li>
                     Your keyboard switches will also alter when a key is
@@ -49,10 +50,12 @@
                 </li>
                 <li>
                     The ultimate hardware change would be to get a new keyboard.
-                    Either to get away from a low polling rate, which introduces
-                    further randomness. Or to get a keyboard with activation
+                    Either to get away from a low polling rate & weird keystroke
+                    scan issues which introduce further randomness or make it
+                    outright impossible. Or to get a keyboard with activation
                     points you can change. Like from Wooting or the Apex Pro
-                    Mini from Steelseries.
+                    Mini from Steelseries. Potential keyboard scan issues are
+                    further explained in the FAQ below.
                 </li>
             </ol>
             <strong>Controller:</strong> <br />
