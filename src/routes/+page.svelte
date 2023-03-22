@@ -459,7 +459,7 @@
     />
 </svelte:head>
 
-<section class="section">
+<section class="section background-image">
     <h1 class="title is-1 has-text-centered">
         Apex Legends Superglide Trainer
     </h1>

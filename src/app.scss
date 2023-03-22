@@ -88,6 +88,13 @@ div.faq-content {
     }
 }
 
+section.background-image {
+    background-image: url('bg.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center
+}
+
 /* width */
 ::-webkit-scrollbar {
     width: 10px;
