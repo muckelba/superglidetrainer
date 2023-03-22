@@ -102,21 +102,16 @@
     });
 
     $: percentageColor = (value) => {
-        console.log(value);
-        if (trainingActive) {
-            if (value >= 75) {
-                return "success";
-            } else if (value >= 50) {
-                return "primary";
-            } else if (value >= 25) {
-                return "warning";
-            } else if (value > 0) {
-                return "orange";
-            } else {
-                return "danger";
-            }
+        if (value >= 75) {
+            return "success";
+        } else if (value >= 50) {
+            return "primary";
+        } else if (value >= 25) {
+            return "warning";
+        } else if (value > 0) {
+            return "orange";
         } else {
-            return "white";
+            return "danger";
         }
     };
 
