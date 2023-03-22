@@ -81,6 +81,13 @@ $divider-margin-size: 0px;
     pointer-events: none;
 }
 
+div.faq-content {
+    div>ul>li::marker {
+        font-size: 1.5rem;
+        color: $turquoise;
+    }
+}
+
 /* width */
 ::-webkit-scrollbar {
     width: 10px;

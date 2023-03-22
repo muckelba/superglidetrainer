@@ -19,7 +19,7 @@
     </a>
     <div class="card-content {tipsHidden ? 'is-hidden' : ''}">
         <div class="content">
-            <h5 class="title is-5">
+            <h5 class="title is-4 is-underlined">
                 Get better at hitting the Jump -> Crouch timing
             </h5>
             <strong>Mouse and keyboard:</strong>
@@ -63,7 +63,7 @@
             or X+Square with one finger.
         </div>
         <div class="content">
-            <h5 class="title is-5">
+            <h5 class="title is-4 is-underlined">
                 Get better at timing the Superglide during the mantle
             </h5>
             <div class="subtitle is-6">
