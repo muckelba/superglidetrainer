@@ -105,15 +105,15 @@
         console.log(value);
         if (trainingActive) {
             if (value >= 75) {
-                return "green";
+                return "success";
             } else if (value >= 50) {
-                return "turquoise";
+                return "primary";
             } else if (value >= 25) {
-                return "yellow";
+                return "warning";
             } else if (value > 0) {
                 return "orange";
             } else {
-                return "red";
+                return "danger";
             }
         } else {
             return "white";
@@ -363,24 +363,17 @@
                             ...potentialSuperglides,
                             chance,
                         ];
-                        superglideText = `${chance.toFixed(
-                            2
-                        )}% chance to hit the superglide`;
-                        if (chance > 50) {
-                            superglideTextColor = "success";
-                        } else {
-                            superglideTextColor = "warning";
-                        }
-                    } else {
-                        superglideText = `0% chance to hit the superglide`;
-                        superglideTextColor = "danger";
                     }
+                    superglideText = `${chance.toFixed(
+                        2
+                    )}% chance to hit the superglide`;
+                    superglideTextColor = percentageColor(chance);
 
                     history = [
                         ...history,
                         {
                             line: superglideText,
-                            color: superglideTextColor,
+                            color: percentageColor(chance),
                             finished: true,
                         },
                     ];
@@ -425,7 +418,7 @@
                     chance = 0;
 
                     superglideText = "0% chance to hit the superglide";
-                    superglideTextColor = "danger";
+                    superglideTextColor = percentageColor(chance);
                     message = `Crouch later by ${earlyBy.toFixed(
                         2
                     )} frames (${delta.toFixed(5)}s)`;
@@ -438,7 +431,7 @@
                         },
                         {
                             line: superglideText,
-                            color: "danger",
+                            color: superglideTextColor,
                             finished: true,
                         },
                     ];

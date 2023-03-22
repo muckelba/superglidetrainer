@@ -1,4 +1,5 @@
 @import "lib/darkly/variables.scss";
+@import "bulma/sass/utilities/functions"; // Import this first to use findColorInvert() 
 
 $body-overflow-y: auto;
 
@@ -13,6 +14,12 @@ button.setting-button {
     color: white !important;
     display: block;
 }
+
+$orange-invert: findColorInvert($orange);
+
+$custom-colors: (
+    "orange": ($orange, $orange-invert)
+);
 
 /* Import only what you need from Bulma */
 @import "bulma/sass/utilities/_all";
@@ -38,24 +45,24 @@ $divider-margin-size: 0px;
     color: $orange;
 }
 
-.has-text-yellow {
+.has-text-warning {
     color: $yellow;
 }
 
-.has-text-turquoise {
+.has-text-primary {
     color: $turquoise;
 }
 
-.has-text-green {
+.has-text-success {
     color: $green;
 }
 
-.has-text-red {
+.has-text-danger {
     color: $red;
 }
 
 .has-text-white {
-    color: white;
+    color: $text;
 }
 
 .history {
