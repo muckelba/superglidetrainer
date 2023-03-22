@@ -14,12 +14,6 @@ button.setting-button {
     display: block;
 }
 
-.white-code {
-    code {
-        color: white
-    }
-}
-
 /* Import only what you need from Bulma */
 @import "bulma/sass/utilities/_all";
 @import "bulma/sass/base/_all";
@@ -38,6 +32,30 @@ $divider-margin-size: 0px;
 .divider {
     margin-top: 10px;
     margin-bottom: 10px;
+}
+
+.has-text-orange {
+    color: $orange;
+}
+
+.has-text-yellow {
+    color: $yellow;
+}
+
+.has-text-turquoise {
+    color: $turquoise;
+}
+
+.has-text-green {
+    color: $green;
+}
+
+.has-text-red {
+    color: $red;
+}
+
+.has-text-white {
+    color: white;
 }
 
 .history {

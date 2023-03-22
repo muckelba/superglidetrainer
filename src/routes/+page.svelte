@@ -101,6 +101,25 @@
         }
     });
 
+    $: percentageColor = (value) => {
+        console.log(value);
+        if (trainingActive) {
+            if (value >= 75) {
+                return "green";
+            } else if (value >= 50) {
+                return "turquoise";
+            } else if (value >= 25) {
+                return "yellow";
+            } else if (value > 0) {
+                return "orange";
+            } else {
+                return "red";
+            }
+        } else {
+            return "white";
+        }
+    };
+
     $: prettyBind = (setting) => {
         let buttonText = "";
         switch ($settings[setting].type) {
@@ -586,29 +605,34 @@
                     </h3>
                     <div class="columns">
                         <div class="column">
-                            <div class="white-code">
-                                <p class="has-text-weight-bold is-size-5">
-                                    Overall superglide consistency: <code
-                                        >{superglideConsistency.toFixed(
-                                            2
-                                        )}%</code
-                                    >
-                                </p>
-                                <div class="divider" />
-                                <p>Attempts: <code> {attempts.length}</code></p>
-                                <p>
-                                    Potential superglides: <code
-                                        >{potentialSuperglidesPercentage.toFixed(
-                                            2
-                                        )}%</code
-                                    >
-                                </p>
-                                <p>
-                                    Average successful chance: <code
-                                        >{potentialAvg.toFixed(2)}%</code
-                                    >
-                                </p>
-                            </div>
+                            <p class="has-text-weight-bold is-size-5">
+                                Overall superglide consistency: <code
+                                    class="has-text-{percentageColor(
+                                        superglideConsistency
+                                    )}"
+                                    >{superglideConsistency.toFixed(2)}%</code
+                                >
+                            </p>
+                            <div class="divider" />
+                            <p>
+                                Attempts: <code class="has-text-white">
+                                    {attempts.length}</code
+                                >
+                            </p>
+                            <p>
+                                Potential superglides: <code
+                                    class="has-text-white"
+                                    >{potentialSuperglidesPercentage.toFixed(
+                                        2
+                                    )}%</code
+                                >
+                            </p>
+                            <p>
+                                Average successful chance: <code
+                                    class="has-text-white"
+                                    >{potentialAvg.toFixed(2)}%</code
+                                >
+                            </p>
                             <br />
                             <!-- <p>You got <code>0%</code> because:</p> -->
                             <p>
