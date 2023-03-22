@@ -143,5 +143,17 @@
                 >
             </p>
         </div>
+        <div class="content">
+            <h5 class="title is-5">
+                Controller Support & Other future features?
+            </h5>
+            <p class="subtitle is-6">
+                We plan to support Controller inputs in the future. We'd also
+                like to extend the analytics, maybe help with training the
+                mantle timing and make the whole site look sleeker. I (Mokey) am
+                also working on a Superglide companion video to this trainer.
+                But for now we focused on getting the core features working.
+            </p>
+        </div>
     </div>
 </div>
