@@ -7,7 +7,10 @@ const dev = process.argv.includes("dev");
 const config = {
   kit: {
     adapter: adapter(),
-    paths: { relative: true }
+    paths: {
+      base: dev ? '' : '/superglidetrainer',
+      relative: true
+    }
   },
 
   preprocess: [
