@@ -454,7 +454,10 @@
     <meta property="og:title" content={siteTitle} />
     <meta property="og:description" content={siteDescription} />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="{siteDomain}/{imagePath}" />
+    <meta
+        property="og:image"
+        content="{siteDomain}/superglidetrainer/{imagePath}"
+    />
     <meta property="og:url" content={siteDomain} />
     <!-- Robots -->
     <meta
@@ -465,7 +468,10 @@
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content={siteTitle} />
     <meta name="twitter:description" content={siteDescription} />
-    <meta name="twitter:image" content="{siteDomain}/{imagePath}" />
+    <meta
+        name="twitter:image"
+        content="{siteDomain}/superglidetrainer/{imagePath}"
+    />
     <meta name="twitter:image:alt" content={imageAlt} />
     <!-- Font Awesome -->
     <link
