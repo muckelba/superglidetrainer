@@ -61,6 +61,14 @@
     $: crouchTooLatePercentage =
         (crouchTooLateCount / attempts.length) * 100 || 0;
 
+    const colorScheme = {
+        success: "#2ecc71",
+        primary: "#1abc9c",
+        warning: "#f1b70e",
+        orange: "#e67e22",
+        danger: "#e74c3c",
+    };
+
     onMount(() => {
         // keep the scrollbar at the bottom
         if (trainingActive) {
@@ -100,6 +108,11 @@
             return "danger";
         }
     };
+
+    $: gradient = history
+        .filter((obj) => obj.finished)
+        .map((obj) => colorScheme[obj.color])
+        .join(",");
 
     $: prettyBind = (setting) => {
         let buttonText = "";
@@ -449,6 +462,10 @@
                 </p>
             </blockquote>
         </div>
+        <div
+            class="box"
+            style="background: #343c3d; background: linear-gradient(90deg, {gradient});"
+        />
         <div class="columns">
             <div class="column">
                 <div class="box has-text-centered">
