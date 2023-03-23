@@ -1,7 +1,13 @@
 <script>
     import { onMount, afterUpdate } from "svelte";
     import { writable } from "svelte/store";
-    import { siteDomain } from "../lib/config";
+    import {
+        siteDomain,
+        siteTitle,
+        siteDescription,
+        imagePath,
+        imageAlt,
+    } from "../lib/config";
     import Faq from "../lib/components/Faq.svelte";
     import Footer from "../lib/components/Footer.svelte";
     import Tips from "../lib/components/Tips.svelte";
@@ -443,13 +449,25 @@
 </script>
 
 <svelte:head>
-    <title>Apex Legends Superglide Trainer</title>
-    <meta property="og:title" content="Apex Legends Superglide Trainer" />
-    <meta
-        property="og:description"
-        content="Train your superglide timings here!"
-    />
+    <title>{siteTitle}</title>
+    <!-- OpenGraph -->
+    <meta property="og:title" content={siteTitle} />
+    <meta property="og:description" content={siteDescription} />
     <meta property="og:type" content="website" />
+    <meta property="og:image" content="{siteDomain}/{imagePath}" />
+    <meta property="og:url" content={siteDomain} />
+    <!-- Robots -->
+    <meta
+        name="robots"
+        content="index, follow, max-snippet:-1, max-image-preview:large"
+    />
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={siteTitle} />
+    <meta name="twitter:description" content={siteDescription} />
+    <meta name="twitter:image" content="{siteDomain}/{imagePath}" />
+    <meta name="twitter:image:alt" content={imageAlt} />
+    <!-- Font Awesome -->
     <link
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
@@ -461,7 +479,7 @@
 
 <section class="section background-image">
     <h1 class="title is-1 has-text-centered">
-        Apex Legends Superglide Trainer
+        {siteTitle}
     </h1>
     <div class="box has-text-centered">
         <blockquote>

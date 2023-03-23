@@ -1,1 +1,5 @@
 export const siteDomain = 'https://apexmovement.tech'
+export const siteTitle = 'Apex Legends Superglide Trainer'
+export const siteDescription = 'Train your superglide timings here!'
+export const imagePath = 'social-preview.jpg'
+export const imageAlt = 'Wraith Supergliding over a rock formation. Text: Superglide Trainer'
