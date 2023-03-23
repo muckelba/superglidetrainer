@@ -473,6 +473,8 @@
         content="{siteDomain}/superglidetrainer/{imagePath}"
     />
     <meta name="twitter:image:alt" content={imageAlt} />
+    <!-- Google -->
+    <meta name="description" content={siteDescription} />
     <!-- Font Awesome -->
     <link
         rel="stylesheet"
