@@ -1,13 +1,7 @@
 <script>
     import { onMount, afterUpdate } from "svelte";
     import { writable } from "svelte/store";
-    import {
-        siteDomain,
-        siteTitle,
-        siteDescription,
-        imagePath,
-        imageAlt,
-    } from "../../lib/config";
+    import { siteTitle } from "../../lib/config";
     import Faq from "../../lib/components/Faq.svelte";
     import Footer from "../../lib/components/Footer.svelte";
     import Tips from "../../lib/components/Tips.svelte";
@@ -438,23 +432,23 @@
     <h1 class="title is-1 has-text-centered">
         {siteTitle}
     </h1>
-    <div class="box has-text-centered">
-        <blockquote>
-            <p>
-                A Superglide needs a jump input first and then a crouch input 1
-                frame later. You need to do the whole Superglide in the last
-                0.1-0.2 second of a mantle.
-            </p>
-            <br />
-
-            <p>
-                That makes the correct timing of Jump -> Crouch way harder then
-                timing the whole Superglide in the mantle. This trainer will
-                help you learn that much harder Jump -> Crouch timing.
-            </p>
-        </blockquote>
-    </div>
     <div class="container ">
+        <div class="box has-text-centered">
+            <blockquote>
+                <p>
+                    A Superglide needs a jump input first and then a crouch
+                    input 1 frame later. You need to do the whole Superglide in
+                    the last 0.1-0.2 second of a mantle.
+                </p>
+                <br />
+
+                <p>
+                    That makes the correct timing of Jump -> Crouch way harder
+                    then timing the whole Superglide in the mantle. This trainer
+                    will help you learn that much harder Jump -> Crouch timing.
+                </p>
+            </blockquote>
+        </div>
         <div class="columns">
             <div class="column">
                 <div class="box has-text-centered">
