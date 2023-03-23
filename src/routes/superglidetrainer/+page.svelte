@@ -61,6 +61,7 @@
     $: crouchTooLatePercentage =
         (crouchTooLateCount / attempts.length) * 100 || 0;
 
+    // i dont know how to access sass variables in svelte, so i did this
     const colorScheme = {
         success: "#2ecc71",
         primary: "#1abc9c",
@@ -449,28 +450,24 @@
         {siteTitle}
     </h1>
     <div class="container ">
-        <div class="box has-text-centered">
-            <blockquote>
-                <p>
-                    A Superglide needs a jump input first and then a crouch
-                    input 1 frame later. You need to do the whole Superglide in
-                    the last 0.1-0.2 second of a mantle.
-                </p>
-                <br />
-
-                <p>
-                    That makes the correct timing of Jump -> Crouch way harder
-                    then timing the whole Superglide in the mantle. This trainer
-                    will help you learn that much harder Jump -> Crouch timing.
-                </p>
-            </blockquote>
-        </div>
         <div
-            class="box"
-            style="background: #343c3d; background: linear-gradient(90deg, {gradientArray
+            class="box has-text-centered gradient"
+            style="border-bottom: 16px solid transparent; border-image: linear-gradient(90deg, rgba(0, 0, 0, 0), {gradientArray
                 .slice(-10)
-                .join(',')});"
-        />
+                .join(',')}, rgba(0, 0, 0, 0)) 1; width: 100%"
+        >
+            <p>
+                A Superglide needs a jump input first and then a crouch input 1
+                frame later. You need to do the whole Superglide in the last
+                0.1-0.2 second of a mantle.
+            </p>
+            <br />
+            <p>
+                That makes the correct timing of Jump -> Crouch way harder then
+                timing the whole Superglide in the mantle. This trainer will
+                help you learn that much harder Jump -> Crouch timing.
+            </p>
+        </div>
         <div class="columns">
             <div class="column">
                 <div class="box has-text-centered">

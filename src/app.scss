@@ -5,6 +5,12 @@ $body-overflow-y: auto;
 
 $notification-padding-ltr: 0.8rem 1.5rem 0.8rem 1.5rem;
 
+$orange-invert: findColorInvert($orange);
+
+$custom-colors: (
+    "orange": ($orange, $orange-invert)
+);
+
 section.section {
     padding-bottom: 1.5rem;
 }
@@ -14,12 +20,6 @@ button.setting-button {
     color: white !important;
     display: block;
 }
-
-$orange-invert: findColorInvert($orange);
-
-$custom-colors: (
-    "orange": ($orange, $orange-invert)
-);
 
 /* Import only what you need from Bulma */
 @import "bulma/sass/utilities/_all";
