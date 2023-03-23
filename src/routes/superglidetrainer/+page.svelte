@@ -69,6 +69,18 @@
         danger: "#e74c3c",
     };
 
+    let gradientArray = Object.values(colorScheme);
+
+    function updateHistory(objArr) {
+        objArr.forEach((obj) => {
+            history = [...history, obj];
+
+            if (obj.finished) {
+                gradientArray = [...gradientArray, colorScheme[obj.color]];
+            }
+        });
+    }
+
     onMount(() => {
         // keep the scrollbar at the bottom
         if (trainingActive) {
@@ -108,11 +120,6 @@
             return "danger";
         }
     };
-
-    $: gradient = history
-        .filter((obj) => obj.finished)
-        .map((obj) => colorScheme[obj.color])
-        .join(",");
 
     $: prettyBind = (setting) => {
         let buttonText = "";
@@ -336,8 +343,7 @@
                         crouchTooLateCount += 1;
                     }
 
-                    history = [
-                        ...history,
+                    updateHistory([
                         {
                             line: message,
                             color: "light",
@@ -350,7 +356,7 @@
                             color: "light",
                             finished: false,
                         },
-                    ];
+                    ]);
 
                     if (chance > 0) {
                         potentialSuperglides = [
@@ -363,14 +369,13 @@
                     )}% chance to hit the superglide`;
                     superglideTextColor = percentageColor(chance);
 
-                    history = [
-                        ...history,
+                    updateHistory([
                         {
                             line: superglideText,
                             color: percentageColor(chance),
                             finished: true,
                         },
-                    ];
+                    ]);
 
                     attempts = [...attempts, chance];
                     state = states.Ready;
@@ -395,14 +400,13 @@
                 } else if (state === states.Crouch) {
                     instructions = "You must jump before you crouch";
                     instructionColor = "danger";
-                    history = [
-                        ...history,
+                    updateHistory([
                         {
                             line: instructions,
                             color: instructionColor,
                             finished: false,
                         },
-                    ];
+                    ]);
 
                     const now = new Date();
                     const delta =
@@ -416,8 +420,7 @@
                     message = `Crouch later by ${earlyBy.toFixed(
                         2
                     )} frames (${delta.toFixed(5)}s)`;
-                    history = [
-                        ...history,
+                    updateHistory([
                         {
                             line: message,
                             color: "light",
@@ -428,7 +431,7 @@
                             color: superglideTextColor,
                             finished: true,
                         },
-                    ];
+                    ]);
                     wrongInputCount += 1;
                     attempts = [...attempts, chance];
                     state = states.Ready;
@@ -464,7 +467,9 @@
         </div>
         <div
             class="box"
-            style="background: #343c3d; background: linear-gradient(90deg, {gradient});"
+            style="background: #343c3d; background: linear-gradient(90deg, {gradientArray
+                .slice(-10)
+                .join(',')});"
         />
         <div class="columns">
             <div class="column">
