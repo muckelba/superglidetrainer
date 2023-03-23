@@ -11,8 +11,7 @@ const config = {
 
   preprocess: [
     preprocess({
-      scss: {
-      },
+      scss: {},
     }),
   ],
 };
