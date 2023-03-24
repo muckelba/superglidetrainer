@@ -446,13 +446,23 @@
 </script>
 
 <section class="section background-image">
-    <h1 class="title is-1 has-text-centered">
-        {siteTitle}
-    </h1>
-    <div class="container ">
+    <div class="container">
+        <h1 class="title is-1 has-text-centered">
+            <span class="icon is-medium">
+                <img
+                    src="/logo.png"
+                    alt="superglidetrainer logo"
+                    style="transform: scaleX(-1);"
+                />
+            </span>
+            {siteTitle}
+            <span class="icon is-medium">
+                <img src="/logo.png" alt="superglidetrainer logo" />
+            </span>
+        </h1>
         <div
             class="box has-text-centered gradient"
-            style="border-bottom: 16px solid transparent; border-image: linear-gradient(90deg, rgba(0, 0, 0, 0), {gradientArray
+            style="border-bottom: 12px solid transparent; border-image: linear-gradient(90deg, rgba(0, 0, 0, 0), {gradientArray
                 .slice(-10)
                 .join(',')}, rgba(0, 0, 0, 0)) 1; width: 100%"
         >
