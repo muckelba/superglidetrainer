@@ -62,33 +62,64 @@
                         Why do i keep consistently hitting the exact same frame
                         delay? Why can't i go lower then that?
                     </h5>
-                    <p class="subtitle is-6">
+                    <p />
+                    <p class="subtitle is-6 is-underlined">
                         <strong>Keyboard issues:</strong>
                     </p>
                     <p class="subtitle is-6">
                         Find out the polling rate of your keyboard. That + some
                         other small system delays is the lowest frame delay you
-                        can hit. The numbers still don't make sense? Your
-                        keyboard might scan the inputs in a weird way. In key
-                        clusters, in a direction like from left to right,
-                        different scan rates or delays on your modifier keys
-                        (Spacebar, Shift, Ctrl etc.). Try if the same happens
-                        when you switch away from spacebar as jump input. Try
-                        out keys next to each other, in different orders and
-                        keys far apart from each other. Try to use a
-                        keyboard-key for one input and a mouse-button for the
-                        other. This should help you narrow down the issue.
+                        can hit. The numbers still don't make sense?
                     </p>
                     <p class="subtitle is-6">
+                        Your keyboard might scan the inputs in a weird way.
+                    </p>
+                    <ul>
+                        <li>
+                            In key clusters. So switching over 1 key left or
+                            right might get you out of one cluster and suddenly
+                            into the perfect delay.
+                        </li>
+                        <li>
+                            In a direction like from left to right. So using <code
+                                >C</code
+                            >,<code>V</code>,<code>B</code>,<code>N</code> with spacebar
+                            all come with a different delay and only one of them
+                            is the correct one.
+                        </li>
+                        <li>
+                            Different scan rates or delays on your modifier keys
+                            (Spacebar, Shift, Ctrl etc.) So using Spacebar as
+                            jump input might never ever work for you. Using two
+                            letters next to each other might be your solution.
+                        </li>
+                    </ul>
+
+                    <p class="subtitle is-6">
+                        So try what happens to your frame delay when you switch
+                        away from spacebar as jump input. Try out keys next to
+                        each other, in different orders and keys far apart from
+                        each other. Try to use a keyboard-key for one input and
+                        a mouse-button for the other. This should help you
+                        narrow down the issue. You may or may not want to use
+                        those exact keybinds in game. But it will help you
+                        narrow down what your hardware issues might be. So you
+                        can potentially adapt a keybind setup that can work for
+                        you, without getting a new keyboard.
+                    </p>
+                    <p class="subtitle is-6 underlined">
                         <strong>Other hardware issues:</strong>
                     </p>
-                    <p class="subtitle is-6">
-                        A faulty USB port or other system related latency Issues
-                        can be the cause of that. Switch USB ports. Check if
-                        your device drivers are up to date. In extreme cases,
-                        problems with other components like your motherboard,
-                        CPU or operating system could be the cause.
-                    </p>
+                    <ul>
+                        <li>
+                            A faulty USB port or other system related latency
+                            Issues can be the cause of that. Switch USB ports.
+                            Check if your device drivers are up to date. In
+                            extreme cases, problems with other components like
+                            your motherboard, CPU or operating system could be
+                            the cause.
+                        </li>
+                    </ul>
                 </li>
             </ul>
         </div>
