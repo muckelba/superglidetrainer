@@ -31,6 +31,13 @@
                     or <code>B</code> with spacebar for example.
                 </li>
                 <li>
+                    The simplest way to alter the delay and which button you hit
+                    first is to manually correct it by holding your thumb in a
+                    different way. This might feel strange at first but often
+                    this can already make a 1 -3 frame difference. And with
+                    practice you can get consistent.
+                </li>
+                <li>
                     Different keycap profiles will naturally alter which button
                     you hit first. So flipping over your crouch keycap can help.
                     As well as getting different keycaps. Or taping stuff to
@@ -54,8 +61,9 @@
                     scan issues which introduce further randomness or make it
                     outright impossible. Or to get a keyboard with activation
                     points you can change. Like from Wooting or the Apex Pro
-                    Mini from Steelseries. Potential keyboard scan issues are
-                    further explained in the FAQ below.
+                    Mini from Steelseries. Potential keyboard scan issues and
+                    how to resolve them without getting new hardware are further
+                    explained in the FAQ below.
                 </li>
             </ol>
             <strong>Controller:</strong> <br />
