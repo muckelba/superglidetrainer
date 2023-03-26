@@ -24,41 +24,6 @@
             <ul>
                 <li>
                     <h5 class="title is-5">
-                        Why is there a Chance? I thought it just needed frame
-                        perfect inputs?
-                    </h5>
-                    <p class="subtitle is-6">
-                        Because of the way Apex handles input data, you might
-                        have timed your jump and crouch input very close to 1
-                        FPS apart. But they might still be processed by the
-                        engine on the same frame. Or 2 frames apart. When it
-                        only works when they are processed 1 frame apart. That
-                        is also the reason why the feedback can say to crouch
-                        later to get a higher chance. Because of that randomness
-                        you can never reach 100% Superglide consistency. Maximum
-                        is 99%. Here is a fantastic video explaining the exact
-                        same problem in Titanfall 2, for another frame dependent
-                        technique:
-                    </p>
-                    <p>
-                        <iframe
-                            class="has-ratio"
-                            width="560"
-                            height="315"
-                            src="https://www.youtube-nocookie.com/embed/Cwa0qbDx2dA?start=423"
-                            title="YouTube video player"
-                            frameborder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                            allowfullscreen
-                        />
-                    </p>
-                </li>
-            </ul>
-        </div>
-        <div class="content">
-            <ul>
-                <li>
-                    <h5 class="title is-5">
                         Why do i keep consistently hitting the exact same frame
                         delay? Why can't i go lower then that?
                     </h5>
@@ -107,7 +72,7 @@
                         can potentially adapt a keybind setup that can work for
                         you, without getting a new keyboard.
                     </p>
-                    <p class="subtitle is-6 underlined">
+                    <p class="subtitle is-6 is-underlined">
                         <strong>Other hardware issues:</strong>
                     </p>
                     <ul>
@@ -120,6 +85,23 @@
                             the cause.
                         </li>
                     </ul>
+                </li>
+            </ul>
+        </div>
+        <div class="content">
+            <ul>
+                <li>
+                    <h5 class="title is-5">
+                        Controller Support & Other future features?
+                    </h5>
+                    <p class="subtitle is-6">
+                        We plan to support Controller inputs in the future. We'd
+                        also like to extend the analytics, maybe help with
+                        training the mantle timing and make the whole site look
+                        sleeker. I (Mokey) am also working on a Superglide
+                        companion video to this trainer. But for now we focused
+                        on getting the core features working.
+                    </p>
                 </li>
             </ul>
         </div>
@@ -165,15 +147,33 @@
             <ul>
                 <li>
                     <h5 class="title is-5">
-                        Controller Support & Other future features?
+                        Why is there a Chance? I thought it just needed frame
+                        perfect inputs?
                     </h5>
                     <p class="subtitle is-6">
-                        We plan to support Controller inputs in the future. We'd
-                        also like to extend the analytics, maybe help with
-                        training the mantle timing and make the whole site look
-                        sleeker. I (Mokey) am also working on a Superglide
-                        companion video to this trainer. But for now we focused
-                        on getting the core features working.
+                        Because of the way Apex handles input data, you might
+                        have timed your jump and crouch input very close to 1
+                        FPS apart. But they might still be processed by the
+                        engine on the same frame. Or 2 frames apart. When it
+                        only works when they are processed 1 frame apart. That
+                        is also the reason why the feedback can say to crouch
+                        later to get a higher chance. Because of that randomness
+                        you can never reach 100% Superglide consistency. Maximum
+                        is 99%. Here is a fantastic video explaining the exact
+                        same problem in Titanfall 2, for another frame dependent
+                        technique:
+                    </p>
+                    <p>
+                        <iframe
+                            class="has-ratio"
+                            width="560"
+                            height="315"
+                            src="https://www.youtube-nocookie.com/embed/Cwa0qbDx2dA?start=423"
+                            title="YouTube video player"
+                            frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowfullscreen
+                        />
                     </p>
                 </li>
             </ul>

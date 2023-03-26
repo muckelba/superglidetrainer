@@ -640,8 +640,12 @@
                             </p> -->
                             <div class="divider" />
                             <div class="notification">
-                                <p>The analytics are explained in the FAQ</p>
-                                <p>More stats coming soon</p>
+                                <p>READ THE FAQ!!!</p>
+                                <p>Seriously if you can't hit them,</p>
+                                <p>
+                                    <strong>READ THE TIPS AND FAQ!!!</strong>
+                                </p>
+                                <p>ALL OF IT!</p>
                             </div>
                         </div>
                         <div class="divider is-vertical" />
