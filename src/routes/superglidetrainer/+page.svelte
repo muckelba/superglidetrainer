@@ -1,16 +1,30 @@
 <script>
     import { onMount, afterUpdate } from "svelte";
     import { writable } from "svelte/store";
-    import { siteTitle } from "../../lib/config";
+    import { siteTitle } from "$lib/config";
+
+    import { percentageColor, updateHistory } from "$lib/util";
+
+    import {
+        trainingActive,
+        attempts,
+        potentialSuperglides,
+        wrongInputCount,
+        crouchTooLateCount,
+        gradientArray,
+    } from "$lib/stores";
+
     import Faq from "../../lib/components/Faq.svelte";
     import Footer from "../../lib/components/Footer.svelte";
     import Tips from "../../lib/components/Tips.svelte";
+    import Analytics from "../../lib/components/Analytics.svelte";
 
     const devices = {
         Keyboard: "keyboard",
         Mouse: "mouse",
         Wheel: "wheel",
     };
+
     // default settings
     const settings = writable({
         jump: { type: devices.Keyboard, bind: " " },
@@ -24,6 +38,7 @@
         JumpWarned: "jumpwarned", // Multi-Jump Warning Sent
         Crouch: "crouch", // Incorrect Sequence, let it play out for a bit
     };
+
     const events = {
         Keydown: "keydown",
         Mousedown: "mousedown",
@@ -34,7 +49,6 @@
     let inputListeners = [];
     let modalNotification = false;
     let assignWarning = false;
-    let trainingActive = false;
     let settingActive = false;
     $: frameTime = 1 / $settings.fps;
     let instructions = "";
@@ -42,52 +56,12 @@
     let superglideText = "";
     let superglideTextColor = "";
     let message = "";
-    let history = [];
-    let historydiv;
     let state = states.Ready;
     let lastState = states.Jump;
     let startTime = new Date();
     let chance = 0;
-    let attempts = [];
-    let potentialSuperglides = [];
-    $: potentialSuperglidesPercentage =
-        (potentialSuperglides.length / attempts.length) * 100 || 0;
-    $: potentialSum = potentialSuperglides.reduce((a, b) => a + b, 0);
-    $: potentialAvg = potentialSum / potentialSuperglides.length || 0;
-    $: superglideConsistency = potentialSum / attempts.length || 0;
-    let wrongInputCount = 0;
-    let crouchTooLateCount = 0;
-    $: wrongInputPercentage = (wrongInputCount / attempts.length) * 100 || 0;
-    $: crouchTooLatePercentage =
-        (crouchTooLateCount / attempts.length) * 100 || 0;
-
-    // i dont know how to access sass variables in svelte, so i did this
-    const colorScheme = {
-        success: "#2ecc71",
-        primary: "#1abc9c",
-        warning: "#f1b70e",
-        orange: "#e67e22",
-        danger: "#e74c3c",
-    };
-
-    let gradientArray = Object.values(colorScheme);
-
-    function updateHistory(objArr) {
-        objArr.forEach((obj) => {
-            history = [...history, obj];
-
-            if (obj.finished) {
-                gradientArray = [...gradientArray, colorScheme[obj.color]];
-            }
-        });
-    }
 
     onMount(() => {
-        // keep the scrollbar at the bottom
-        if (trainingActive) {
-            historydiv.scrollTop = historydiv.scrollHeight;
-        }
-
         // load settings from localstorage
         const content = localStorage.getItem("content");
         if (content) {
@@ -100,27 +74,6 @@
 
         return unsubscribe;
     });
-
-    afterUpdate(() => {
-        // keep the scrollbar at the bottom
-        if (trainingActive) {
-            historydiv.scrollTop = historydiv.scrollHeight;
-        }
-    });
-
-    $: percentageColor = (value) => {
-        if (value >= 75) {
-            return "success";
-        } else if (value >= 50) {
-            return "primary";
-        } else if (value >= 25) {
-            return "warning";
-        } else if (value > 0) {
-            return "orange";
-        } else {
-            return "danger";
-        }
-    };
 
     $: prettyBind = (setting) => {
         let buttonText = "";
@@ -161,11 +114,11 @@
     }
 
     function toggleState() {
-        trainingActive = !trainingActive;
+        $trainingActive = !$trainingActive;
         // removes focus to disable activation by spacebar
         this.blur();
         // reset to default values when stopping
-        if (!trainingActive) {
+        if (!$trainingActive) {
             window.removeEventListener(events.Popstate, disableHistory);
             window.removeEventListener(
                 inputListeners[0][0],
@@ -296,7 +249,7 @@
     }
 
     async function superglide() {
-        while (trainingActive) {
+        while ($trainingActive) {
             if (lastState !== state) {
                 if (state === states.Jump) {
                     instructions = "Press crouch";
@@ -341,7 +294,7 @@
                             1
                         )} frames (${(differenceSeconds * -1).toFixed(5)}s)`;
                         chance = 0;
-                        crouchTooLateCount += 1;
+                        $crouchTooLateCount += 1;
                     }
 
                     updateHistory([
@@ -360,8 +313,8 @@
                     ]);
 
                     if (chance > 0) {
-                        potentialSuperglides = [
-                            ...potentialSuperglides,
+                        $potentialSuperglides = [
+                            ...$potentialSuperglides,
                             chance,
                         ];
                     }
@@ -378,7 +331,7 @@
                         },
                     ]);
 
-                    attempts = [...attempts, chance];
+                    $attempts = [...$attempts, chance];
                     state = states.Ready;
                 } else if (state === states.Crouch) {
                     instructions = "Double Crouch Input, resetting";
@@ -433,8 +386,8 @@
                             finished: true,
                         },
                     ]);
-                    wrongInputCount += 1;
-                    attempts = [...attempts, chance];
+                    $wrongInputCount += 1;
+                    $attempts = [...$attempts, chance];
                     state = states.Ready;
                 }
             } else {
@@ -462,7 +415,7 @@
         </h1>
         <div
             class="box has-text-centered gradient"
-            style="border-bottom: 12px solid transparent; border-image: linear-gradient(90deg, rgba(0, 0, 0, 0), {gradientArray
+            style="border-bottom: 12px solid transparent; border-image: linear-gradient(90deg, rgba(0, 0, 0, 0), {$gradientArray
                 .slice(-10)
                 .join(',')}, rgba(0, 0, 0, 0)) 1; width: 100%"
         >
@@ -522,7 +475,6 @@
                                         class="button is-link is-outlined setting-button"
                                         on:click={() => setSetting("crouch")}
                                         >{@html prettyBind("crouch")}
-                                        <!-- <span class="tag" /> -->
                                     </button>
                                 </p>
                             </div>
@@ -555,7 +507,7 @@
                             This key is already assigned
                         </div>
                     {/if}
-                    {#if trainingActive}
+                    {#if $trainingActive}
                         <div class="notification is-{instructionColor}">
                             {instructions}
                         </div>
@@ -571,95 +523,18 @@
                         {/if}
                     {/if}
                     <button
-                        class="button is-medium is-fullwidth {trainingActive
+                        class="button is-medium is-fullwidth {$trainingActive
                             ? 'is-danger'
                             : 'is-success'}"
                         on:click={toggleState}
                     >
-                        {trainingActive ? "Stop" : "Start"}
+                        {$trainingActive ? "Stop" : "Start"}
                     </button>
                 </div>
             </div>
             <div class="column">
                 <div class="box">
-                    <h3 class="title has-text-centered is-3">
-                        <span class="icon-text"
-                            ><span class="icon"
-                                ><i class="fas fa-chart-bar" /></span
-                            >&nbsp;<span>Analytics</span></span
-                        >
-                    </h3>
-                    <div class="columns">
-                        <div class="column">
-                            <p class="has-text-weight-bold is-size-5">
-                                Overall superglide consistency: <code
-                                    class="has-text-{percentageColor(
-                                        superglideConsistency
-                                    )}"
-                                    >{superglideConsistency.toFixed(2)}%</code
-                                >
-                            </p>
-                            <div class="divider" />
-                            <p>
-                                Attempts: <code class="has-text-white">
-                                    {attempts.length}</code
-                                >
-                            </p>
-                            <p>
-                                Potential superglides: <code
-                                    class="has-text-white"
-                                    >{potentialSuperglidesPercentage.toFixed(
-                                        2
-                                    )}%</code
-                                >
-                            </p>
-                            <p>
-                                Average successful chance: <code
-                                    class="has-text-white"
-                                    >{potentialAvg.toFixed(2)}%</code
-                                >
-                            </p>
-                            <br />
-                            <!-- <p>You got <code>0%</code> because:</p> -->
-                            <p>
-                                Wrong input first: <code
-                                    >{wrongInputPercentage.toFixed(2)}%</code
-                                >
-                            </p>
-                            <p>
-                                Crouch too late: <code
-                                    >{crouchTooLatePercentage.toFixed(2)}%</code
-                                >
-                            </p>
-                            <!-- <br />
-                            <p>
-                                On a potential superglide your crouch is too
-                                late by
-                                <code>0.0134</code> ms or <code>0.4</code> FPS on
-                                average
-                            </p> -->
-                            <div class="divider" />
-                            <div class="notification">
-                                <p>READ THE FAQ!!!</p>
-                                <p>Seriously if you can't hit them,</p>
-                                <p>
-                                    <strong>READ THE TIPS AND FAQ!!!</strong>
-                                </p>
-                                <p>ALL OF IT!</p>
-                            </div>
-                        </div>
-                        <div class="divider is-vertical" />
-                        <div class="column history" bind:this={historydiv}>
-                            {#each history as { line, color, finished }}
-                                <p>
-                                    <span class="tag is-{color}">{line}</span>
-                                </p>
-                                {#if finished}
-                                    <div class="divider" />
-                                {/if}
-                            {/each}
-                        </div>
-                    </div>
+                    <Analytics />
                 </div>
             </div>
         </div>
