@@ -2,7 +2,7 @@ name: Create and publish a Docker image
 
 on:
   push:
-    branches: ['main']
+    branches: ['main', 'develop']
 
 env:
   REGISTRY: ghcr.io
@@ -52,6 +52,6 @@ jobs:
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.SSHKEY }}
         script: |
-          cd ${{ secrets.PATH }}
+          cd ${{ secrets.PATH }}-${{ github.ref_name }}
           echo ${{ secrets.GITHUB_TOKEN }} | docker login ${{ env.REGISTRY }} -u ${{ github.actor }} --password-stdin
           docker compose pull && docker compose up -d 
