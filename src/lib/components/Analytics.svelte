@@ -126,13 +126,59 @@
     <div class="modal-content">
         <div class="box">
             <p class="title has-text-centered">Statistics</p>
-            <div class="content">Text</div>
             <div
                 class="box"
-                style="background: linear-gradient(90deg, {$gradientArray
-                    .slice(-10)
-                    .join(',')});"
+                style="background: linear-gradient(90deg, {$gradientArray.join(
+                    ','
+                )});"
             />
+            <div class="columns">
+                <div class="column">
+                    <p class="has-text-weight-bold is-size-5">
+                        Overall superglide consistency: <code
+                            class="has-text-{computedPercentageColor}"
+                            >{superglideConsistency.toFixed(2)}%</code
+                        >
+                    </p>
+                    <div class="divider" />
+                    <p>
+                        Attempts: <code class="has-text-white">
+                            {$attempts.length}</code
+                        >
+                    </p>
+                    <p>
+                        Potential superglides: <code class="has-text-white"
+                            >{potentialSuperglidesPercentage.toFixed(2)}%</code
+                        >
+                    </p>
+                    <p>
+                        Average successful chance: <code class="has-text-white"
+                            >{potentialAvg.toFixed(2)}%</code
+                        >
+                    </p>
+                    <br />
+                    <p>
+                        Wrong input first: <code
+                            >{wrongInputPercentage.toFixed(2)}%</code
+                        >
+                    </p>
+                    <p>
+                        Crouch too late: <code
+                            >{crouchTooLatePercentage.toFixed(2)}%</code
+                        >
+                    </p>
+                </div>
+                <div class="column history">
+                    {#each $history as { line, color, finished }}
+                        <p>
+                            <span class="tag is-{color}">{line}</span>
+                        </p>
+                        {#if finished}
+                            <div class="divider" />
+                        {/if}
+                    {/each}
+                </div>
+            </div>
             <footer>
                 <button class="button" on:click={toggleSharingModal}
                     >Close</button
