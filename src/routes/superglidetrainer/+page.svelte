@@ -19,10 +19,29 @@
     import Tips from "../../lib/components/Tips.svelte";
     import Analytics from "../../lib/components/Analytics.svelte";
 
+    let gamepad;
+    let controllerButtons = [];
+
+    function handleInput() {
+        // Get the latest gamepad state
+        gamepad = navigator.getGamepads()[0];
+
+        // Update the buttons array
+        controllerButtons = gamepad?.buttons.map((button) => button.value);
+        window.requestAnimationFrame(handleInput);
+    }
+
+    const icon_map = {
+        keyboard: "keyboard",
+        mouse: "mouse",
+        wheel: "mouse",
+    };
+
     const devices = {
         Keyboard: "keyboard",
         Mouse: "mouse",
         Wheel: "wheel",
+        Controller: "controller",
     };
 
     // default settings
@@ -68,6 +87,11 @@
             $settings = JSON.parse(content);
         }
 
+        if ("getGamepads" in navigator) {
+            window.addEventListener("gamepadconnected", handleInput);
+            window.requestAnimationFrame(handleInput);
+        }
+
         const unsubscribe = settings.subscribe((value) => {
             localStorage.setItem("content", JSON.stringify(value));
         });
@@ -96,11 +120,6 @@
                 break;
         }
 
-        const icon_map = {
-            keyboard: "keyboard",
-            mouse: "mouse",
-            wheel: "mouse",
-        };
         const icon_class = `fas fa-${icon_map[$settings[setting].type]}`;
         return `${buttonText}&nbsp;&nbsp;
                 <span class="icon">
@@ -431,6 +450,11 @@
                 help you learn that much harder Jump -> Crouch timing.
             </p>
         </div>
+        {#if controllerButtons}
+            <p>Buttons: {controllerButtons}</p>
+        {:else}
+            <p>Please press a controller button</p>
+        {/if}
         <div class="columns">
             <div class="column">
                 <div class="box has-text-centered">
