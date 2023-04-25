@@ -44,6 +44,7 @@
     });
 
     function toggleSharingModal() {
+        $trainingActive = false;
         sharing_modal_active = !sharing_modal_active;
     }
 </script>

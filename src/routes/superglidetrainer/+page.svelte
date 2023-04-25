@@ -1,5 +1,5 @@
 <script>
-    import { onMount, afterUpdate } from "svelte";
+    import { onMount } from "svelte";
     import { writable } from "svelte/store";
     import { siteTitle } from "$lib/config";
 
@@ -19,22 +19,44 @@
     import Tips from "../../lib/components/Tips.svelte";
     import Analytics from "../../lib/components/Analytics.svelte";
 
-    let gamepad;
-    let controllerButtons = [];
+    let selectedController = 0; // use the first controller by default
+    let controllers = [];
 
-    function handleInput() {
+    function updateControllers() {
+        controllers = Array.from(navigator.getGamepads()).filter(
+            (controller) => controller !== null
+        );
+    }
+
+    function controllerLoop() {
+        updateControllers();
+
         // Get the latest gamepad state
-        gamepad = navigator.getGamepads()[0];
+        const gamepad = controllers[selectedController];
 
-        // Update the buttons array
-        controllerButtons = gamepad?.buttons.map((button) => button.value);
-        window.requestAnimationFrame(handleInput);
+        // Settings
+        if (settingsBinding && gamepad) {
+            const index = gamepad.buttons.findIndex(
+                (obj) => obj.pressed === true
+            );
+
+            // index returns -1 if pressed is false for every array object
+            if (index > 0) {
+                $settings[settingsBinding].type = devices.Controller;
+                $settings[settingsBinding].bind = index;
+                settingsBinding = undefined;
+            }
+        }
+
+        // Loop itself
+        window.requestAnimationFrame(controllerLoop);
     }
 
     const icon_map = {
         keyboard: "keyboard",
         mouse: "mouse",
         wheel: "mouse",
+        controller: "gamepad",
     };
 
     const devices = {
@@ -66,7 +88,7 @@
     };
 
     let inputListeners = [];
-    let modalNotification = false;
+    let settingsBinding = undefined;
     let assignWarning = false;
     let settingActive = false;
     $: frameTime = 1 / $settings.fps;
@@ -88,8 +110,8 @@
         }
 
         if ("getGamepads" in navigator) {
-            window.addEventListener("gamepadconnected", handleInput);
-            window.requestAnimationFrame(handleInput);
+            updateControllers();
+            window.addEventListener("gamepadconnected", controllerLoop);
         }
 
         const unsubscribe = settings.subscribe((value) => {
@@ -115,6 +137,9 @@
                 buttonText = `Mousewheel ${
                     $settings[setting].bind > 0 ? "DOWN" : "UP"
                 }`;
+                break;
+            case devices.Controller:
+                buttonText = `Controllerbutton ${$settings[setting].bind}`;
                 break;
             default:
                 break;
@@ -174,9 +199,12 @@
             event.preventDefault();
 
             if (event.key !== getOtherKey(setting)) {
-                $settings[setting].type = devices.Keyboard;
-                $settings[setting].bind = event.key;
-                modalNotification = false;
+                if (settingsBinding) {
+                    // Only change something if no controller was pressed in the meantime
+                    $settings[setting].type = devices.Keyboard;
+                    $settings[setting].bind = event.key;
+                }
+                settingsBinding = undefined;
                 assignWarning = false;
                 removeListeners();
             } else {
@@ -189,9 +217,12 @@
             event.preventDefault();
 
             if (event.button !== getOtherKey(setting)) {
-                $settings[setting].type = devices.Mouse;
-                $settings[setting].bind = event.button;
-                modalNotification = false;
+                if (settingsBinding) {
+                    // Only change something if no controller was pressed in the meantime
+                    $settings[setting].type = devices.Mouse;
+                    $settings[setting].bind = event.button;
+                }
+                settingsBinding = undefined;
                 assignWarning = false;
                 removeListeners();
             } else {
@@ -204,9 +235,12 @@
             event.preventDefault();
 
             if (Math.sign(event.deltaY) !== getOtherKey(setting)) {
-                $settings[setting].type = devices.Wheel;
-                $settings[setting].bind = Math.sign(event.deltaY);
-                modalNotification = false;
+                if (settingsBinding) {
+                    // Only change something if no controller was pressed in the meantime
+                    $settings[setting].type = devices.Wheel;
+                    $settings[setting].bind = Math.sign(event.deltaY);
+                }
+                settingsBinding = undefined;
                 assignWarning = false;
                 removeListeners();
             } else {
@@ -214,8 +248,8 @@
             }
         }
 
-        if (!modalNotification) {
-            modalNotification = true;
+        if (!settingsBinding) {
+            settingsBinding = setting;
             window.addEventListener(events.Keydown, handleKeyboard);
             window.addEventListener(events.Mousedown, handleMouse);
             window.addEventListener(events.Wheel, handleWheel, {
@@ -225,7 +259,7 @@
             // https://chromestatus.com/feature/6662647093133312
         } else {
             removeListeners();
-            modalNotification = false;
+            settingsBinding = undefined;
             settingActive = false;
         }
     }
@@ -450,10 +484,30 @@
                 help you learn that much harder Jump -> Crouch timing.
             </p>
         </div>
-        {#if controllerButtons}
-            <p>Buttons: {controllerButtons}</p>
+        {#if controllers.length == 0}
+            <p>Please press a button on a controller</p>
         {:else}
-            <p>Please press a controller button</p>
+            <div class="control has-icons-left">
+                <div class="select">
+                    <select bind:value={selectedController}>
+                        {#each controllers as controller, index (controller.index)}
+                            <option value={index}>{controller.id}</option>
+                        {/each}
+                    </select>
+                </div>
+                <div class="icon is-small is-left">
+                    <i class="fas fa-gamepad" />
+                </div>
+            </div>
+            {#if controllers[selectedController] !== undefined}
+                <p>
+                    Button States: {#each controllers[selectedController].buttons as button, index}
+                        {button.value},
+                    {/each}
+                </p>
+            {:else}
+                <p>Please select a controller</p>
+            {/if}
         {/if}
         <div class="columns">
             <div class="column">
@@ -521,7 +575,7 @@
                             </div>
                         </div>
                     </div>
-                    {#if modalNotification}
+                    {#if settingsBinding}
                         <div class="notification is-info">
                             Press any key or mouse button to bind
                         </div>
