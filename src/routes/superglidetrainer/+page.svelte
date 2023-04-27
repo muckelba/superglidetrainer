@@ -19,18 +19,25 @@
     import Tips from "../../lib/components/Tips.svelte";
     import Analytics from "../../lib/components/Analytics.svelte";
 
+    // Controller stuff
     let selectedController = 0; // use the first controller by default
     let controllers = [];
+    // Loop stats
+    let prevTimestamp = 0;
+    let loopDelay = 0;
+    let fps = 0;
 
+    // $: console.log(loopDelay);
+
+    // Function to update the controllers array with current connected controllers minus the empty entries in chromium
     function updateControllers() {
         controllers = Array.from(navigator.getGamepads()).filter(
             (controller) => controller !== null
         );
     }
 
-    function controllerLoop() {
+    function controllerLoop(timestamp) {
         updateControllers();
-
         // Get the latest gamepad state
         const gamepad = controllers[selectedController];
 
@@ -47,6 +54,13 @@
                 settingsBinding = undefined;
             }
         }
+
+        // Get the time elapsed since last call to controllerLoop
+        loopDelay = timestamp - prevTimestamp;
+        // Store current timestamp for next time
+        prevTimestamp = timestamp;
+
+        fps = 1000 / loopDelay;
 
         // Loop itself
         window.requestAnimationFrame(controllerLoop);
@@ -111,7 +125,10 @@
 
         if ("getGamepads" in navigator) {
             updateControllers();
-            window.addEventListener("gamepadconnected", controllerLoop);
+            window.addEventListener(
+                "gamepadconnected",
+                controllerLoop(new Date())
+            );
         }
 
         const unsubscribe = settings.subscribe((value) => {
@@ -509,6 +526,8 @@
                 <p>Please select a controller</p>
             {/if}
         {/if}
+        <p>Delay between game loop runs: {loopDelay.toFixed(2)}ms</p>
+        <p>FPS: {fps.toFixed(2)}</p>
         <div class="columns">
             <div class="column">
                 <div class="box has-text-centered">
