@@ -20,6 +20,7 @@
     import Analytics from "../../lib/components/Analytics.svelte";
 
     // Controller stuff
+    let isController = false;
     let selectedController = 0; // use the first controller by default
     let controllers = [];
     // Loop stats
@@ -198,6 +199,10 @@
             superglideText = "";
             superglide();
         }
+    }
+
+    function toggleController() {
+        isController = !isController;
     }
 
     function getOtherKey(setting) {
@@ -501,33 +506,6 @@
                 help you learn that much harder Jump -> Crouch timing.
             </p>
         </div>
-        {#if controllers.length == 0}
-            <p>Please press a button on a controller</p>
-        {:else}
-            <div class="control has-icons-left">
-                <div class="select">
-                    <select bind:value={selectedController}>
-                        {#each controllers as controller, index (controller.index)}
-                            <option value={index}>{controller.id}</option>
-                        {/each}
-                    </select>
-                </div>
-                <div class="icon is-small is-left">
-                    <i class="fas fa-gamepad" />
-                </div>
-            </div>
-            {#if controllers[selectedController] !== undefined}
-                <p>
-                    Button States: {#each controllers[selectedController].buttons as button, index}
-                        {button.value},
-                    {/each}
-                </p>
-            {:else}
-                <p>Please select a controller</p>
-            {/if}
-        {/if}
-        <p>Delay between game loop runs: {loopDelay.toFixed(2)}ms</p>
-        <p>FPS: {fps.toFixed(2)}</p>
         <div class="columns">
             <div class="column">
                 <div class="box has-text-centered">
@@ -627,6 +605,57 @@
                     >
                         {$trainingActive ? "Stop" : "Start"}
                     </button>
+                </div>
+                <div class="box">
+                    <div class="switch-container is-size-4">
+                        <span
+                            class:has-text-grey-light={isController}
+                            class="label-left">MnK</span
+                        >
+                        <label class="switch">
+                            <input
+                                type="checkbox"
+                                on:click={toggleController}
+                            />
+                            <span class="slider round" />
+                        </label>
+                        <span
+                            class:has-text-grey-light={!isController}
+                            class="label-right">Controller</span
+                        >
+                    </div>
+                    <br />
+                    {#if controllers.length == 0}
+                        <p>Please press a button on a controller</p>
+                    {:else}
+                        <div class="control has-icons-left">
+                            <div class="select">
+                                <select bind:value={selectedController}>
+                                    {#each controllers as controller, index (controller.index)}
+                                        <option value={index}
+                                            >{controller.id}</option
+                                        >
+                                    {/each}
+                                </select>
+                            </div>
+                            <div class="icon is-small is-left">
+                                <i class="fas fa-gamepad" />
+                            </div>
+                        </div>
+                        {#if controllers[selectedController] !== undefined}
+                            <p>
+                                Button States: {#each controllers[selectedController].buttons as button, index}
+                                    {button.value},
+                                {/each}
+                            </p>
+                        {:else}
+                            <p>Please select a controller</p>
+                        {/if}
+                    {/if}
+                    <p>
+                        Delay between game loop runs: {loopDelay.toFixed(2)}ms
+                    </p>
+                    <p>FPS: {fps.toFixed(2)}</p>
                 </div>
             </div>
             <div class="column">
