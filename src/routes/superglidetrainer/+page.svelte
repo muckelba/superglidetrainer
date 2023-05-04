@@ -23,12 +23,94 @@
     let isController = false;
     let selectedController = 0; // use the first controller by default
     let controllers = [];
+
     // Loop stats
     let prevTimestamp = 0;
     let loopDelay = 0;
-    let fps = 0;
 
-    // $: console.log(loopDelay);
+    let fps = 0;
+    let inputListeners = [];
+    let settingsBinding = undefined;
+    let assignWarning = false;
+    let settingActive = false;
+    $: frameTime = 1 / $settings.fps;
+    let instructions = "";
+    let instructionColor = "";
+    let superglideText = "";
+    let superglideTextColor = "";
+    let message = "";
+
+    const states = {
+        Ready: "ready", // Initial State
+        Jump: "jump", // Partial Sequence
+        JumpWarned: "jumpwarned", // Multi-Jump Warning Sent
+        Crouch: "crouch", // Incorrect Sequence, let it play out for a bit
+    };
+
+    let state = states.Ready;
+    let lastState = states.Jump;
+    let startTime = new Date();
+    let chance = 0;
+
+    const icon_map = {
+        keyboard: "keyboard",
+        mouse: "mouse",
+        wheel: "mouse",
+        controller: "gamepad",
+    };
+
+    const devices = {
+        Keyboard: "keyboard",
+        Mouse: "mouse",
+        Wheel: "wheel",
+        Controller: "controller",
+    };
+
+    // default settings
+    const settings = writable({
+        mnk: {
+            jump: { type: devices.Keyboard, bind: " " },
+            crouch: { type: devices.Keyboard, bind: "Control" },
+        },
+        controller: {
+            jump: "0",
+            crouch: "1",
+        },
+        fps: 144,
+    });
+
+    const events = {
+        Keydown: "keydown",
+        Mousedown: "mousedown",
+        Wheel: "wheel",
+        Popstate: "popstate",
+    };
+
+    function migrateSettings(oldSettings) {
+        // check if oldSettings is in the old format
+        if (
+            "jump" in oldSettings &&
+            "crouch" in oldSettings &&
+            "fps" in oldSettings
+        ) {
+            // convert to the new format
+            console.log("Detected old settings, migrating them...");
+            return {
+                mnk: {
+                    jump: oldSettings.jump,
+                    crouch: oldSettings.crouch,
+                },
+                controller: {
+                    jump: "0",
+                    crouch: "1",
+                },
+                fps: oldSettings.fps,
+            };
+        } else {
+            // already in the new format, return as is
+            return oldSettings;
+        }
+    }
 
     // Function to update the controllers array with current connected controllers minus the empty entries in chromium
     function updateControllers() {
@@ -50,8 +132,7 @@
 
             // index returns -1 if pressed is false for every array object
             if (index > 0) {
-                $settings[settingsBinding].type = devices.Controller;
-                $settings[settingsBinding].bind = index;
+                $settings.controller[settingsBinding] = index;
                 settingsBinding = undefined;
             }
         }
@@ -64,64 +145,17 @@
         fps = 1000 / loopDelay;
 
         // Loop itself
-        window.requestAnimationFrame(controllerLoop);
+        window.requestAnimationFrame(controllerLoop); // TODO: this is currently bound to the refreshrate of the clients monitor, but it needs to be faster
     }
-
-    const icon_map = {
-        keyboard: "keyboard",
-        mouse: "mouse",
-        wheel: "mouse",
-        controller: "gamepad",
-    };
-
-    const devices = {
-        Keyboard: "keyboard",
-        Mouse: "mouse",
-        Wheel: "wheel",
-        Controller: "controller",
-    };
-
-    // default settings
-    const settings = writable({
-        jump: { type: devices.Keyboard, bind: " " },
-        crouch: { type: devices.Keyboard, bind: "Control" },
-        fps: 144,
-    });
-
-    const states = {
-        Ready: "ready", // Initial State
-        Jump: "jump", // Partial Sequence
-        JumpWarned: "jumpwarned", // Multi-Jump Warning Sent
-        Crouch: "crouch", // Incorrect Sequence, let it play out for a bit
-    };
-
-    const events = {
-        Keydown: "keydown",
-        Mousedown: "mousedown",
-        Wheel: "wheel",
-        Popstate: "popstate",
-    };
-
-    let inputListeners = [];
-    let settingsBinding = undefined;
-    let assignWarning = false;
-    let settingActive = false;
-    $: frameTime = 1 / $settings.fps;
-    let instructions = "";
-    let instructionColor = "";
-    let superglideText = "";
-    let superglideTextColor = "";
-    let message = "";
-    let state = states.Ready;
-    let lastState = states.Jump;
-    let startTime = new Date();
-    let chance = 0;
 
     onMount(() => {
         // load settings from localstorage
         const content = localStorage.getItem("content");
         if (content) {
-            $settings = JSON.parse(content);
+            const oldSettings = JSON.parse(content);
+            const newSettings = migrateSettings(oldSettings);
+            settings.set(newSettings);
+            localStorage.setItem("content", JSON.stringify(newSettings));
         }
 
         if ("getGamepads" in navigator) {
@@ -141,29 +175,31 @@
 
     $: prettyBind = (setting) => {
         let buttonText = "";
-        switch ($settings[setting].type) {
-            case devices.Keyboard:
-                buttonText =
-                    $settings[setting].bind === " "
-                        ? "SPACE"
-                        : $settings[setting].bind.toUpperCase();
-                break;
-            case devices.Mouse:
-                buttonText = `Mousebutton ${$settings[setting].bind}`;
-                break;
-            case devices.Wheel:
-                buttonText = `Mousewheel ${
-                    $settings[setting].bind > 0 ? "DOWN" : "UP"
-                }`;
-                break;
-            case devices.Controller:
-                buttonText = `Controllerbutton ${$settings[setting].bind}`;
-                break;
-            default:
-                break;
+        let icon_class = "";
+        if (isController) {
+            buttonText = `Button ${$settings.controller[setting]}`;
+            icon_class = `fas fa-${icon_map["controller"]}`;
+        } else {
+            switch ($settings.mnk[setting].type) {
+                case devices.Keyboard:
+                    buttonText =
+                        $settings.mnk[setting].bind === " "
+                            ? "SPACE"
+                            : $settings.mnk[setting].bind.toUpperCase();
+                    break;
+                case devices.Mouse:
+                    buttonText = `Mousebutton ${$settings.mnk[setting].bind}`;
+                    break;
+                case devices.Wheel:
+                    buttonText = `Mousewheel ${
+                        $settings.mnk[setting].bind > 0 ? "DOWN" : "UP"
+                    }`;
+                default:
+                    break;
+            }
+            icon_class = `fas fa-${icon_map[$settings.mnk[setting].type]}`;
         }
 
-        const icon_class = `fas fa-${icon_map[$settings[setting].type]}`;
         return `${buttonText}&nbsp;&nbsp;
                 <span class="icon">
                     <i class="${icon_class}"></i>
@@ -203,11 +239,13 @@
 
     function toggleController() {
         isController = !isController;
+        $trainingActive = false;
     }
 
     function getOtherKey(setting) {
         const otherSetting = setting === "jump" ? "crouch" : "jump";
-        return $settings[otherSetting].bind;
+        return $settings[isController ? "controller" : "mnk"][otherSetting]
+            .bind;
     }
 
     function setSetting(setting) {
@@ -223,8 +261,8 @@
             if (event.key !== getOtherKey(setting)) {
                 if (settingsBinding) {
                     // Only change something if no controller was pressed in the meantime
-                    $settings[setting].type = devices.Keyboard;
-                    $settings[setting].bind = event.key;
+                    $settings.mnk[setting].type = devices.Keyboard;
+                    $settings.mnk[setting].bind = event.key;
                 }
                 settingsBinding = undefined;
                 assignWarning = false;
@@ -241,8 +279,8 @@
             if (event.button !== getOtherKey(setting)) {
                 if (settingsBinding) {
                     // Only change something if no controller was pressed in the meantime
-                    $settings[setting].type = devices.Mouse;
-                    $settings[setting].bind = event.button;
+                    $settings.mnk[setting].type = devices.Mouse;
+                    $settings.mnk[setting].bind = event.button;
                 }
                 settingsBinding = undefined;
                 assignWarning = false;
@@ -259,8 +297,8 @@
             if (Math.sign(event.deltaY) !== getOtherKey(setting)) {
                 if (settingsBinding) {
                     // Only change something if no controller was pressed in the meantime
-                    $settings[setting].type = devices.Wheel;
-                    $settings[setting].bind = Math.sign(event.deltaY);
+                    $settings.mnk[setting].type = devices.Wheel;
+                    $settings.mnk[setting].bind = Math.sign(event.deltaY);
                 }
                 settingsBinding = undefined;
                 assignWarning = false;
@@ -272,11 +310,13 @@
 
         if (!settingsBinding) {
             settingsBinding = setting;
-            window.addEventListener(events.Keydown, handleKeyboard);
-            window.addEventListener(events.Mousedown, handleMouse);
-            window.addEventListener(events.Wheel, handleWheel, {
-                passive: false,
-            });
+            if (!isController) {
+                window.addEventListener(events.Keydown, handleKeyboard);
+                window.addEventListener(events.Mousedown, handleMouse);
+                window.addEventListener(events.Wheel, handleWheel, {
+                    passive: false,
+                });
+            }
             // Unable to preventDefault in passive event listner, which causes page to scroll down when binding it to the input.
             // https://chromestatus.com/feature/6662647093133312
         } else {
@@ -298,7 +338,7 @@
     }
 
     function waitingKeypress() {
-        const devices = [$settings.jump.type, $settings.crouch.type];
+        const devices = [$settings.mnk.jump.type, $settings.mnk.crouch.type];
         inputListeners = [];
         return new Promise((resolve) => {
             devices.forEach((dev) => {
@@ -311,8 +351,8 @@
                     const [_, return_value] = get_device_props(dev, e);
                     // only prevent default for the two set keys (only works for keyboard events)
                     if (
-                        return_value === $settings.jump.bind ||
-                        return_value === $settings.crouch.bind
+                        return_value === $settings.mnk.jump.bind ||
+                        return_value === $settings.mnk.crouch.bind
                     ) {
                         e.preventDefault();
                     }
@@ -324,7 +364,7 @@
     }
 
     async function superglide() {
-        while ($trainingActive) {
+        while ($trainingActive && !isController) {
             if (lastState !== state) {
                 if (state === states.Jump) {
                     instructions = "Press crouch";
@@ -339,7 +379,7 @@
             let key = await waitingKeypress();
             console.log(`Pressed key "${key}"`);
 
-            if (key === $settings.crouch.bind) {
+            if (key === $settings.mnk.crouch.bind) {
                 if (state === states.Ready) {
                     startTime = new Date();
                     state = states.Crouch;
@@ -414,7 +454,7 @@
                     chance = 0;
                     state = states.Ready;
                 }
-            } else if (key === $settings.jump.bind) {
+            } else if (key === $settings.mnk.jump.bind) {
                 if (state === states.Ready) {
                     startTime = new Date();
                     state = states.Jump;
@@ -625,37 +665,41 @@
                         >
                     </div>
                     <br />
-                    {#if controllers.length == 0}
-                        <p>Please press a button on a controller</p>
-                    {:else}
-                        <div class="control has-icons-left">
-                            <div class="select">
-                                <select bind:value={selectedController}>
-                                    {#each controllers as controller, index (controller.index)}
-                                        <option value={index}
-                                            >{controller.id}</option
-                                        >
-                                    {/each}
-                                </select>
-                            </div>
-                            <div class="icon is-small is-left">
-                                <i class="fas fa-gamepad" />
-                            </div>
-                        </div>
-                        {#if controllers[selectedController] !== undefined}
-                            <p>
-                                Button States: {#each controllers[selectedController].buttons as button, index}
-                                    {button.value},
-                                {/each}
-                            </p>
+                    {#if isController}
+                        {#if controllers.length == 0}
+                            <p>Please press a button on a controller</p>
                         {:else}
-                            <p>Please select a controller</p>
+                            <div class="control has-icons-left">
+                                <div class="select">
+                                    <select bind:value={selectedController}>
+                                        {#each controllers as controller, index (controller.index)}
+                                            <option value={index}
+                                                >{controller.id}</option
+                                            >
+                                        {/each}
+                                    </select>
+                                </div>
+                                <div class="icon is-small is-left">
+                                    <i class="fas fa-gamepad" />
+                                </div>
+                            </div>
+                            {#if controllers[selectedController] !== undefined}
+                                <p>
+                                    Button States: {#each controllers[selectedController].buttons as button, index}
+                                        {button.value},
+                                    {/each}
+                                </p>
+                            {:else}
+                                <p>Please select a controller</p>
+                            {/if}
                         {/if}
+                        <p>
+                            Delay between game loop runs: {loopDelay.toFixed(
+                                2
+                            )}ms
+                        </p>
+                        <p>FPS: {fps.toFixed(2)}</p>
                     {/if}
-                    <p>
-                        Delay between game loop runs: {loopDelay.toFixed(2)}ms
-                    </p>
-                    <p>FPS: {fps.toFixed(2)}</p>
                 </div>
             </div>
             <div class="column">
