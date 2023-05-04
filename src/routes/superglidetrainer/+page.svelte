@@ -73,8 +73,8 @@
             crouch: { type: devices.Keyboard, bind: "Control" },
         },
         controller: {
-            jump: "0",
-            crouch: "1",
+            jump: 0,
+            crouch: 1,
         },
         fps: 144,
     });
@@ -101,8 +101,8 @@
                     crouch: oldSettings.crouch,
                 },
                 controller: {
-                    jump: "0",
-                    crouch: "1",
+                    jump: 0,
+                    crouch: 1,
                 },
                 fps: oldSettings.fps,
             };
@@ -131,9 +131,16 @@
             );
 
             // index returns -1 if pressed is false for every array object
-            if (index > 0) {
-                $settings.controller[settingsBinding] = index;
-                settingsBinding = undefined;
+            if (index >= 0) {
+                console.log(index);
+                console.log(getOtherKey(settingsBinding));
+                if (index !== getOtherKey(settingsBinding)) {
+                    $settings.controller[settingsBinding] = index;
+                    settingsBinding = undefined;
+                    assignWarning = false;
+                } else {
+                    assignWarning = true;
+                }
             }
         }
 
@@ -244,8 +251,11 @@
 
     function getOtherKey(setting) {
         const otherSetting = setting === "jump" ? "crouch" : "jump";
-        return $settings[isController ? "controller" : "mnk"][otherSetting]
-            .bind;
+        if (isController) {
+            return $settings.controller[otherSetting];
+        } else {
+            return $settings.mnk[otherSetting].bind;
+        }
     }
 
     function setSetting(setting) {
