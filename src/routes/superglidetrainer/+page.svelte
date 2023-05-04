@@ -5,14 +5,7 @@
 
     import { percentageColor, updateHistory } from "$lib/util";
 
-    import {
-        trainingActive,
-        attempts,
-        potentialSuperglides,
-        wrongInputCount,
-        crouchTooLateCount,
-        gradientArray,
-    } from "$lib/stores";
+    import { trainingActive, attempts, potentialSuperglides, wrongInputCount, crouchTooLateCount, gradientArray } from "$lib/stores";
 
     import Faq from "../../lib/components/Faq.svelte";
     import Footer from "../../lib/components/Footer.svelte";
@@ -23,6 +16,8 @@
     let isController = false;
     let selectedController = 0; // use the first controller by default
     let controllers = [];
+    let jumpButtonPressed = false;
+    let crouchButtonPressed = false;
 
     // Loop stats
     let prevTimestamp = 0;
@@ -88,11 +83,7 @@
 
     function migrateSettings(oldSettings) {
         // check if oldSettings is in the old format
-        if (
-            "jump" in oldSettings &&
-            "crouch" in oldSettings &&
-            "fps" in oldSettings
-        ) {
+        if ("jump" in oldSettings && "crouch" in oldSettings && "fps" in oldSettings) {
             // convert to the new format
             console.log("Detected old settings, migrating them...");
             return {
@@ -114,9 +105,7 @@
 
     // Function to update the controllers array with current connected controllers minus the empty entries in chromium
     function updateControllers() {
-        controllers = Array.from(navigator.getGamepads()).filter(
-            (controller) => controller !== null
-        );
+        controllers = Array.from(navigator.getGamepads()).filter((controller) => controller !== null);
     }
 
     function controllerLoop(timestamp) {
@@ -124,23 +113,46 @@
         // Get the latest gamepad state
         const gamepad = controllers[selectedController];
 
-        // Settings
-        if (settingsBinding && gamepad) {
-            const index = gamepad.buttons.findIndex(
-                (obj) => obj.pressed === true
-            );
+        if (gamepad) {
+            const currentButton = gamepad.buttons.findIndex((button) => button.pressed === true);
+            const crouch = gamepad.buttons[$settings.controller.crouch];
+            const jump = gamepad.buttons[$settings.controller.jump];
 
-            // index returns -1 if pressed is false for every array object
-            if (index >= 0) {
-                console.log(index);
-                console.log(getOtherKey(settingsBinding));
-                if (index !== getOtherKey(settingsBinding)) {
-                    $settings.controller[settingsBinding] = index;
-                    settingsBinding = undefined;
-                    assignWarning = false;
-                } else {
-                    assignWarning = true;
+            if (currentButton >= 0) {
+                // Settings
+                if (settingsBinding) {
+                    if (currentButton !== getOtherKey(settingsBinding)) {
+                        $settings.controller[settingsBinding] = currentButton;
+                        settingsBinding = undefined;
+                        assignWarning = false;
+                    } else {
+                        assignWarning = true;
+                    }
                 }
+                console.log(`Pressed button ${currentButton}`);
+            }
+
+            if (!crouch.pressed) {
+                crouchButtonPressed = false;
+            }
+            if (!jump.pressed) {
+                jumpButtonPressed = false;
+            }
+
+            // Trainer
+            if ($trainingActive && currentButton >= 0) {
+                if (crouch.pressed && !crouchButtonPressed) {
+                    handleCrouch();
+                    crouchButtonPressed = true;
+                } else if (jump.pressed && !jumpButtonPressed) {
+                    console.log("Handle jump");
+                    handleJump();
+                    jumpButtonPressed = true;
+                } else if (currentButton != $settings.controller.crouch && currentButton != $settings.controller.jump) {
+                    instructions = "Other button pressed, ignoring";
+                    instructionColor = "warning";
+                }
+                updateState();
             }
         }
 
@@ -167,10 +179,7 @@
 
         if ("getGamepads" in navigator) {
             updateControllers();
-            window.addEventListener(
-                "gamepadconnected",
-                controllerLoop(new Date())
-            );
+            window.addEventListener("gamepadconnected", controllerLoop(new Date()));
         }
 
         const unsubscribe = settings.subscribe((value) => {
@@ -189,18 +198,13 @@
         } else {
             switch ($settings.mnk[setting].type) {
                 case devices.Keyboard:
-                    buttonText =
-                        $settings.mnk[setting].bind === " "
-                            ? "SPACE"
-                            : $settings.mnk[setting].bind.toUpperCase();
+                    buttonText = $settings.mnk[setting].bind === " " ? "SPACE" : $settings.mnk[setting].bind.toUpperCase();
                     break;
                 case devices.Mouse:
                     buttonText = `Mousebutton ${$settings.mnk[setting].bind}`;
                     break;
                 case devices.Wheel:
-                    buttonText = `Mousewheel ${
-                        $settings.mnk[setting].bind > 0 ? "DOWN" : "UP"
-                    }`;
+                    buttonText = `Mousewheel ${$settings.mnk[setting].bind > 0 ? "DOWN" : "UP"}`;
                 default:
                     break;
             }
@@ -218,29 +222,32 @@
         window.history.go(1);
     }
 
-    function toggleState() {
+    function toggleTraining() {
         $trainingActive = !$trainingActive;
+
+        message = "";
+        superglideText = "";
+        instructions = "";
+        instructionColor = "";
+        state = states.Ready;
+        lastState = states.Jump;
+        updateState();
+
         // removes focus to disable activation by spacebar
         this.blur();
-        // reset to default values when stopping
-        if (!$trainingActive) {
-            window.removeEventListener(events.Popstate, disableHistory);
-            window.removeEventListener(
-                inputListeners[0][0],
-                inputListeners[0][1]
-            );
-            window.removeEventListener(
-                inputListeners[1][0],
-                inputListeners[1][1]
-            );
-            inputListeners = [];
-        } else {
+
+        if (!isController && $trainingActive) {
             // clear forward history
             window.history.pushState(null, null, window.location.href);
             window.addEventListener(events.Popstate, disableHistory);
-            message = "";
-            superglideText = "";
-            superglide();
+            handleMnK();
+        }
+
+        if (!$trainingActive) {
+            window.removeEventListener(events.Popstate, disableHistory);
+            window.removeEventListener(inputListeners[0][0], inputListeners[0][1]);
+            window.removeEventListener(inputListeners[1][0], inputListeners[1][1]);
+            inputListeners = [];
         }
     }
 
@@ -360,10 +367,7 @@
                     window.removeEventListener(event_name, onEventHandler);
                     const [_, return_value] = get_device_props(dev, e);
                     // only prevent default for the two set keys (only works for keyboard events)
-                    if (
-                        return_value === $settings.mnk.jump.bind ||
-                        return_value === $settings.mnk.crouch.bind
-                    ) {
+                    if (return_value === $settings.mnk.jump.bind || return_value === $settings.mnk.crouch.bind) {
                         e.preventDefault();
                     }
                     resolve(return_value);
@@ -373,152 +377,142 @@
         });
     }
 
-    async function superglide() {
-        while ($trainingActive && !isController) {
-            if (lastState !== state) {
-                if (state === states.Jump) {
-                    instructions = "Press crouch";
-                    instructionColor = "";
-                } else if (state === states.Ready) {
-                    instructions = "Press jump";
-                    instructionColor = "";
-                }
+    function updateState() {
+        if (lastState !== state) {
+            if (state === states.Jump) {
+                instructions = "Press crouch";
+                instructionColor = "";
+            } else if (state === states.Ready) {
+                instructions = "Press jump";
+                instructionColor = "";
+            }
+        }
+        lastState = state;
+    }
+
+    function handleCrouch() {
+        if (state === states.Ready) {
+            startTime = new Date();
+            state = states.Crouch;
+        } else if (state === states.Jump || state === states.JumpWarned) {
+            const now = new Date();
+            const calucated = (now.getTime() - startTime.getTime()) / 1000;
+            const elapsedFrames = calucated / frameTime;
+            const differenceSeconds = frameTime - calucated;
+            const lateBy = Math.abs(1 - elapsedFrames);
+
+            if (elapsedFrames < 1) {
+                chance = elapsedFrames * 100;
+                message = `Crouch later by ${lateBy.toFixed(1)} frames (${differenceSeconds.toFixed(5)}s)`;
+            } else if (elapsedFrames < 2) {
+                chance = (2 - elapsedFrames) * 100;
+                message = `Crouch sooner by ${lateBy.toFixed(1)} frames (${(differenceSeconds * -1).toFixed(1)}s)`;
+            } else {
+                message = `Crouched too late by ${lateBy.toFixed(1)} frames (${(differenceSeconds * -1).toFixed(5)}s)`;
+                chance = 0;
+                $crouchTooLateCount += 1;
             }
 
-            lastState = state;
+            updateHistory([
+                {
+                    line: message,
+                    color: "light",
+                    finished: false,
+                },
+                {
+                    line: `${elapsedFrames.toFixed(1)} frames have passed`,
+                    color: "light",
+                    finished: false,
+                },
+            ]);
+
+            if (chance > 0) {
+                $potentialSuperglides = [...$potentialSuperglides, chance];
+            }
+            superglideText = `${chance.toFixed(2)}% chance to hit the superglide`;
+            superglideTextColor = percentageColor(chance);
+
+            updateHistory([
+                {
+                    line: superglideText,
+                    color: percentageColor(chance),
+                    finished: true,
+                },
+            ]);
+
+            $attempts = [...$attempts, chance];
+            state = states.Ready;
+        } else if (state === states.Crouch) {
+            instructions = "Double Crouch Input, resetting";
+            instructionColor = "danger";
+            chance = 0;
+            state = states.Ready;
+        }
+    }
+
+    function handleJump() {
+        if (state === states.Ready) {
+            startTime = new Date();
+            state = states.Jump;
+        } else if (state === states.Jump) {
+            state = states.JumpWarned;
+            instructions = "Multiple jumps detected, results may not reflect ingame behavior.";
+            instructionColor = "warning";
+            superglideText = "";
+        } else if (state === states.JumpWarned) {
+            state = states.JumpWarned;
+        } else if (state === states.Crouch) {
+            instructions = "You must jump before you crouch";
+            instructionColor = "danger";
+            updateHistory([
+                {
+                    line: instructions,
+                    color: instructionColor,
+                    finished: false,
+                },
+            ]);
+
+            const now = new Date();
+            const delta = (now.getTime() - startTime) / 1000 + frameTime;
+            const earlyBy = delta / frameTime;
+
+            chance = 0;
+
+            superglideText = "0% chance to hit the superglide";
+            superglideTextColor = percentageColor(chance);
+            message = `Crouch later by ${earlyBy.toFixed(2)} frames (${delta.toFixed(5)}s)`;
+            updateHistory([
+                {
+                    line: message,
+                    color: "light",
+                    finished: false,
+                },
+                {
+                    line: superglideText,
+                    color: superglideTextColor,
+                    finished: true,
+                },
+            ]);
+            $wrongInputCount += 1;
+            $attempts = [...$attempts, chance];
+            state = states.Ready;
+        }
+    }
+
+    async function handleMnK() {
+        while ($trainingActive) {
             let key = await waitingKeypress();
             console.log(`Pressed key "${key}"`);
 
             if (key === $settings.mnk.crouch.bind) {
-                if (state === states.Ready) {
-                    startTime = new Date();
-                    state = states.Crouch;
-                } else if (
-                    state === states.Jump ||
-                    state === states.JumpWarned
-                ) {
-                    const now = new Date();
-                    const calucated =
-                        (now.getTime() - startTime.getTime()) / 1000;
-                    const elapsedFrames = calucated / frameTime;
-                    const differenceSeconds = frameTime - calucated;
-                    const lateBy = Math.abs(1 - elapsedFrames);
-
-                    if (elapsedFrames < 1) {
-                        chance = elapsedFrames * 100;
-                        message = `Crouch later by ${lateBy.toFixed(
-                            1
-                        )} frames (${differenceSeconds.toFixed(5)}s)`;
-                    } else if (elapsedFrames < 2) {
-                        chance = (2 - elapsedFrames) * 100;
-                        message = `Crouch sooner by ${lateBy.toFixed(
-                            1
-                        )} frames (${(differenceSeconds * -1).toFixed(1)}s)`;
-                    } else {
-                        message = `Crouched too late by ${lateBy.toFixed(
-                            1
-                        )} frames (${(differenceSeconds * -1).toFixed(5)}s)`;
-                        chance = 0;
-                        $crouchTooLateCount += 1;
-                    }
-
-                    updateHistory([
-                        {
-                            line: message,
-                            color: "light",
-                            finished: false,
-                        },
-                        {
-                            line: `${elapsedFrames.toFixed(
-                                1
-                            )} frames have passed`,
-                            color: "light",
-                            finished: false,
-                        },
-                    ]);
-
-                    if (chance > 0) {
-                        $potentialSuperglides = [
-                            ...$potentialSuperglides,
-                            chance,
-                        ];
-                    }
-                    superglideText = `${chance.toFixed(
-                        2
-                    )}% chance to hit the superglide`;
-                    superglideTextColor = percentageColor(chance);
-
-                    updateHistory([
-                        {
-                            line: superglideText,
-                            color: percentageColor(chance),
-                            finished: true,
-                        },
-                    ]);
-
-                    $attempts = [...$attempts, chance];
-                    state = states.Ready;
-                } else if (state === states.Crouch) {
-                    instructions = "Double Crouch Input, resetting";
-                    instructionColor = "danger";
-                    chance = 0;
-                    state = states.Ready;
-                }
+                handleCrouch();
             } else if (key === $settings.mnk.jump.bind) {
-                if (state === states.Ready) {
-                    startTime = new Date();
-                    state = states.Jump;
-                } else if (state === states.Jump) {
-                    state = states.JumpWarned;
-                    instructions =
-                        "Multiple jumps detected, results may not reflect ingame behavior.";
-                    instructionColor = "warning";
-                    superglideText = "";
-                } else if (state === states.JumpWarned) {
-                    state = states.JumpWarned;
-                } else if (state === states.Crouch) {
-                    instructions = "You must jump before you crouch";
-                    instructionColor = "danger";
-                    updateHistory([
-                        {
-                            line: instructions,
-                            color: instructionColor,
-                            finished: false,
-                        },
-                    ]);
-
-                    const now = new Date();
-                    const delta =
-                        (now.getTime() - startTime) / 1000 + frameTime;
-                    const earlyBy = delta / frameTime;
-
-                    chance = 0;
-
-                    superglideText = "0% chance to hit the superglide";
-                    superglideTextColor = percentageColor(chance);
-                    message = `Crouch later by ${earlyBy.toFixed(
-                        2
-                    )} frames (${delta.toFixed(5)}s)`;
-                    updateHistory([
-                        {
-                            line: message,
-                            color: "light",
-                            finished: false,
-                        },
-                        {
-                            line: superglideText,
-                            color: superglideTextColor,
-                            finished: true,
-                        },
-                    ]);
-                    $wrongInputCount += 1;
-                    $attempts = [...$attempts, chance];
-                    state = states.Ready;
-                }
+                handleJump();
             } else {
                 instructions = `Other key pressed, ignoring`;
                 instructionColor = "warning";
             }
+            updateState();
         }
     }
 </script>
@@ -527,11 +521,7 @@
     <div class="container">
         <h1 class="title is-1 has-text-centered">
             <span class="icon is-medium">
-                <img
-                    src="/logo.png"
-                    alt="superglidetrainer logo"
-                    style="transform: scaleX(-1);"
-                />
+                <img src="/logo.png" alt="superglidetrainer logo" style="transform: scaleX(-1);" />
             </span>
             {siteTitle}
             <span class="icon is-medium">
@@ -545,43 +535,30 @@
                 .join(',')}, rgba(0, 0, 0, 0)) 1; width: 100%"
         >
             <p>
-                A Superglide needs a jump input first and then a crouch input 1
-                frame later. You need to do the whole Superglide in the last
-                0.1-0.2 second of a mantle.
+                A Superglide needs a jump input first and then a crouch input 1 frame later. You need to do the whole Superglide in the last 0.1-0.2 second of a
+                mantle.
             </p>
             <br />
             <p>
-                That makes the correct timing of Jump -> Crouch way harder than
-                timing the whole Superglide in the mantle. This trainer will
-                help you learn that much harder Jump -> Crouch timing.
+                That makes the correct timing of Jump -> Crouch way harder than timing the whole Superglide in the mantle. This trainer will help you learn that
+                much harder Jump -> Crouch timing.
             </p>
         </div>
         <div class="columns">
             <div class="column">
                 <div class="box has-text-centered">
                     <h3 class="title is-3">
-                        <span class="icon-text"
-                            ><span class="icon"
-                                ><i class="fas fa-dumbbell" /></span
-                            >&nbsp;<span>Training</span></span
-                        >
+                        <span class="icon-text"><span class="icon"><i class="fas fa-dumbbell" /></span>&nbsp;<span>Training</span></span>
                     </h3>
                     <p class="subtitle">Click on the buttons to re-bind them</p>
                     <div class="field">
                         <div class="field-body">
                             <div class="field has-addons">
                                 <p class="control">
-                                    <button
-                                        class="button is-link is-outlined no-hover"
-                                    >
-                                        Jump
-                                    </button>
+                                    <button class="button is-link is-outlined no-hover"> Jump </button>
                                 </p>
                                 <p class="control">
-                                    <button
-                                        class="button setting-button is-link is-outlined"
-                                        on:click={() => setSetting("jump")}
-                                    >
+                                    <button class="button setting-button is-link is-outlined" on:click={() => setSetting("jump")}>
                                         {@html prettyBind("jump")}
                                     </button>
                                     <!-- <span class="tag" /> -->
@@ -589,27 +566,17 @@
                             </div>
                             <div class="field has-addons">
                                 <p class="control">
-                                    <button
-                                        class="button is-link is-outlined no-hover"
-                                    >
-                                        Crouch
-                                    </button>
+                                    <button class="button is-link is-outlined no-hover"> Crouch </button>
                                 </p>
                                 <p class="control">
-                                    <button
-                                        class="button is-link is-outlined setting-button"
-                                        on:click={() => setSetting("crouch")}
+                                    <button class="button is-link is-outlined setting-button" on:click={() => setSetting("crouch")}
                                         >{@html prettyBind("crouch")}
                                     </button>
                                 </p>
                             </div>
                             <div class="field has-addons">
                                 <p class="control">
-                                    <button
-                                        class="button is-link is-outlined no-hover"
-                                    >
-                                        FPS
-                                    </button>
+                                    <button class="button is-link is-outlined no-hover"> FPS </button>
                                 </p>
                                 <p class="control">
                                     <input
@@ -623,14 +590,10 @@
                         </div>
                     </div>
                     {#if settingsBinding}
-                        <div class="notification is-info">
-                            Press any key or mouse button to bind
-                        </div>
+                        <div class="notification is-info">Press any key or mouse button to bind</div>
                     {/if}
                     {#if assignWarning}
-                        <div class="notification is-danger">
-                            This key is already assigned
-                        </div>
+                        <div class="notification is-danger">This key is already assigned</div>
                     {/if}
                     {#if $trainingActive}
                         <div class="notification is-{instructionColor}">
@@ -647,32 +610,18 @@
                             </div>
                         {/if}
                     {/if}
-                    <button
-                        class="button is-medium is-fullwidth {$trainingActive
-                            ? 'is-danger'
-                            : 'is-success'}"
-                        on:click={toggleState}
-                    >
+                    <button class="button is-medium is-fullwidth {$trainingActive ? 'is-danger' : 'is-success'}" on:click={toggleTraining}>
                         {$trainingActive ? "Stop" : "Start"}
                     </button>
                 </div>
                 <div class="box">
                     <div class="switch-container is-size-4">
-                        <span
-                            class:has-text-grey-light={isController}
-                            class="label-left">MnK</span
-                        >
+                        <span class:has-text-grey-light={isController} class="label-left">MnK</span>
                         <label class="switch">
-                            <input
-                                type="checkbox"
-                                on:click={toggleController}
-                            />
+                            <input type="checkbox" on:click={toggleController} />
                             <span class="slider round" />
                         </label>
-                        <span
-                            class:has-text-grey-light={!isController}
-                            class="label-right">Controller</span
-                        >
+                        <span class:has-text-grey-light={!isController} class="label-right">Controller</span>
                     </div>
                     <br />
                     {#if isController}
@@ -683,9 +632,7 @@
                                 <div class="select">
                                     <select bind:value={selectedController}>
                                         {#each controllers as controller, index (controller.index)}
-                                            <option value={index}
-                                                >{controller.id}</option
-                                            >
+                                            <option value={index}>{controller.id}</option>
                                         {/each}
                                     </select>
                                 </div>
@@ -704,9 +651,7 @@
                             {/if}
                         {/if}
                         <p>
-                            Delay between game loop runs: {loopDelay.toFixed(
-                                2
-                            )}ms
+                            Delay between game loop runs: {loopDelay.toFixed(2)}ms
                         </p>
                         <p>FPS: {fps.toFixed(2)}</p>
                     {/if}
