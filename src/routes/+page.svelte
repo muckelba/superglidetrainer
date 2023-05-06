@@ -2,14 +2,10 @@
     <h1 class="title is-1">Apex Legends Movement Tech</h1>
     <div class="box">
         <div class="content is-medium">
-            The future home of a complete movement-tech wiki & more 👀<br /> In
-            the meantime we built this for you: <br />
+            The future home of a complete movement-tech wiki & more 👀<br /> In the meantime we built this for you: <br />
 
             <a href="/superglidetrainer">Superglide Trainer</a> <br />
-            <a
-                href="https://docs.google.com/document/d/1lGqQ8B25mBIhGtV4j6YenjMhPK8r2Uz_jfu8dFus9Qk/edit?usp=sharing"
-                >A list with every movement-tech</a
-            >
+            <a href="https://docs.google.com/document/d/1lGqQ8B25mBIhGtV4j6YenjMhPK8r2Uz_jfu8dFus9Qk/edit?usp=sharing">A list with every movement-tech</a>
         </div>
     </div>
 </section>

@@ -4,6 +4,7 @@
 $body-overflow-y: auto;
 
 $notification-padding-ltr: 0.8rem 1.5rem 0.8rem 1.5rem;
+$modal-content-width: 66%;
 
 $orange-invert: findColorInvert($orange);
 
@@ -142,7 +143,7 @@ $divider-margin-size: 0px;
 }
 
 .history {
-    height: 360px;
+    height: 430px;
     overflow-y: auto;
     overflow-x: hidden;
     flex-direction: column-reverse;

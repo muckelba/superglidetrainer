@@ -1,15 +1,7 @@
 <script>
     import { onMount, afterUpdate } from "svelte";
 
-    import {
-        history,
-        trainingActive,
-        attempts,
-        potentialSuperglides,
-        wrongInputCount,
-        crouchTooLateCount,
-        gradientArray,
-    } from "$lib/stores";
+    import { history, trainingActive, attempts, potentialSuperglides, wrongInputCount, crouchTooLateCount, gradientArray } from "$lib/stores";
 
     import { percentageColor } from "$lib/util";
 
@@ -18,14 +10,12 @@
 
     // Stat calculations
     $: potentialSum = $potentialSuperglides.reduce((a, b) => a + b, 0);
-    $: potentialSuperglidesPercentage =
-        ($potentialSuperglides.length / $attempts.length) * 100 || 0;
+    $: potentialSuperglidesPercentage = ($potentialSuperglides.length / $attempts.length) * 100 || 0;
 
     $: potentialAvg = potentialSum / $potentialSuperglides.length || 0;
     $: superglideConsistency = potentialSum / $attempts.length || 0;
     $: wrongInputPercentage = ($wrongInputCount / $attempts.length) * 100 || 0;
-    $: crouchTooLatePercentage =
-        ($crouchTooLateCount / $attempts.length) * 100 || 0;
+    $: crouchTooLatePercentage = ($crouchTooLateCount / $attempts.length) * 100 || 0;
 
     $: computedPercentageColor = percentageColor(superglideConsistency);
 
@@ -51,34 +41,23 @@
 
 <div class="level has-text-centered">
     <p class="title is-3 level-item">
-        <span class="icon-text"
-            ><span class="icon"><i class="fas fa-chart-bar" /></span>&nbsp;<span
-                >Analytics</span
-            ></span
-        >
+        <span class="icon-text"><span class="icon"><i class="fas fa-chart-bar" /></span>&nbsp;<span>Analytics</span></span>
     </p>
 </div>
 <div class="columns">
     <div class="column">
         <p class="has-text-weight-bold is-size-5">
-            Overall superglide consistency: <code
-                class="has-text-{computedPercentageColor}"
-                >{superglideConsistency.toFixed(2)}%</code
-            >
+            Overall superglide consistency: <code class="has-text-{computedPercentageColor}">{superglideConsistency.toFixed(2)}%</code>
         </p>
         <div class="divider" />
         <p>
             Attempts: <code class="has-text-white"> {$attempts.length}</code>
         </p>
         <p>
-            Potential superglides: <code class="has-text-white"
-                >{potentialSuperglidesPercentage.toFixed(2)}%</code
-            >
+            Potential superglides: <code class="has-text-white">{potentialSuperglidesPercentage.toFixed(2)}%</code>
         </p>
         <p>
-            Average successful chance: <code class="has-text-white"
-                >{potentialAvg.toFixed(2)}%</code
-            >
+            Average successful chance: <code class="has-text-white">{potentialAvg.toFixed(2)}%</code>
         </p>
         <br />
         <!-- <p>You got <code>0%</code> because:</p> -->
@@ -104,9 +83,7 @@
             </p>
             <p>ALL OF IT!</p>
         </div>
-        <button class="button is-fullwidth" on:click={toggleSharingModal}
-            >Show all stats</button
-        >
+        <button class="button is-fullwidth" on:click={toggleSharingModal}>Show all stats</button>
     </div>
     <div class="divider is-vertical" />
     <div class="column history" bind:this={historydiv}>
@@ -127,49 +104,29 @@
     <div class="modal-content">
         <div class="box">
             <p class="title has-text-centered">Statistics</p>
-            <div
-                class="box"
-                style="background: linear-gradient(90deg, {$gradientArray.join(
-                    ','
-                )});"
-            />
             <div class="columns">
                 <div class="column">
                     <p class="has-text-weight-bold is-size-5">
-                        Overall superglide consistency: <code
-                            class="has-text-{computedPercentageColor}"
-                            >{superglideConsistency.toFixed(2)}%</code
-                        >
-                    </p>
-                    <div class="divider" />
-                    <p>
-                        Attempts: <code class="has-text-white">
-                            {$attempts.length}</code
-                        >
+                        Overall superglide consistency: <code class="has-text-{computedPercentageColor}">{superglideConsistency.toFixed(2)}%</code>
                     </p>
                     <p>
-                        Potential superglides: <code class="has-text-white"
-                            >{potentialSuperglidesPercentage.toFixed(2)}%</code
-                        >
+                        Attempts: <code class="has-text-white"> {$attempts.length}</code>
                     </p>
                     <p>
-                        Average successful chance: <code class="has-text-white"
-                            >{potentialAvg.toFixed(2)}%</code
-                        >
+                        Potential superglides: <code class="has-text-white">{potentialSuperglidesPercentage.toFixed(2)}%</code>
+                    </p>
+                    <p>
+                        Average successful chance: <code class="has-text-white">{potentialAvg.toFixed(2)}%</code>
                     </p>
                     <br />
                     <p>
-                        Wrong input first: <code
-                            >{wrongInputPercentage.toFixed(2)}%</code
-                        >
+                        Wrong input first: <code>{wrongInputPercentage.toFixed(2)}%</code>
                     </p>
                     <p>
-                        Crouch too late: <code
-                            >{crouchTooLatePercentage.toFixed(2)}%</code
-                        >
+                        Crouch too late: <code>{crouchTooLatePercentage.toFixed(2)}%</code>
                     </p>
                 </div>
-                <div class="column history">
+                <div class="column history is-one-third">
                     {#each $history as { line, color, finished }}
                         <p>
                             <span class="tag is-{color}">{line}</span>
@@ -180,10 +137,9 @@
                     {/each}
                 </div>
             </div>
+            <div class="box" style="background: linear-gradient(90deg, {$gradientArray.join(',')});" />
             <footer>
-                <button class="button" on:click={toggleSharingModal}
-                    >Close</button
-                >
+                <button class="button" on:click={toggleSharingModal}>Close</button>
             </footer>
         </div>
     </div>

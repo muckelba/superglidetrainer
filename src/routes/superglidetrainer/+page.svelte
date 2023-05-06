@@ -19,9 +19,12 @@
     let jumpButtonPressed = false;
     let crouchButtonPressed = false;
 
-    // Loop stats
+    // Controller Loop
+    const pollInterval = 1; // 1ms interval between each poll, so 1000hz polling rate
+    let controllerLoopId = null;
     let prevTimestamp = 0;
     let loopDelay = 0;
+    let cotrollerLoopDelay = 0;
 
     let fps = 0;
     let inputListeners = [];
@@ -109,6 +112,7 @@
     }
 
     function controllerLoop(timestamp) {
+        cotrollerLoopDelay = new Date();
         updateControllers();
         // Get the latest gamepad state
         const gamepad = controllers[selectedController];
@@ -162,9 +166,7 @@
         prevTimestamp = timestamp;
 
         fps = 1000 / loopDelay;
-
-        // Loop itself
-        window.requestAnimationFrame(controllerLoop); // TODO: this is currently bound to the refreshrate of the clients monitor, but it needs to be faster
+        console.log(cotrollerLoopDelay - new Date());
     }
 
     onMount(() => {
@@ -175,11 +177,6 @@
             const newSettings = migrateSettings(oldSettings);
             settings.set(newSettings);
             localStorage.setItem("content", JSON.stringify(newSettings));
-        }
-
-        if ("getGamepads" in navigator) {
-            updateControllers();
-            window.addEventListener("gamepadconnected", controllerLoop(new Date()));
         }
 
         const unsubscribe = settings.subscribe((value) => {
@@ -243,7 +240,7 @@
             handleMnK();
         }
 
-        if (!$trainingActive) {
+        if (!$trainingActive && inputListeners.length > 0) {
             window.removeEventListener(events.Popstate, disableHistory);
             window.removeEventListener(inputListeners[0][0], inputListeners[0][1]);
             window.removeEventListener(inputListeners[1][0], inputListeners[1][1]);
@@ -254,6 +251,13 @@
     function toggleController() {
         isController = !isController;
         $trainingActive = false;
+        if (isController) {
+            controllerLoopId = setInterval(() => {
+                controllerLoop(new Date());
+            }, pollInterval);
+        } else {
+            clearInterval(controllerLoopId);
+        }
     }
 
     function getOtherKey(setting) {
@@ -626,7 +630,7 @@
                     <br />
                     {#if isController}
                         {#if controllers.length == 0}
-                            <p>Please press a button on a controller</p>
+                            <p>Please press a button on a controller to connect it</p>
                         {:else}
                             <div class="control has-icons-left">
                                 <div class="select">
@@ -640,19 +644,8 @@
                                     <i class="fas fa-gamepad" />
                                 </div>
                             </div>
-                            {#if controllers[selectedController] !== undefined}
-                                <p>
-                                    Button States: {#each controllers[selectedController].buttons as button, index}
-                                        {button.value},
-                                    {/each}
-                                </p>
-                            {:else}
-                                <p>Please select a controller</p>
-                            {/if}
                         {/if}
-                        <p>
-                            Delay between game loop runs: {loopDelay.toFixed(2)}ms
-                        </p>
+                        <p>Delay: {loopDelay.toFixed(2)}ms</p>
                         <p>FPS: {fps.toFixed(2)}</p>
                     {/if}
                 </div>
