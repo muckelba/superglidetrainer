@@ -20,13 +20,11 @@
     let crouchButtonPressed = false;
 
     // Controller Loop
-    const pollInterval = 1; // 1ms interval between each poll, so 1000hz polling rate
     let controllerLoopId = null;
     let prevTimestamp = 0;
     let loopDelay = 0;
-    let cotrollerLoopDelay = 0;
+    let pollingRate = 0;
 
-    let fps = 0;
     let inputListeners = [];
     let settingsBinding = undefined;
     let assignWarning = false;
@@ -112,7 +110,6 @@
     }
 
     function controllerLoop(timestamp) {
-        cotrollerLoopDelay = new Date();
         updateControllers();
         // Get the latest gamepad state
         const gamepad = controllers[selectedController];
@@ -164,9 +161,7 @@
         loopDelay = timestamp - prevTimestamp;
         // Store current timestamp for next time
         prevTimestamp = timestamp;
-
-        fps = 1000 / loopDelay;
-        console.log(cotrollerLoopDelay - new Date());
+        pollingRate = 1000 / loopDelay;
     }
 
     onMount(() => {
@@ -214,6 +209,14 @@
                 </span>`;
     };
 
+    $: prettyController = (name) => {
+        if (name.length > 47) {
+            return name.slice(0, 50) + "...";
+        } else {
+            return name;
+        }
+    };
+
     // always go to the first forward history, which does not exist.
     function disableHistory() {
         window.history.go(1);
@@ -254,7 +257,7 @@
         if (isController) {
             controllerLoopId = setInterval(() => {
                 controllerLoop(new Date());
-            }, pollInterval);
+            }, 1);
         } else {
             clearInterval(controllerLoopId);
         }
@@ -629,6 +632,16 @@
                     </div>
                     <br />
                     {#if isController}
+                        <p>Pollingrate: <code>{pollingRate.toFixed(2)}hz</code></p>
+                        <br />
+                        {#if pollingRate >= 1 && pollingRate <= 150}
+                            <div class="notification is-danger">
+                                Your Browser is polling the controller state with a very low rate. <strong>
+                                    The trainerresults are most likely inaccurate.</strong
+                                > <br />
+                                If you are using Firefox, switch to a Chromium based browser as those allow a higher pollingrate.
+                            </div>
+                        {/if}
                         {#if controllers.length == 0}
                             <p>Please press a button on a controller to connect it</p>
                         {:else}
@@ -636,7 +649,7 @@
                                 <div class="select">
                                     <select bind:value={selectedController}>
                                         {#each controllers as controller, index (controller.index)}
-                                            <option value={index}>{controller.id}</option>
+                                            <option value={index}>{prettyController(controller.id)}</option>
                                         {/each}
                                     </select>
                                 </div>
@@ -645,8 +658,6 @@
                                 </div>
                             </div>
                         {/if}
-                        <p>Delay: {loopDelay.toFixed(2)}ms</p>
-                        <p>FPS: {fps.toFixed(2)}</p>
                     {/if}
                 </div>
             </div>
