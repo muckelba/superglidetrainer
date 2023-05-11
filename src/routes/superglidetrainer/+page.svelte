@@ -78,8 +78,10 @@
     const events = {
         Keydown: "keydown",
         Mousedown: "mousedown",
+        Mouseup: "mouseup",
         Wheel: "wheel",
         Popstate: "popstate",
+        Contextmenu: "contextmenu",
     };
 
     function migrateSettings(oldSettings) {
@@ -222,6 +224,11 @@
         window.history.go(1);
     }
 
+    // prevent the right-click menu
+    function disableContextmenu(event) {
+        event.preventDefault();
+    }
+
     function toggleTraining() {
         $trainingActive = !$trainingActive;
 
@@ -240,6 +247,7 @@
             // clear forward history
             window.history.pushState(null, null, window.location.href);
             window.addEventListener(events.Popstate, disableHistory);
+            window.addEventListener(events.Contextmenu, disableContextmenu);
             handleMnK();
         }
 
@@ -247,6 +255,7 @@
             window.removeEventListener(events.Popstate, disableHistory);
             window.removeEventListener(inputListeners[0][0], inputListeners[0][1]);
             window.removeEventListener(inputListeners[1][0], inputListeners[1][1]);
+            window.removeEventListener(events.Contextmenu, disableContextmenu);
             inputListeners = [];
         }
     }
@@ -275,8 +284,12 @@
     function setSetting(setting) {
         function removeListeners() {
             window.removeEventListener(events.Keydown, handleKeyboard);
-            window.removeEventListener(events.Mousedown, handleMouse);
+            window.removeEventListener(events.Mouseup, handleMouse);
             window.removeEventListener(events.Wheel, handleWheel);
+            // TODO: find a better solution for this
+            setTimeout(function () {
+                window.removeEventListener(events.Contextmenu, disableContextmenu);
+            }, 1000);
         }
 
         function handleKeyboard(event) {
@@ -336,10 +349,12 @@
             settingsBinding = setting;
             if (!isController) {
                 window.addEventListener(events.Keydown, handleKeyboard);
-                window.addEventListener(events.Mousedown, handleMouse);
+                // Mouseup, because we want to keep the disableContextmenu listener longer than the click to still disable it
+                window.addEventListener(events.Mouseup, handleMouse);
                 window.addEventListener(events.Wheel, handleWheel, {
                     passive: false,
                 });
+                window.addEventListener(events.Contextmenu, disableContextmenu);
             }
             // Unable to preventDefault in passive event listner, which causes page to scroll down when binding it to the input.
             // https://chromestatus.com/feature/6662647093133312
@@ -630,8 +645,8 @@
                         </label>
                         <span class:has-text-grey-light={!isController} class="label-right">Controller</span>
                     </div>
-                    <br />
                     {#if isController}
+                        <br />
                         <p>Pollingrate: <code>{pollingRate.toFixed(2)}hz</code></p>
                         <br />
                         {#if pollingRate >= 1 && pollingRate <= 150}

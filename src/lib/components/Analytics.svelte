@@ -125,6 +125,8 @@
                     <p>
                         Crouch too late: <code>{crouchTooLatePercentage.toFixed(2)}%</code>
                     </p>
+                    <div class="divider" />
+                    <div class="notification">More stuff here is coming soon</div>
                 </div>
                 <div class="column history is-one-third">
                     {#each $history as { line, color, finished }}
