@@ -27,8 +27,10 @@
     const events = {
         Keydown: "keydown",
         Mousedown: "mousedown",
+        Mouseup: "mouseup",
         Wheel: "wheel",
         Popstate: "popstate",
+        Contextmenu: "contextmenu",
     };
 
     let inputListeners = [];
@@ -50,16 +52,14 @@
     let chance = 0;
     let attempts = [];
     let potentialSuperglides = [];
-    $: potentialSuperglidesPercentage =
-        (potentialSuperglides.length / attempts.length) * 100 || 0;
+    $: potentialSuperglidesPercentage = (potentialSuperglides.length / attempts.length) * 100 || 0;
     $: potentialSum = potentialSuperglides.reduce((a, b) => a + b, 0);
     $: potentialAvg = potentialSum / potentialSuperglides.length || 0;
     $: superglideConsistency = potentialSum / attempts.length || 0;
     let wrongInputCount = 0;
     let crouchTooLateCount = 0;
     $: wrongInputPercentage = (wrongInputCount / attempts.length) * 100 || 0;
-    $: crouchTooLatePercentage =
-        (crouchTooLateCount / attempts.length) * 100 || 0;
+    $: crouchTooLatePercentage = (crouchTooLateCount / attempts.length) * 100 || 0;
 
     // i dont know how to access sass variables in svelte, so i did this
     const colorScheme = {
@@ -126,18 +126,13 @@
         let buttonText = "";
         switch ($settings[setting].type) {
             case devices.Keyboard:
-                buttonText =
-                    $settings[setting].bind === " "
-                        ? "SPACE"
-                        : $settings[setting].bind.toUpperCase();
+                buttonText = $settings[setting].bind === " " ? "SPACE" : $settings[setting].bind.toUpperCase();
                 break;
             case devices.Mouse:
                 buttonText = `Mousebutton ${$settings[setting].bind}`;
                 break;
             case devices.Wheel:
-                buttonText = `Mousewheel ${
-                    $settings[setting].bind > 0 ? "DOWN" : "UP"
-                }`;
+                buttonText = `Mousewheel ${$settings[setting].bind > 0 ? "DOWN" : "UP"}`;
                 break;
             default:
                 break;
@@ -160,6 +155,11 @@
         window.history.go(1);
     }
 
+    // prevent the right-click menu
+    function disableContextmenu(event) {
+        event.preventDefault();
+    }
+
     function toggleState() {
         trainingActive = !trainingActive;
         // removes focus to disable activation by spacebar
@@ -167,19 +167,15 @@
         // reset to default values when stopping
         if (!trainingActive) {
             window.removeEventListener(events.Popstate, disableHistory);
-            window.removeEventListener(
-                inputListeners[0][0],
-                inputListeners[0][1]
-            );
-            window.removeEventListener(
-                inputListeners[1][0],
-                inputListeners[1][1]
-            );
+            window.removeEventListener(inputListeners[0][0], inputListeners[0][1]);
+            window.removeEventListener(inputListeners[1][0], inputListeners[1][1]);
+            window.removeEventListener(events.Contextmenu, disableContextmenu);
             inputListeners = [];
         } else {
             // clear forward history
             window.history.pushState(null, null, window.location.href);
             window.addEventListener(events.Popstate, disableHistory);
+            window.addEventListener(events.Contextmenu, disableContextmenu);
             message = "";
             superglideText = "";
             superglide();
@@ -194,8 +190,12 @@
     function setSetting(setting) {
         function removeListeners() {
             window.removeEventListener(events.Keydown, handleKeyboard);
-            window.removeEventListener(events.Mousedown, handleMouse);
+            window.removeEventListener(events.Mouseup, handleMouse);
             window.removeEventListener(events.Wheel, handleWheel);
+            // TODO: find a better solution for this
+            setTimeout(function () {
+                window.removeEventListener(events.Contextmenu, disableContextmenu);
+            }, 1000);
         }
 
         function handleKeyboard(event) {
@@ -245,10 +245,12 @@
         if (!modalNotification) {
             modalNotification = true;
             window.addEventListener(events.Keydown, handleKeyboard);
-            window.addEventListener(events.Mousedown, handleMouse);
+            // Mouseup, because we want to keep the disableContextmenu listener longer than the click to still disable it
+            window.addEventListener(events.Mouseup, handleMouse);
             window.addEventListener(events.Wheel, handleWheel, {
                 passive: false,
             });
+            window.addEventListener(events.Contextmenu, disableContextmenu);
             // Unable to preventDefault in passive event listner, which causes page to scroll down when binding it to the input.
             // https://chromestatus.com/feature/6662647093133312
         } else {
@@ -282,10 +284,7 @@
                     window.removeEventListener(event_name, onEventHandler);
                     const [_, return_value] = get_device_props(dev, e);
                     // only prevent default for the two set keys (only works for keyboard events)
-                    if (
-                        return_value === $settings.jump.bind ||
-                        return_value === $settings.crouch.bind
-                    ) {
+                    if (return_value === $settings.jump.bind || return_value === $settings.crouch.bind) {
                         e.preventDefault();
                     }
                     resolve(return_value);
@@ -315,31 +314,21 @@
                 if (state === states.Ready) {
                     startTime = new Date();
                     state = states.Crouch;
-                } else if (
-                    state === states.Jump ||
-                    state === states.JumpWarned
-                ) {
+                } else if (state === states.Jump || state === states.JumpWarned) {
                     const now = new Date();
-                    const calucated =
-                        (now.getTime() - startTime.getTime()) / 1000;
+                    const calucated = (now.getTime() - startTime.getTime()) / 1000;
                     const elapsedFrames = calucated / frameTime;
                     const differenceSeconds = frameTime - calucated;
                     const lateBy = Math.abs(1 - elapsedFrames);
 
                     if (elapsedFrames < 1) {
                         chance = elapsedFrames * 100;
-                        message = `Crouch later by ${lateBy.toFixed(
-                            1
-                        )} frames (${differenceSeconds.toFixed(5)}s)`;
+                        message = `Crouch later by ${lateBy.toFixed(1)} frames (${differenceSeconds.toFixed(5)}s)`;
                     } else if (elapsedFrames < 2) {
                         chance = (2 - elapsedFrames) * 100;
-                        message = `Crouch sooner by ${lateBy.toFixed(
-                            1
-                        )} frames (${(differenceSeconds * -1).toFixed(1)}s)`;
+                        message = `Crouch sooner by ${lateBy.toFixed(1)} frames (${(differenceSeconds * -1).toFixed(1)}s)`;
                     } else {
-                        message = `Crouched too late by ${lateBy.toFixed(
-                            1
-                        )} frames (${(differenceSeconds * -1).toFixed(5)}s)`;
+                        message = `Crouched too late by ${lateBy.toFixed(1)} frames (${(differenceSeconds * -1).toFixed(5)}s)`;
                         chance = 0;
                         crouchTooLateCount += 1;
                     }
@@ -351,23 +340,16 @@
                             finished: false,
                         },
                         {
-                            line: `${elapsedFrames.toFixed(
-                                1
-                            )} frames have passed`,
+                            line: `${elapsedFrames.toFixed(1)} frames have passed`,
                             color: "light",
                             finished: false,
                         },
                     ]);
 
                     if (chance > 0) {
-                        potentialSuperglides = [
-                            ...potentialSuperglides,
-                            chance,
-                        ];
+                        potentialSuperglides = [...potentialSuperglides, chance];
                     }
-                    superglideText = `${chance.toFixed(
-                        2
-                    )}% chance to hit the superglide`;
+                    superglideText = `${chance.toFixed(2)}% chance to hit the superglide`;
                     superglideTextColor = percentageColor(chance);
 
                     updateHistory([
@@ -392,8 +374,7 @@
                     state = states.Jump;
                 } else if (state === states.Jump) {
                     state = states.JumpWarned;
-                    instructions =
-                        "Multiple jumps detected, results may not reflect ingame behavior.";
+                    instructions = "Multiple jumps detected, results may not reflect ingame behavior.";
                     instructionColor = "warning";
                     superglideText = "";
                 } else if (state === states.JumpWarned) {
@@ -410,17 +391,14 @@
                     ]);
 
                     const now = new Date();
-                    const delta =
-                        (now.getTime() - startTime) / 1000 + frameTime;
+                    const delta = (now.getTime() - startTime) / 1000 + frameTime;
                     const earlyBy = delta / frameTime;
 
                     chance = 0;
 
                     superglideText = "0% chance to hit the superglide";
                     superglideTextColor = percentageColor(chance);
-                    message = `Crouch later by ${earlyBy.toFixed(
-                        2
-                    )} frames (${delta.toFixed(5)}s)`;
+                    message = `Crouch later by ${earlyBy.toFixed(2)} frames (${delta.toFixed(5)}s)`;
                     updateHistory([
                         {
                             line: message,
@@ -449,11 +427,7 @@
     <div class="container">
         <h1 class="title is-1 has-text-centered">
             <span class="icon is-medium">
-                <img
-                    src="/logo.png"
-                    alt="superglidetrainer logo"
-                    style="transform: scaleX(-1);"
-                />
+                <img src="/logo.png" alt="superglidetrainer logo" style="transform: scaleX(-1);" />
             </span>
             {siteTitle}
             <span class="icon is-medium">
@@ -467,43 +441,30 @@
                 .join(',')}, rgba(0, 0, 0, 0)) 1; width: 100%"
         >
             <p>
-                A Superglide needs a jump input first and then a crouch input 1
-                frame later. You need to do the whole Superglide in the last
-                0.1-0.2 second of a mantle.
+                A Superglide needs a jump input first and then a crouch input 1 frame later. You need to do the whole Superglide in the last 0.1-0.2 second of a
+                mantle.
             </p>
             <br />
             <p>
-                That makes the correct timing of Jump -> Crouch way harder than
-                timing the whole Superglide in the mantle. This trainer will
-                help you learn that much harder Jump -> Crouch timing.
+                That makes the correct timing of Jump -> Crouch way harder than timing the whole Superglide in the mantle. This trainer will help you learn that
+                much harder Jump -> Crouch timing.
             </p>
         </div>
         <div class="columns">
             <div class="column">
                 <div class="box has-text-centered">
                     <h3 class="title is-3">
-                        <span class="icon-text"
-                            ><span class="icon"
-                                ><i class="fas fa-dumbbell" /></span
-                            >&nbsp;<span>Training</span></span
-                        >
+                        <span class="icon-text"><span class="icon"><i class="fas fa-dumbbell" /></span>&nbsp;<span>Training</span></span>
                     </h3>
                     <p class="subtitle">Click on the buttons to re-bind them</p>
                     <div class="field">
                         <div class="field-body">
                             <div class="field has-addons">
                                 <p class="control">
-                                    <button
-                                        class="button is-link is-outlined no-hover"
-                                    >
-                                        Jump
-                                    </button>
+                                    <button class="button is-link is-outlined no-hover"> Jump </button>
                                 </p>
                                 <p class="control">
-                                    <button
-                                        class="button setting-button is-link is-outlined"
-                                        on:click={() => setSetting("jump")}
-                                    >
+                                    <button class="button setting-button is-link is-outlined" on:click={() => setSetting("jump")}>
                                         {@html prettyBind("jump")}
                                     </button>
                                     <!-- <span class="tag" /> -->
@@ -511,16 +472,10 @@
                             </div>
                             <div class="field has-addons">
                                 <p class="control">
-                                    <button
-                                        class="button is-link is-outlined no-hover"
-                                    >
-                                        Crouch
-                                    </button>
+                                    <button class="button is-link is-outlined no-hover"> Crouch </button>
                                 </p>
                                 <p class="control">
-                                    <button
-                                        class="button is-link is-outlined setting-button"
-                                        on:click={() => setSetting("crouch")}
+                                    <button class="button is-link is-outlined setting-button" on:click={() => setSetting("crouch")}
                                         >{@html prettyBind("crouch")}
                                         <!-- <span class="tag" /> -->
                                     </button>
@@ -528,11 +483,7 @@
                             </div>
                             <div class="field has-addons">
                                 <p class="control">
-                                    <button
-                                        class="button is-link is-outlined no-hover"
-                                    >
-                                        FPS
-                                    </button>
+                                    <button class="button is-link is-outlined no-hover"> FPS </button>
                                 </p>
                                 <p class="control">
                                     <input
@@ -546,14 +497,10 @@
                         </div>
                     </div>
                     {#if modalNotification}
-                        <div class="notification is-info">
-                            Press any key or mouse button to bind
-                        </div>
+                        <div class="notification is-info">Press any key or mouse button to bind</div>
                     {/if}
                     {#if assignWarning}
-                        <div class="notification is-danger">
-                            This key is already assigned
-                        </div>
+                        <div class="notification is-danger">This key is already assigned</div>
                     {/if}
                     {#if trainingActive}
                         <div class="notification is-{instructionColor}">
@@ -570,12 +517,7 @@
                             </div>
                         {/if}
                     {/if}
-                    <button
-                        class="button is-medium is-fullwidth {trainingActive
-                            ? 'is-danger'
-                            : 'is-success'}"
-                        on:click={toggleState}
-                    >
+                    <button class="button is-medium is-fullwidth {trainingActive ? 'is-danger' : 'is-success'}" on:click={toggleState}>
                         {trainingActive ? "Stop" : "Start"}
                     </button>
                 </div>
@@ -583,53 +525,32 @@
             <div class="column">
                 <div class="box">
                     <h3 class="title has-text-centered is-3">
-                        <span class="icon-text"
-                            ><span class="icon"
-                                ><i class="fas fa-chart-bar" /></span
-                            >&nbsp;<span>Analytics</span></span
-                        >
+                        <span class="icon-text"><span class="icon"><i class="fas fa-chart-bar" /></span>&nbsp;<span>Analytics</span></span>
                     </h3>
                     <div class="columns">
                         <div class="column">
                             <p class="has-text-weight-bold is-size-5">
-                                Overall superglide consistency: <code
-                                    class="has-text-{percentageColor(
-                                        superglideConsistency
-                                    )}"
+                                Overall superglide consistency: <code class="has-text-{percentageColor(superglideConsistency)}"
                                     >{superglideConsistency.toFixed(2)}%</code
                                 >
                             </p>
                             <div class="divider" />
                             <p>
-                                Attempts: <code class="has-text-white">
-                                    {attempts.length}</code
-                                >
+                                Attempts: <code class="has-text-white"> {attempts.length}</code>
                             </p>
                             <p>
-                                Potential superglides: <code
-                                    class="has-text-white"
-                                    >{potentialSuperglidesPercentage.toFixed(
-                                        2
-                                    )}%</code
-                                >
+                                Potential superglides: <code class="has-text-white">{potentialSuperglidesPercentage.toFixed(2)}%</code>
                             </p>
                             <p>
-                                Average successful chance: <code
-                                    class="has-text-white"
-                                    >{potentialAvg.toFixed(2)}%</code
-                                >
+                                Average successful chance: <code class="has-text-white">{potentialAvg.toFixed(2)}%</code>
                             </p>
                             <br />
                             <!-- <p>You got <code>0%</code> because:</p> -->
                             <p>
-                                Wrong input first: <code
-                                    >{wrongInputPercentage.toFixed(2)}%</code
-                                >
+                                Wrong input first: <code>{wrongInputPercentage.toFixed(2)}%</code>
                             </p>
                             <p>
-                                Crouch too late: <code
-                                    >{crouchTooLatePercentage.toFixed(2)}%</code
-                                >
+                                Crouch too late: <code>{crouchTooLatePercentage.toFixed(2)}%</code>
                             </p>
                             <!-- <br />
                             <p>
