@@ -326,7 +326,7 @@
                         message = `Crouch later by ${lateBy.toFixed(1)} frames (${differenceSeconds.toFixed(5)}s)`;
                     } else if (elapsedFrames < 2) {
                         chance = (2 - elapsedFrames) * 100;
-                        message = `Crouch sooner by ${lateBy.toFixed(1)} frames (${(differenceSeconds * -1).toFixed(1)}s)`;
+                        message = `Crouch sooner by ${lateBy.toFixed(1)} frames (${(differenceSeconds * -1).toFixed(5)}s)`;
                     } else {
                         message = `Crouched too late by ${lateBy.toFixed(1)} frames (${(differenceSeconds * -1).toFixed(5)}s)`;
                         chance = 0;
