@@ -2,6 +2,9 @@
     import { onMount, afterUpdate } from "svelte";
 
     import {
+        settings,
+        controllerPrecision,
+        isController,
         history,
         trainingActive,
         sharingModalActive,
@@ -129,7 +132,12 @@
                         Crouch too late: <code>{crouchTooLatePercentage.toFixed(2)}%</code>
                     </p>
                     <div class="divider" />
-                    <div class="notification">More stuff here is coming soon</div>
+                    {#if $isController}
+                        <p>
+                            Your browser is limiting our timing precision to <code>{$controllerPrecision.toFixed(2)}ms</code>. Youre current FPS setting is
+                            <code>{$settings.fps}</code>
+                        </p>
+                    {/if}
                 </div>
                 <div class="column history is-one-third">
                     {#each $history as { line, color, finished }}

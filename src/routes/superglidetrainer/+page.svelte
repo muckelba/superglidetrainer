@@ -5,7 +5,18 @@
 
     import { percentageColor, updateHistory, toggleSharingModal } from "$lib/util";
 
-    import { trainingActive, attempts, potentialSuperglides, wrongInputCount, crouchTooLateCount, gradientArray } from "$lib/stores";
+    import {
+        settings,
+        controllerPrecision,
+        isController,
+        devices,
+        trainingActive,
+        attempts,
+        potentialSuperglides,
+        wrongInputCount,
+        crouchTooLateCount,
+        gradientArray,
+    } from "$lib/stores";
 
     import Faq from "../../lib/components/Faq.svelte";
     import Footer from "../../lib/components/Footer.svelte";
@@ -13,7 +24,6 @@
     import Analytics from "../../lib/components/Analytics.svelte";
 
     // Controller stuff
-    let isController = false;
     let selectedController = 0; // use the first controller by default
     let controllers = [];
     let jumpButtonPressed = false;
@@ -23,7 +33,6 @@
     let controllerLoopId = null;
     let prevTimestamp = 0;
     let loopDelay = 0;
-    let controllerPrecision = 0;
 
     let inputListeners = [];
     let settingsBinding = undefined;
@@ -54,26 +63,6 @@
         wheel: "mouse",
         controller: "gamepad",
     };
-
-    const devices = {
-        Keyboard: "keyboard",
-        Mouse: "mouse",
-        Wheel: "wheel",
-        Controller: "controller",
-    };
-
-    // default settings
-    const settings = writable({
-        mnk: {
-            jump: { type: devices.Keyboard, bind: " " },
-            crouch: { type: devices.Keyboard, bind: "Control" },
-        },
-        controller: {
-            jump: 0,
-            crouch: 1,
-        },
-        fps: 144,
-    });
 
     const events = {
         Keydown: "keydown",
@@ -163,7 +152,7 @@
         loopDelay = timestamp - prevTimestamp;
         // Store current timestamp for next time
         prevTimestamp = timestamp;
-        controllerPrecision = ($settings.fps / (1000 / loopDelay)) * 0.5;
+        $controllerPrecision = ($settings.fps / (1000 / loopDelay)) * 0.5;
     }
 
     onMount(() => {
@@ -186,7 +175,7 @@
     $: prettyBind = (setting) => {
         let buttonText = "";
         let icon_class = "";
-        if (isController) {
+        if ($isController) {
             buttonText = `Button ${$settings.controller[setting]}`;
             icon_class = `fas fa-${icon_map["controller"]}`;
         } else {
@@ -243,7 +232,7 @@
         // removes focus to disable activation by spacebar
         this.blur();
 
-        if (!isController && $trainingActive) {
+        if (!$isController && $trainingActive) {
             // clear forward history
             window.history.pushState(null, null, window.location.href);
             window.addEventListener(events.Popstate, disableHistory);
@@ -261,7 +250,7 @@
     }
 
     function toggleController() {
-        isController = !isController;
+        $isController = !$isController;
         $trainingActive = false;
         if (isController) {
             controllerLoopId = setInterval(() => {
@@ -274,7 +263,7 @@
 
     function getOtherKey(setting) {
         const otherSetting = setting === "jump" ? "crouch" : "jump";
-        if (isController) {
+        if ($isController) {
             return $settings.controller[otherSetting];
         } else {
             return $settings.mnk[otherSetting].bind;
@@ -347,7 +336,7 @@
 
         if (!settingsBinding) {
             settingsBinding = setting;
-            if (!isController) {
+            if (!$isController) {
                 window.addEventListener(events.Keydown, handleKeyboard);
                 // Mouseup, because we want to keep the disableContextmenu listener longer than the click to still disable it
                 window.addEventListener(events.Mouseup, handleMouse);
@@ -638,21 +627,16 @@
                 </div>
                 <div class="box">
                     <div class="switch-container is-size-4">
-                        <span class:has-text-grey-light={isController} class="label-left">MnK</span>
+                        <span class:has-text-grey-light={$isController} class="label-left">MnK</span>
                         <label class="switch">
                             <input type="checkbox" on:click={toggleController} />
                             <span class="slider round" />
                         </label>
-                        <span class:has-text-grey-light={!isController} class="label-right">Controller</span>
+                        <span class:has-text-grey-light={!$isController} class="label-right">Controller</span>
                     </div>
-                    {#if isController}
+                    {#if $isController}
                         <br />
-                        <p>
-                            Your browser is limiting our timing precision to <code>{controllerPrecision.toFixed(2)}ms</code>. Youre current FPS setting is
-                            <code>{$settings.fps}</code>
-                        </p>
-                        <br />
-                        {#if controllerPrecision >= 1 && controllerPrecision <= 150}
+                        {#if $controllerPrecision >= 1 && $controllerPrecision <= 150}
                             <div class="notification is-danger">
                                 Your Browser is polling the controller state with a very low rate. <strong> The trainerresults are very inaccurate.</strong>
                                 <br />
