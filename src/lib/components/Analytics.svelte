@@ -1,11 +1,19 @@
 <script>
     import { onMount, afterUpdate } from "svelte";
 
-    import { history, trainingActive, attempts, potentialSuperglides, wrongInputCount, crouchTooLateCount, gradientArray } from "$lib/stores";
+    import {
+        history,
+        trainingActive,
+        sharingModalActive,
+        attempts,
+        potentialSuperglides,
+        wrongInputCount,
+        crouchTooLateCount,
+        gradientArray,
+    } from "$lib/stores";
 
-    import { percentageColor } from "$lib/util";
+    import { percentageColor, toggleSharingModal } from "$lib/util";
 
-    let sharing_modal_active = false;
     let historydiv;
 
     // Stat calculations
@@ -32,11 +40,6 @@
             historydiv.scrollTop = historydiv.scrollHeight;
         }
     });
-
-    function toggleSharingModal() {
-        $trainingActive = false;
-        sharing_modal_active = !sharing_modal_active;
-    }
 </script>
 
 <div class="level has-text-centered">
@@ -98,7 +101,7 @@
     </div>
 </div>
 
-<div class:is-active={sharing_modal_active} class="modal">
+<div class:is-active={$sharingModalActive} class="modal">
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <div class="modal-background" on:click={toggleSharingModal} />
     <div class="modal-content">

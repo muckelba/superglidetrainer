@@ -1,4 +1,4 @@
-import { history, gradientArray } from "$lib/stores"
+import { history, trainingActive, sharingModalActive, gradientArray } from "$lib/stores";
 import { colorScheme } from "$lib/config";
 
 export function percentageColor(value) {
@@ -23,4 +23,9 @@ export function updateHistory(objArr) {
             gradientArray.update((gradientValue) => [...gradientValue, colorScheme[obj.color]]);
         }
     });
+}
+
+export function toggleSharingModal() {
+    trainingActive.set(false);
+    sharingModalActive.update(value => !value);
 }

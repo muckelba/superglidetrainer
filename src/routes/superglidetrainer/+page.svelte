@@ -3,7 +3,7 @@
     import { writable } from "svelte/store";
     import { siteTitle } from "$lib/config";
 
-    import { percentageColor, updateHistory } from "$lib/util";
+    import { percentageColor, updateHistory, toggleSharingModal } from "$lib/util";
 
     import { trainingActive, attempts, potentialSuperglides, wrongInputCount, crouchTooLateCount, gradientArray } from "$lib/stores";
 
@@ -651,9 +651,9 @@
                         <br />
                         {#if pollingRate >= 1 && pollingRate <= 150}
                             <div class="notification is-danger">
-                                Your Browser is polling the controller state with a very low rate. <strong>
-                                    The trainerresults are most likely inaccurate.</strong
-                                > <br />
+                                Your Browser is polling the controller state with a very low rate. <strong> The trainerresults are very inaccurate.</strong>
+                                <br />
+                                Click <a on:click={toggleSharingModal}>here</a> to see more statistics about it <br />
                                 If you are using Firefox, switch to a Chromium based browser as those allow a higher pollingrate.
                             </div>
                         {/if}

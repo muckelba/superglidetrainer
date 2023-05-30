@@ -3,6 +3,7 @@ import { colorScheme } from "$lib/config";
 
 export let history = writable([])
 export let trainingActive = writable(false);
+export let sharingModalActive = writable(false);
 
 // Stat stores
 export let attempts = writable([]);
