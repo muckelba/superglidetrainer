@@ -134,7 +134,7 @@
                     <div class="divider" />
                     {#if $isController}
                         <p>
-                            Your browser is limiting our timing precision to <code>{$controllerPrecision.toFixed(2)}ms</code>. Youre current FPS setting is
+                            Your browser is limiting our timing precision to <code>{$controllerPrecision.toFixed(2)}ms</code>. Your current FPS setting is
                             <code>{$settings.fps}</code>
                         </p>
                     {/if}
