@@ -23,7 +23,7 @@
     let controllerLoopId = null;
     let prevTimestamp = 0;
     let loopDelay = 0;
-    let pollingRate = 0;
+    let controllerPrecision = 0;
 
     let inputListeners = [];
     let settingsBinding = undefined;
@@ -163,7 +163,7 @@
         loopDelay = timestamp - prevTimestamp;
         // Store current timestamp for next time
         prevTimestamp = timestamp;
-        pollingRate = 1000 / loopDelay;
+        controllerPrecision = ($settings.fps / (1000 / loopDelay)) * 0.5;
     }
 
     onMount(() => {
@@ -647,9 +647,12 @@
                     </div>
                     {#if isController}
                         <br />
-                        <p>Pollingrate: <code>{pollingRate.toFixed(2)}hz</code></p>
+                        <p>
+                            Your browser is limiting our timing precision to <code>{controllerPrecision.toFixed(2)}ms</code>. Youre current FPS setting is
+                            <code>{$settings.fps}</code>
+                        </p>
                         <br />
-                        {#if pollingRate >= 1 && pollingRate <= 150}
+                        {#if controllerPrecision >= 1 && controllerPrecision <= 150}
                             <div class="notification is-danger">
                                 Your Browser is polling the controller state with a very low rate. <strong> The trainerresults are very inaccurate.</strong>
                                 <br />
