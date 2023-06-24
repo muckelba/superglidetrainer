@@ -30,6 +30,7 @@
 
     $: computedPercentageColor = percentageColor(superglideConsistency);
 
+    $: averageErrorPerPoll = ($settings.fps / (1000 / $controllerPrecision)) * 0.5;
     onMount(() => {
         // keep the scrollbar at the bottom
         if (trainingActive) {
@@ -134,8 +135,12 @@
                     <div class="divider" />
                     {#if $isController}
                         <p>
-                            Your browser is limiting our timing precision to <code>{$controllerPrecision.toFixed(2)}ms</code>. Your current FPS setting is
-                            <code>{$settings.fps}</code>
+                            Your browser is limiting our timing precision to <code class="has-text-white">{$controllerPrecision.toFixed(2)}ms</code>. Your
+                            current FPS setting is
+                            <code class="has-text-white">{$settings.fps}</code>
+                        </p>
+                        <p class="has-text-weight-bold is-size-5">
+                            Result: the % numbers we show you are wrong by an average of <code class="has-text-white">{averageErrorPerPoll.toFixed(2)}</code>%
                         </p>
                     {/if}
                 </div>

@@ -33,6 +33,8 @@
     let controllerLoopId = null;
     let prevTimestamp = 0;
     let loopDelay = 0;
+    let loopDelayHz = 0;
+    let loopDelayList = [];
 
     let inputListeners = [];
     let settingsBinding = undefined;
@@ -152,7 +154,13 @@
         loopDelay = timestamp - prevTimestamp;
         // Store current timestamp for next time
         prevTimestamp = timestamp;
-        $controllerPrecision = ($settings.fps / (1000 / loopDelay)) * 0.5;
+        loopDelayHz = 1000 / loopDelay;
+        loopDelayList.push(loopDelay);
+        // Only keep 1000 items to make this stat readable
+        if (loopDelayList.length > 1000) {
+            loopDelayList.shift();
+        }
+        $controllerPrecision = loopDelayList.reduce((acc, curr) => acc + curr, 0) / loopDelayList.length;
     }
 
     onMount(() => {
@@ -252,7 +260,8 @@
     function toggleController() {
         $isController = !$isController;
         $trainingActive = false;
-        if (isController) {
+        if ($isController) {
+            prevTimestamp = new Date(); // calculate the first delay entry correct
             controllerLoopId = setInterval(() => {
                 controllerLoop(new Date());
             }, 1);
@@ -636,9 +645,10 @@
                     </div>
                     {#if $isController}
                         <br />
-                        {#if $controllerPrecision >= 1 && $controllerPrecision <= 150}
+                        {#if $controllerPrecision >= 7}
                             <div class="notification is-danger">
-                                Your Browser is polling the controller state with a very low rate. <strong> The trainerresults are very inaccurate.</strong>
+                                Your Browser is polling the controller state with a very low rate. ({loopDelayHz.toFixed(2)}hz)
+                                <strong> The trainerresults are very inaccurate.</strong>
                                 <br />
                                 Click <a on:click={toggleSharingModal}>here</a> to see more statistics about it <br />
                                 If you are using Firefox, switch to a Chromium based browser as those allow a higher pollingrate.
