@@ -4,21 +4,23 @@ A website based on [this powershell script](https://github.com/AngryGroceries/Ap
 
 ## TODO
 
-### Required for initial release
+### In progress
+- [ ] Expand the protocol for better screenshots
+
+### Backlog
+- [ ] More session stats
+  - [ ] Add graphs
+- [ ] Use a pop-up modal for setting keybinds
+- [ ] Sharing feature
+- [ ] Add a ? next to analytics to scroll down to the website FAQ section
+
+### Done
 - [x] Actually implementing the trainer
 - [x] Darkmode 
 - [x] Don't allow double binds
 - [x] Show # of attempts and a overall superglide consistency
 - [x] Mousebutton support
-
-### Additional, non-critial
-- [ ] More session stats
-  - [ ] Add graphs
-- [ ] Use a pop-up modal for setting keybinds
-- [ ] Add controller support (<https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API>)
-- [ ] Sharing feature
-- [ ] Expand the protocol for better screenshots
-- [ ] Add a ? next to analytics to scroll down to the website FAQ section
+- [x] Controller support (<https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API>)
 
 ## Local development
 
