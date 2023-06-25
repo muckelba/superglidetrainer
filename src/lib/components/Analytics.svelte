@@ -3,7 +3,7 @@
 
     import {
         settings,
-        controllerPrecision,
+        loopDelayAvg,
         isController,
         history,
         trainingActive,
@@ -31,7 +31,7 @@
     $: computedPercentageColor = percentageColor(superglideConsistency);
 
     // This can be improved 100%
-    $: averageErrorPerPoll = ($settings.fps / (1000 / $controllerPrecision)) * 0.5 * 100;
+    $: averageErrorPerPoll = ($settings.fps / (1000 / $loopDelayAvg)) * 0.5 * 100;
     onMount(() => {
         // keep the scrollbar at the bottom
         if (trainingActive) {
@@ -136,8 +136,8 @@
                     <div class="divider" />
                     {#if $isController}
                         <p>
-                            Your browser is limiting our timing precision to <code class="has-text-white">{$controllerPrecision.toFixed(2)}ms</code>. Your
-                            current FPS setting is
+                            Your browser is limiting our timing precision to <code class="has-text-white">{$loopDelayAvg.toFixed(2)}ms</code>. Your current FPS
+                            setting is
                             <code class="has-text-white">{$settings.fps}</code>
                         </p>
                         <p class="has-text-weight-bold is-size-5">

@@ -27,7 +27,7 @@ export let sharingModalActive = writable(false);
 
 // Controller stuff
 export let isController = writable(false);
-export let controllerPrecision = writable(0);
+export let loopDelayAvg = writable(0);
 
 // Stat stores
 export let attempts = writable([]);

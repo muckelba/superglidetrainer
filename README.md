@@ -5,7 +5,6 @@ A website based on [this powershell script](https://github.com/AngryGroceries/Ap
 ## TODO
 
 ### In progress
-- [ ] Controller support (<https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API>)
 - [ ] Expand the protocol for better screenshots
 
 ### Backlog
@@ -21,6 +20,7 @@ A website based on [this powershell script](https://github.com/AngryGroceries/Ap
 - [x] Don't allow double binds
 - [x] Show # of attempts and a overall superglide consistency
 - [x] Mousebutton support
+- [x] Controller support (<https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API>)
 
 ## Local development
 

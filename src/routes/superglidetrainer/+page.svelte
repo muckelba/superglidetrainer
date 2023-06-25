@@ -7,7 +7,7 @@
 
     import {
         settings,
-        controllerPrecision,
+        loopDelayAvg,
         isController,
         devices,
         trainingActive,
@@ -160,7 +160,7 @@
         if (loopDelayList.length > 1000) {
             loopDelayList.shift();
         }
-        $controllerPrecision = loopDelayList.reduce((acc, curr) => acc + curr, 0) / loopDelayList.length;
+        $loopDelayAvg = loopDelayList.reduce((acc, curr) => acc + curr, 0) / loopDelayList.length;
     }
 
     onMount(() => {
@@ -645,7 +645,7 @@
                     </div>
                     {#if $isController}
                         <br />
-                        {#if $controllerPrecision >= 7}
+                        {#if $loopDelayAvg >= 7}
                             <div class="notification is-danger">
                                 Your Browser is polling the controller state with a very low rate. ({loopDelayHz.toFixed(2)}hz)
                                 <strong> The trainerresults are very inaccurate.</strong>
