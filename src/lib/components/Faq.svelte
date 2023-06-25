@@ -23,6 +23,28 @@
                     <h5 class="title is-5">Why do i keep consistently hitting the exact same frame delay? Why can't i go lower then that?</h5>
                     <p />
                     <p class="subtitle is-6 is-underlined">
+                        <strong>Website Issues:</strong>
+                    </p>
+                    <p class="subtitle is-6">
+                        By using this web based Superglide trainer you trade accuracy for convenience, compared to the Powershell script.
+                    </p>
+                    <p class="subtitle is-6">
+                        On the web we can only pull your inputs at a certain frequency. This introduces an uncertainty. We are currently working on displaying
+                        this uncertainty to you for MnK. For controller we already display the uncertainty in "Show all stats".
+                    </p>
+                    <p class="subtitle is-6">
+                        Most browser-setups seem to poll MnK inputs at 1kHz. At 144 FPS this results in an average uncertainty of around 7%. So when you get a
+                        48% chance to hit the Superglide, on average it could be anything between 41% or 55%.<br />
+                        We are also working on potentially improving the poll frequency for both MnK and Controller.
+                    </p>
+                    <p class="subtitle is-6">
+                        But this means this web based Superglide Trainer still fulfills its purpose.<br />
+                        It helps beginners and intermediates get used to the order of inputs, resolve hardware problems and track their rough progress.<br />
+                        But if your overall superglide consistency starts to regularly stay above 70% and you want to make sure that your progress towards 90 and
+                        100% is as accurate as possible, you could start using the Powershell script linked at the bottom. It's not limited by browser limitations
+                        and doesn't suffer from the same uncertainty problem.
+                    </p>
+                    <p class="subtitle is-6 is-underlined">
                         <strong>Keyboard issues:</strong>
                     </p>
                     <p class="subtitle is-6">

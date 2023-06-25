@@ -30,7 +30,8 @@
 
     $: computedPercentageColor = percentageColor(superglideConsistency);
 
-    $: averageErrorPerPoll = ($settings.fps / (1000 / $controllerPrecision)) * 0.5;
+    // This can be improved 100%
+    $: averageErrorPerPoll = ($settings.fps / (1000 / $controllerPrecision)) * 0.5 * 100;
     onMount(() => {
         // keep the scrollbar at the bottom
         if (trainingActive) {
