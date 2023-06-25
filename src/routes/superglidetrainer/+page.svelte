@@ -647,7 +647,7 @@
                         <br />
                         {#if $loopDelayAvg >= 7}
                             <div class="notification is-danger">
-                                Your Browser is polling the controller state with a very low rate. ({loopDelayHz.toFixed(2)}hz)
+                                Your Browser is polling the controller state with a very low rate. ({$loopDelayAvg.toFixed(2)}ms delay on average)
                                 <strong> The trainerresults are very inaccurate.</strong>
                                 <br />
                                 Click <a on:click={toggleSharingModal}>here</a> to see more statistics about it <br />
