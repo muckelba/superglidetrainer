@@ -22,6 +22,9 @@
     import Tips from "../../lib/components/Tips.svelte";
     import Analytics from "../../lib/components/Analytics.svelte";
 
+    // Misc
+    let isTabActive = true;
+
     // Random Background Image
     let backgroundImages = ["/BG_1.jpg", "/BG_2.jpg", " /BG_3.jpg"];
     let randomImage;
@@ -166,10 +169,26 @@
         $loopDelayAvg = loopDelayList.reduce((acc, curr) => acc + curr, 0) / loopDelayList.length;
     }
 
+    function pauseWhenInactive() {
+        isTabActive = !document.hidden;
+
+        if ($isController && !isTabActive) {
+            console.log("Tab became inactive, stopping controller polling loop");
+            clearInterval(controllerLoopId);
+        } else if ($isController) {
+            console.log("Tab became active again, starting controller polling loop");
+            startControllerLoop();
+        }
+    }
+
     onMount(() => {
+        // Stop trainer when tab is inactive
+        window.addEventListener("visibilitychange", pauseWhenInactive);
+
         // Random Background Image
         let randomIndex = Math.floor(Math.random() * backgroundImages.length);
         randomImage = backgroundImages[randomIndex];
+
         // load settings from localstorage
         const content = localStorage.getItem("content");
         if (content) {
@@ -263,14 +282,18 @@
         }
     }
 
+    function startControllerLoop() {
+        prevTimestamp = new Date(); // calculate the first delay entry correct
+        controllerLoopId = setInterval(() => {
+            controllerLoop(new Date());
+        }, 1);
+    }
+
     function toggleController() {
         $isController = !$isController;
         $trainingActive = false;
         if ($isController) {
-            prevTimestamp = new Date(); // calculate the first delay entry correct
-            controllerLoopId = setInterval(() => {
-                controllerLoop(new Date());
-            }, 1);
+            startControllerLoop();
         } else {
             clearInterval(controllerLoopId);
         }
@@ -656,6 +679,9 @@
                                 Your Browser is polling the controller state with a very low rate. ({$loopDelayAvg.toFixed(2)}ms delay on average)
                                 <strong> The trainerresults are very inaccurate.</strong>
                                 <br />
+                                <!-- TODO: style a <button> that looks like link. Currently not possbile with bulma out of the box -->
+                                <!-- svelte-ignore a11y-click-events-have-key-events -->
+                                <!-- svelte-ignore a11y-missing-attribute -->
                                 Click <a on:click={toggleSharingModal}>here</a> to see more statistics about it <br />
                                 If you are using Firefox, switch to a Chromium based browser as those allow a higher pollingrate.
                             </div>
