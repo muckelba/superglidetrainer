@@ -1,6 +1,5 @@
 <script>
     import { onMount } from "svelte";
-    import { writable } from "svelte/store";
     import { siteTitle } from "$lib/config";
 
     import { percentageColor, updateHistory, toggleSharingModal } from "$lib/util";
@@ -22,6 +21,10 @@
     import Footer from "../../lib/components/Footer.svelte";
     import Tips from "../../lib/components/Tips.svelte";
     import Analytics from "../../lib/components/Analytics.svelte";
+
+    // Random Background Image
+    let backgroundImages = ["/BG_1.jpg", "/BG_2.jpg", " /BG_3.jpg"];
+    let randomImage;
 
     // Controller stuff
     let selectedController = 0; // use the first controller by default
@@ -164,6 +167,9 @@
     }
 
     onMount(() => {
+        // Random Background Image
+        let randomIndex = Math.floor(Math.random() * backgroundImages.length);
+        randomImage = backgroundImages[randomIndex];
         // load settings from localstorage
         const content = localStorage.getItem("content");
         if (content) {
@@ -537,7 +543,7 @@
     }
 </script>
 
-<section class="section background-image">
+<section class="section background-image" style={randomImage ? `background-image: url('${randomImage}');` : ""}>
     <div class="container">
         <h1 class="title is-1 has-text-centered">
             <span class="icon is-medium">
