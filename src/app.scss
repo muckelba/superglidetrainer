@@ -166,7 +166,7 @@ div.faq-content {
 }
 
 section.background-image {
-    background-image: url('/bg.jpg');
+    // background-image is set dynamically inline
     background-size: cover;
     background-position: center center;
     background-size: auto auto;
