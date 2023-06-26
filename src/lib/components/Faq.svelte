@@ -148,6 +148,18 @@
                 </li>
             </ul>
         </div>
+        <div class="content">
+            <ul>
+                <li>
+                    <h5 class="title is-5">Is it really just 1 Frame between the jump and crouch?</h5>
+                    <p class="subtitle is-6">
+                        Yes and No. <br />
+                        From 0-100FPS it is 1 frame. There have been recent discoveries that above 100FPS the delay get's bigger than 1 FPS. We are working on figuring
+                        out the exact delays and what the implications for the % chances are.
+                    </p>
+                </li>
+            </ul>
+        </div>
         <h4 class="title is-4 is-underlined">General Superglide questions:</h4>
         <div class="content">
             <ul>
