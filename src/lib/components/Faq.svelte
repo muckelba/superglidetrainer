@@ -177,10 +177,14 @@
                 <li>
                     <h5 class="title is-5">How do i know if i hit a Superglide in game?</h5>
                     <p class="subtitle is-6">
-                        The immediate speed feels very different to every other slide or jump of a ledge or mantle. The biggest indicator is the change in FOV.
-                        If your FOV didn't change. You didn't hit a Superglide. Go to the fire range to the long metal box at the top. A Superglide will clear
-                        it from one side to the other without scraping your feet. If you can't clear that box. You are not supergliding.<br />
-                        <a href="https://youtu.be/i7jfEFrJ4sw?t=23">Here is how that looks and sounds.</a>
+                        The immediate speed feels very different to every other slide or jump of a ledge or mantle. <br />
+                        One indicator is the change in Field of View. <br />
+                        An instant slide can also change your FOV. So it's not a surefire way to know. But if your Fov didn't change you definetly didn't hit a Superglide.
+                        <br />
+                        The best way to know for sure is to train in a spot that only a superglide can cross. <br />
+                        <a href="https://youtu.be/3W4McYsiPoM?t=260" target="_blank">Video with Spots</a> <br />
+                        If you have a teammate with you, or are in third person you can easily tell if you hit a Superglide by the way your legs will suddenly straighten
+                        out. Compared to the crouch out of a slide or the angled legs of a jump.
                     </p>
                 </li>
             </ul>
