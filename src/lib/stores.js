@@ -24,6 +24,7 @@ export const settings = writable({
 export let history = writable([])
 export let trainingActive = writable(false);
 export let sharingModalActive = writable(false);
+export let isFaqOpen = writable(false);
 
 // Controller stuff
 export let isController = writable(false);

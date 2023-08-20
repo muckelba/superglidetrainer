@@ -12,7 +12,6 @@ A website based on [this powershell script](https://github.com/AngryGroceries/Ap
   - [ ] Add graphs
 - [ ] Use a pop-up modal for setting keybinds
 - [ ] Sharing feature
-- [ ] Add a ? next to analytics to scroll down to the website FAQ section
 
 ### Done
 - [x] Actually implementing the trainer
@@ -21,6 +20,7 @@ A website based on [this powershell script](https://github.com/AngryGroceries/Ap
 - [x] Show # of attempts and a overall superglide consistency
 - [x] Mousebutton support
 - [x] Controller support (<https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API>)
+- [x] Add a ? next to analytics to scroll down to the website FAQ section
 
 ## Local development
 

@@ -1,21 +1,21 @@
 <script>
-    let faqHidden = true;
+    import { isFaqOpen } from "$lib/stores";
 
     function toggleFaq() {
-        faqHidden = !faqHidden;
+        isFaqOpen.update((isOpen) => !isOpen);
     }
 </script>
 
-<div class="card">
+<div class="card" id="faq">
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <!-- svelte-ignore a11y-missing-attribute -->
     <a class="card-header" on:click={toggleFaq}>
         <button class="button card-header-icon is-large" aria-label="collapse the FAQ">
-            <i class="fa fa-angle-{faqHidden ? 'down' : 'up'}" />
+            <i class="fa fa-angle-{$isFaqOpen ? 'up' : 'down'}" />
         </button>
         <p class="card-header-title title is-3">FAQ</p>
     </a>
-    <div class="card-content faq-content {faqHidden ? 'is-hidden' : ''}">
+    <div class="card-content faq-content {$isFaqOpen ? '' : 'is-hidden'}">
         <h4 class="title is-4 is-underlined">Superglide Trainer questions:</h4>
         <div class="content">
             <ul>
