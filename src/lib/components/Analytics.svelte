@@ -13,6 +13,7 @@
         wrongInputCount,
         crouchTooLateCount,
         gradientArray,
+        isFaqOpen,
     } from "$lib/stores";
 
     import { percentageColor, toggleSharingModal } from "$lib/util";
@@ -45,11 +46,25 @@
             historydiv.scrollTop = historydiv.scrollHeight;
         }
     });
+
+    const scrollToFaq = () => {
+      const faqHeader = document.querySelector("#faq");
+      if (!faqHeader) return;
+
+      isFaqOpen.set(true);
+
+      const scroll = () => {
+        faqHeader.scrollIntoView({ behavior: "smooth" });
+      };
+      const waitAccordionOpenInMs = 50;
+      setTimeout(scroll, waitAccordionOpenInMs);
+    };
 </script>
 
 <div class="level has-text-centered">
     <p class="title is-3 level-item">
         <span class="icon-text"><span class="icon"><i class="fas fa-chart-bar" /></span>&nbsp;<span>Analytics</span></span>
+        <a class="has-text-white" href="#faq" on:click|preventDefault={scrollToFaq}>?</a>
     </p>
 </div>
 <div class="columns">
