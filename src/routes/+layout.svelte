@@ -9,7 +9,7 @@
     if (window.location.origin === siteDomain) {
       var script = document.createElement("script");
       script.type = "text/javascript";
-      script.src = "https://umami.anton.wtf/umami.js";
+      script.src = "https://umami.anton.wtf/script.js";
       script.defer = true;
       script.async = true;
       script.setAttribute("data-website-id", "4e7c534d-4079-424b-aef5-cd74274718dc");
