@@ -30,7 +30,6 @@ export function toggleSharingModal() {
   sharingModalActive.update((value) => !value);
 }
 
-// Either toggle the variable if state is not passed or set it to the value of state
 export function toggleAnalytics(state) {
   analyticsHidden.update(() => state);
 }
