@@ -16,7 +16,7 @@
   </a>
   <div class="card-content {tipsHidden ? 'is-hidden' : ''}">
     <div class="content">
-      <h5 class="title is-4 is-underlined">There are two timings. The input timing and the mantle timing</h5>
+      <h5 class="title is-4">There are two timings. The input timing and the mantle timing</h5>
       <h5 class="title is-4 is-underlined">Get better at hitting the Jump -> Crouch timing</h5>
       <strong>Mouse and keyboard:</strong>
       <ol type="1">
@@ -55,7 +55,7 @@
         You need to do the Superglide Inputs in the last 150ms of a mantle. For a start it can help to practice this on the same ledge over and over
         till you are consistent with that. It also helps to practice with the same legend. Since they have different body heights it's easier to get
         used to how a mantle looks on the same legend. Beyond that there are 5 cues you can use to practice the mantle timing.
-        <ul>
+        <ol type="1">
           <li>
             <strong>Jump</strong><br />Try to jump immediately out of a mantle. Don't even bother with a crouch input for now. The first few frames
             where you jump is the Superglide window. If you jump too early you simply won't jump. So start by deliberately jumping too late and then
@@ -87,7 +87,7 @@
             <strong>Animations</strong><br />If you have learned to superglides and just keep playing you will start to develop an intuitive
             understanding of how your heirlooms and weapons move around during different mantles. Helping with the feeling of the mantle timing.
           </li>
-        </ul>
+        </ol>
         <p>All the tips for the jump crouch combo and mantle timing are only good for the initial practice, to get you used to Supergliding.</p>
         <p>Ingame it makes much more sense to go for feeling.</p>
         <p>
