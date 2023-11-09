@@ -5,7 +5,7 @@ $body-overflow-y: auto;
 
 $notification-padding-ltr: 0.8rem 1.5rem 0.8rem 1.5rem;
 $modal-content-width: 66%;
-
+$card-radius: $radius-large;
 $orange-invert: findColorInvert($orange);
 
 $custom-colors: (
@@ -23,6 +23,23 @@ button.setting-button {
   background-color: $grey-darker !important;
   color: white !important;
   display: block;
+}
+
+.tutorial-button {
+  background-image: url("/button_bg.jpg");
+  background-size: 105%;
+  background-position: center;
+  border-color: $grey !important;
+  border-width: 1px;
+}
+
+.tutorial-button:hover {
+  filter: brightness(0.9);
+  border-color: $grey-light !important;
+}
+
+.tutorial-button:active {
+  filter: brightness(0.8);
 }
 
 /* Import only what you need from Bulma */
@@ -62,7 +79,7 @@ $divider-margin-size: 0px;
     position: relative;
     display: inline-block;
     width: 60px;
-    height: 34px;
+    height: 30px;
     margin-right: 10px;
     margin-left: 10px;
 
@@ -88,8 +105,8 @@ $divider-margin-size: 0px;
       &:before {
         position: absolute;
         content: "";
-        height: 26px;
-        width: 26px;
+        height: 22px;
+        width: 22px;
         left: 4px;
         bottom: 4px;
         background-color: white;
@@ -111,7 +128,7 @@ $divider-margin-size: 0px;
     }
 
     input:checked + .slider:before {
-      transform: translateX(26px);
+      transform: translateX(30px);
     }
   }
 }

@@ -16,6 +16,7 @@
   </a>
   <div class="card-content {tipsHidden ? 'is-hidden' : ''}">
     <div class="content">
+      <h5 class="title is-4">There are two timings. The input timing and the mantle timing</h5>
       <h5 class="title is-4 is-underlined">Get better at hitting the Jump -> Crouch timing</h5>
       <strong>Mouse and keyboard:</strong>
       <ol type="1">
@@ -46,34 +47,54 @@
         </li>
       </ol>
       <strong>Controller:</strong> <br />
-      For controller the eastiest way is to press either A+B with one finger or X+Square with one finger.
+      For controller the only tip is to put jump and crouch on two buttons you can hit with the same finger. Like A+B, X+Square or two paddles.
     </div>
     <div class="content">
       <h5 class="title is-4 is-underlined">Get better at timing the Superglide during the mantle</h5>
       <div class="subtitle is-6">
-        You need to do the Superglide Inputs in the last 0.1-0.2 sec of a mantle. For a start it can help to practice this on the same ledge over and
-        over till you are consistent with that. It also helps to practice with the same legend. Since they have different body heights it's easier to
-        get used how a mantle looks on the same legend. Additionally you can use different cues to help with the timing:
-        <ul>
+        You need to do the Superglide Inputs in the last 150ms of a mantle. For a start it can help to practice this on the same ledge over and over
+        till you are consistent with that. It also helps to practice with the same legend. Since they have different body heights it's easier to get
+        used to how a mantle looks on the same legend. Beyond that there are 5 cues you can use to practice the mantle timing.
+        <ol type="1">
           <li>
-            <strong>Audio cue</strong><br />There is a distinct, higher pitched hand grab sound effect at the end of a mantle. That starts at around
-            0.3-0.25 sec before the mantle finishes. So timing your Superglide just as its about to end or slightly after it ended is perfect. How
-            that timing feels between your headset/speaker latency and hand-ear/eye coordination might be different. So you might time it with or
-            before the audio-cue happens.
-            <a href="https://youtu.be/i7jfEFrJ4sw">Here</a> is what that sounds and looks like.
+            <strong>Jump</strong><br />Try to jump immediately out of a mantle. Don't even bother with a crouch input for now. The first few frames
+            where you jump is the Superglide window. If you jump too early you simply won't jump. So start by deliberately jumping too late and then
+            jump earlier and earlier till you are right on the edge where it shifts into not jumping at all. That method of figuring out the mantle
+            timing works on every ledge. But there's also
+            <a href="https://youtu.be/_cP1YO5Idts?si=8rQNoywHdg3kr41h&t=473" target="_blank">this spot</a>. That even shows you if you jumped too
+            late. This is the most precise method to experience the superglide mantle timing for the first time.
           </li>
           <li>
-            <strong>Visual cue</strong><br />You can also time it with the camera movement. Check in the top left or right corner. You view goes from
-            wobbling to completely still a few frames before the Superglide-window closes. So some people time it using that. I zoomed into the
-            corners in the
-            <a href="https://youtu.be/i7jfEFrJ4sw">audio-trigger video</a> to make it more obvious.
+            <strong>Audio cue</strong><br />There is a distinct hand grab sound the Legend does at the end of a mantle. It sounds like
+            <a href="https://youtu.be/_cP1YO5Idts?si=GQMXaW4bvzo0Y_tQ&t=497" target="_blank">this</a>. That sound plays at around 0.3 seconds before
+            the mantle ends. So if you time your jump crouch combo right after that sound you hit the correct window. But how that timing feels
+            between your headset or speaker latency and hand-ear/eye coordination might be different. So it is helpful to use the hand sound as a cue
+            but to you it might feel like you have to time your inputs with it instead of after.
           </li>
-        </ul>
-        <br />
-        Using these cues is only good for practice. Trying to do Superglides in game during gunfights with cues is almost impossible. So use the cues to
-        practise the timing and then start to get used to it by feeling.
-        <br />
-        One last timing tip: If you don't gain any speed of the ledge you hit the Superglide to early in the mantle.
+          <li>
+            <strong>Camera shake</strong><br />Your view will shake during a mantle and then come to a stop. It's easiest to see this on the upper
+            border of <a href="https://youtu.be/_cP1YO5Idts?si=43fuwGrNpqHAvztb&t=534" target="_blank">your screen</a>. That stop happens just a few
+            frames before the Superglide window closes. So doing your input together with the wiggle stop is a good ballpark to aim for. Same as with
+            the audio cue, to you it might feel correct to do it slightly before or after.
+          </li>
+          <li>
+            <strong>Camera turn</strong><br />If you
+            <a href="https://youtu.be/_cP1YO5Idts?si=mcBShizWXZAKC6KC&t=554" target="_blank">turn your view</a> during the mantle it will stop at about
+            80 degrees and then continue after the mantle is finished. Time your jump crouch combo slightly before that. This is not to say to actually
+            do a Superglide using the turn, but to use it as a tool to get a feeling for the end of the mantle.
+          </li>
+          <li>
+            <strong>Animations</strong><br />If you have learned to superglide and just keep playing you will start to develop an intuitive
+            understanding of how your heirlooms and weapons move around during different mantles. Helping with the feeling of the mantle timing.
+          </li>
+        </ol>
+        <p>All the tips for the jump crouch combo and mantle timing are only good for the initial practice, to get you used to Supergliding.</p>
+        <p>Ingame it makes much more sense to go for feeling.</p>
+        <p>
+          And like with practicing every other Movement-Tech. Play Mixtape. The density of fights to practice in is 5-10x higher in mixtape then in
+          BR. And if you don't have a teammate you can disappoint, because you just lost them the game with your Superglide attempt, your mind is free
+          to care about movement, without pressure.
+        </p>
       </div>
     </div>
   </div>

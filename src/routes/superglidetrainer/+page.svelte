@@ -2,7 +2,7 @@
   import { onMount } from "svelte";
   import { siteTitle } from "$lib/config";
 
-  import { percentageColor, updateHistory, toggleSharingModal } from "$lib/util";
+  import { percentageColor, updateHistory, toggleSharingModal, toggleAnalytics } from "$lib/util";
 
   import {
     settings,
@@ -254,6 +254,11 @@
 
   function toggleTraining() {
     $trainingActive = !$trainingActive;
+
+    // Only open the analytics, dont close them when stopping training
+    if ($trainingActive) {
+      toggleAnalytics(!$trainingActive);
+    }
 
     message = "";
     superglideText = "";
@@ -585,13 +590,17 @@
         .join(',')}, rgba(0, 0, 0, 0)) 1; width: 100%"
     >
       <p>
-        A Superglide needs a jump input first and then a crouch input 1 frame later. You need to do the whole Superglide in the last 0.1-0.2 second of
-        a mantle.
+        A Superglide needs a jump input first and then a crouch input 1 frame later. You need to do the whole Superglide in the last 0.15 second of a
+        mantle.
       </p>
-      <br />
       <p>
         That makes the correct timing of Jump -> Crouch way harder than timing the whole Superglide in the mantle. This trainer will help you learn
         that much harder Jump -> Crouch timing.
+      </p>
+      <br />
+      <p>
+        <a href="https://youtu.be/_cP1YO5Idts?si=w8I9vglYEgI_FvtK" target="_blank">Here</a> is our official companion video to this Trainer. Giving you
+        every single tip and trick you could need.
       </p>
     </div>
     <div class="columns">
@@ -660,13 +669,22 @@
           </button>
         </div>
         <div class="box">
-          <div class="switch-container is-size-4">
-            <span class:has-text-grey-light={$isController} class="label-left">MnK</span>
-            <label class="switch">
-              <input type="checkbox" on:click={toggleController} />
-              <span class="slider round" />
-            </label>
-            <span class:has-text-grey-light={!$isController} class="label-right">Controller</span>
+          <div class="field">
+            <div class="field-body">
+              <div class="switch-container is-size-4 field has-addons">
+                <span class:has-text-grey-light={$isController} class="label-left">MnK</span>
+                <label class="switch">
+                  <input type="checkbox" on:click={toggleController} />
+                  <span class="slider round" />
+                </label>
+                <span class:has-text-grey-light={!$isController} class="label-right">Controller</span>
+              </div>
+              <a class="button is-size-5 is-primary tutorial-button" href="https://www.youtube.com/watch?v=_cP1YO5Idts" target="_blank">
+                <div class="transparent">
+                  <strong>Superglide Tutorial Video</strong>
+                </div>
+              </a>
+            </div>
           </div>
           {#if $isController}
             <br />
@@ -703,9 +721,7 @@
         </div>
       </div>
       <div class="column">
-        <div class="box">
-          <Analytics />
-        </div>
+        <Analytics />
       </div>
     </div>
   </div>
