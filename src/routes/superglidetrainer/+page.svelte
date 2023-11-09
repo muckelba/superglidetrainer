@@ -2,7 +2,7 @@
   import { onMount } from "svelte";
   import { siteTitle } from "$lib/config";
 
-  import { percentageColor, updateHistory, toggleSharingModal } from "$lib/util";
+  import { percentageColor, updateHistory, toggleSharingModal, toggleAnalytics } from "$lib/util";
 
   import {
     settings,
@@ -254,6 +254,7 @@
 
   function toggleTraining() {
     $trainingActive = !$trainingActive;
+    toggleAnalytics(!$trainingActive);
 
     message = "";
     superglideText = "";
@@ -716,9 +717,7 @@
         </div>
       </div>
       <div class="column">
-        <div class="box">
-          <Analytics />
-        </div>
+        <Analytics />
       </div>
     </div>
   </div>

@@ -30,6 +30,7 @@ export let isController = writable(false);
 export let loopDelayAvg = writable(0);
 
 // Stat stores
+export let analyticsHidden = writable(true);
 export let attempts = writable([]);
 export let potentialSuperglides = writable([]);
 export let wrongInputCount = writable(0);
