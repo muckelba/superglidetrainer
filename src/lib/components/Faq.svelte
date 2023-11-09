@@ -20,7 +20,7 @@
     <div class="content">
       <ul>
         <li>
-          <h5 class="title is-5">Why do i keep consistently hitting the exact same frame delay? Why can't i go lower then that?</h5>
+          <h5 class="title is-5">Why do I keep consistently hitting the exact same frame delay? Why can't I go lower then that?</h5>
           <p />
           <p class="subtitle is-6 is-underlined">
             <strong>Website Issues:</strong>
@@ -107,7 +107,7 @@
           <ul>
             <li>
               <strong>Overall superglide consistency:</strong> Is the average chance out of all your attempts. 0% or 95% it gets counted. This gives you
-              a % number for the following question: If i attempted a Superglide in game, how likely am i to hit that Superglide?
+              a % number for the following question: If I attempted a Superglide in game, how likely am I to hit that Superglide?
             </li>
             <li>
               <strong>Attempts:</strong> Number of attempts this session. Reload the page to reset everything

@@ -74,8 +74,8 @@
           <li>
             <strong>Camera shake</strong><br />Your view will shake during a mantle and then come to a stop. It's easiest to see this on the upper
             border of <a href="https://youtu.be/_cP1YO5Idts?si=43fuwGrNpqHAvztb&t=534" target="_blank">your screen</a>. That stop happens just a few
-            frames before the Superglide window closes. So doing your input together with the wiggle stop is a good ballpark to aim for. The same as
-            with the audio cue. To you it might feel correct to it slightly before or after.
+            frames before the Superglide window closes. So doing your input together with the wiggle stop is a good ballpark to aim for. Same as with
+            the audio cue, to you it might feel correct to do it slightly before or after.
           </li>
           <li>
             <strong>Camera turn</strong><br />If you
@@ -84,7 +84,7 @@
             do a Superglide using the turn, but to use it as a tool to get a feeling for the end of the mantle.
           </li>
           <li>
-            <strong>Animations</strong><br />If you have learned to superglides and just keep playing you will start to develop an intuitive
+            <strong>Animations</strong><br />If you have learned to superglide and just keep playing you will start to develop an intuitive
             understanding of how your heirlooms and weapons move around during different mantles. Helping with the feeling of the mantle timing.
           </li>
         </ol>
@@ -92,8 +92,8 @@
         <p>Ingame it makes much more sense to go for feeling.</p>
         <p>
           And like with practicing every other Movement-Tech. Play Mixtape. The density of fights to practice in is 5-10x higher in mixtape then in
-          BR. And if you don't have a teammate you can disappoint cus you just lost them the game with your Superglide attempt. Your mind is free to
-          care about movement, without pressure.
+          BR. And if you don't have a teammate you can disappoint, because you just lost them the game with your Superglide attempt, your mind is free
+          to care about movement, without pressure.
         </p>
       </div>
     </div>

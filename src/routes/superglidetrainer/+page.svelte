@@ -254,7 +254,11 @@
 
   function toggleTraining() {
     $trainingActive = !$trainingActive;
-    toggleAnalytics(!$trainingActive);
+
+    // Only open the analytics, dont close them when stopping training
+    if ($trainingActive) {
+      toggleAnalytics(!$trainingActive);
+    }
 
     message = "";
     superglideText = "";
