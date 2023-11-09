@@ -27,12 +27,15 @@ button.setting-button {
 
 .tutorial-button {
   background-image: url("/button_bg.jpg");
-  background-size: auto 250%;
+  background-size: 105%;
   background-position: center;
+  border-color: $grey !important;
+  border-width: 1px;
 }
 
 .tutorial-button:hover {
   filter: brightness(0.9);
+  border-color: $grey-light !important;
 }
 
 .tutorial-button:active {

@@ -79,7 +79,7 @@
           </li>
           <li>
             <strong>Camera turn</strong><br />If you
-            <a href="https://youtu.be/_cP1YO5Idts?si=mcBShizWXZAKC6KC&t=554" target="_blank">turning your view</a> during the mantle it will stop at about
+            <a href="https://youtu.be/_cP1YO5Idts?si=mcBShizWXZAKC6KC&t=554" target="_blank">turn your view</a> during the mantle it will stop at about
             80 degrees and then continue after the mantle is finished. Time your jump crouch combo slightly before that. This is not to say to actually
             do a Superglide using the turn, but to use it as a tool to get a feeling for the end of the mantle.
           </li>
