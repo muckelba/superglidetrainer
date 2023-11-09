@@ -585,13 +585,17 @@
         .join(',')}, rgba(0, 0, 0, 0)) 1; width: 100%"
     >
       <p>
-        A Superglide needs a jump input first and then a crouch input 1 frame later. You need to do the whole Superglide in the last 0.1-0.2 second of
-        a mantle.
+        A Superglide needs a jump input first and then a crouch input 1 frame later. You need to do the whole Superglide in the last 0.15 second of a
+        mantle.
       </p>
       <br />
       <p>
         That makes the correct timing of Jump -> Crouch way harder than timing the whole Superglide in the mantle. This trainer will help you learn
         that much harder Jump -> Crouch timing.
+      </p>
+      <p>
+        <a href="https://youtu.be/_cP1YO5Idts?si=w8I9vglYEgI_FvtK" target="_blank">Here</a> is our official companion video to this Trainer. Giving you
+        every single tip and trick you could need.
       </p>
     </div>
     <div class="columns">
