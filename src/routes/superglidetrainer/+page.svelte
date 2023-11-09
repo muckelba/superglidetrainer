@@ -674,9 +674,9 @@
                 </label>
                 <span class:has-text-grey-light={!$isController} class="label-right">Controller</span>
               </div>
-              <a class="button is-primary tutorial-button" href="https://www.youtube.com/watch?v=_cP1YO5Idts" target="_blank">
+              <a class="button is-size-5 is-primary tutorial-button" href="https://www.youtube.com/watch?v=_cP1YO5Idts" target="_blank">
                 <div class="transparent">
-                  <span class="foo">Superglide Tutorial Video</span>
+                  <strong>Superglide Tutorial Video</strong>
                 </div>
               </a>
             </div>
