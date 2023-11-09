@@ -2,7 +2,7 @@ name: Create and publish a Docker image
 
 on:
   push:
-    branches: ['main', 'develop']
+    branches: ["main", "develop"]
 
 env:
   REGISTRY: ghcr.io
@@ -45,13 +45,13 @@ jobs:
     needs: build-and-push-image
 
     steps:
-    - name: SSH Deploy 
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.SSHKEY }}
-        script: |
-          cd ${{ secrets.PATH }}-${{ github.ref_name }}
-          echo ${{ secrets.GITHUB_TOKEN }} | docker login ${{ env.REGISTRY }} -u ${{ github.actor }} --password-stdin
-          docker compose pull && docker compose up -d 
+      - name: SSH Deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSHKEY }}
+          script: |
+            cd ${{ secrets.PATH }}-${{ github.ref_name }}
+            echo ${{ secrets.GITHUB_TOKEN }} | docker login ${{ env.REGISTRY }} -u ${{ github.actor }} --password-stdin
+            docker compose pull && docker compose up -d

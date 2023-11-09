@@ -1,11 +1,5 @@
 <script>
-  import {
-    siteDomain,
-    siteTitle,
-    siteDescription,
-    imagePath,
-    imageAlt,
-  } from "$lib/config";
+  import { siteDomain, siteTitle, siteDescription, imagePath, imageAlt } from "$lib/config";
   import { onMount } from "svelte";
 
   import "../app.scss";
@@ -18,10 +12,7 @@
       script.src = "https://umami.anton.wtf/script.js";
       script.defer = true;
       script.async = true;
-      script.setAttribute(
-        "data-website-id",
-        "4e7c534d-4079-424b-aef5-cd74274718dc"
-      );
+      script.setAttribute("data-website-id", "4e7c534d-4079-424b-aef5-cd74274718dc");
       document.head.appendChild(script);
     }
   });
@@ -36,10 +27,7 @@
   <meta property="og:image" content="{siteDomain}/{imagePath}" />
   <meta property="og:url" content={siteDomain} />
   <!-- Robots -->
-  <meta
-    name="robots"
-    content="index, follow, max-snippet:-1, max-image-preview:large"
-  />
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large" />
   <!-- Twitter -->
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content={siteTitle} />

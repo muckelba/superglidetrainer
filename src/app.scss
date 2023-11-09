@@ -1,5 +1,5 @@
 @import "lib/darkly/variables.scss";
-@import "bulma/sass/utilities/functions"; // Import this first to use findColorInvert() 
+@import "bulma/sass/utilities/functions"; // Import this first to use findColorInvert()
 
 $body-overflow-y: auto;
 
@@ -9,17 +9,20 @@ $modal-content-width: 66%;
 $orange-invert: findColorInvert($orange);
 
 $custom-colors: (
-    "orange": ($orange, $orange-invert)
+  "orange": (
+    $orange,
+    $orange-invert,
+  ),
 );
 
 section.section {
-    padding-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
 }
 
 button.setting-button {
-    background-color: $grey-darker !important;
-    color: white !important;
-    display: block;
+  background-color: $grey-darker !important;
+  color: white !important;
+  display: block;
 }
 
 /* Import only what you need from Bulma */
@@ -38,158 +41,158 @@ $divider-margin-size: 0px;
 @import "@creativebulma/bulma-divider";
 
 .switch-container {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 
-    .label-left,
-    .label-right {
-        display: inline-block;
-        vertical-align: middle;
+  .label-left,
+  .label-right {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  .label-left {
+    margin-right: 10px;
+  }
+
+  .label-right {
+    margin-left: 10px;
+  }
+
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+    margin-right: 10px;
+    margin-left: 10px;
+
+    input {
+      display: none;
     }
 
-    .label-left {
-        margin-right: 10px;
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      border-radius: 34px;
+      transition: 0.4s;
+
+      &.round {
+        border-radius: 34px;
+      }
+
+      &:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        border-radius: 50%;
+        transition: 0.2s;
+      }
+
+      &.round:before {
+        border-radius: 50%;
+      }
     }
 
-    .label-right {
-        margin-left: 10px;
+    input:checked + .slider {
+      background-color: $turquoise;
     }
 
-    .switch {
-        position: relative;
-        display: inline-block;
-        width: 60px;
-        height: 34px;
-        margin-right: 10px;
-        margin-left: 10px;
-
-        input {
-            display: none;
-        }
-
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            border-radius: 34px;
-            transition: .4s;
-
-            &.round {
-                border-radius: 34px;
-            }
-
-            &:before {
-                position: absolute;
-                content: "";
-                height: 26px;
-                width: 26px;
-                left: 4px;
-                bottom: 4px;
-                background-color: white;
-                border-radius: 50%;
-                transition: .2s;
-            }
-
-            &.round:before {
-                border-radius: 50%;
-            }
-        }
-
-        input:checked+.slider {
-            background-color: $turquoise;
-        }
-
-        input:focus+.slider {
-            box-shadow: 0 0 1px $turquoise;
-        }
-
-        input:checked+.slider:before {
-            transform: translateX(26px);
-        }
+    input:focus + .slider {
+      box-shadow: 0 0 1px $turquoise;
     }
+
+    input:checked + .slider:before {
+      transform: translateX(26px);
+    }
+  }
 }
 
 .divider {
-    margin-top: 10px;
-    margin-bottom: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .has-text-orange {
-    color: $orange;
+  color: $orange;
 }
 
 .has-text-warning {
-    color: $yellow;
+  color: $yellow;
 }
 
 .has-text-primary {
-    color: $turquoise;
+  color: $turquoise;
 }
 
 .has-text-success {
-    color: $green;
+  color: $green;
 }
 
 .has-text-danger {
-    color: $red;
+  color: $red;
 }
 
 .has-text-white {
-    color: $text;
+  color: $text;
 }
 
 .history {
-    height: 430px;
-    overflow-y: auto;
-    overflow-x: hidden;
-    flex-direction: column-reverse;
+  height: 430px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  flex-direction: column-reverse;
 
-    p {
-        padding-top: 3px;
-        padding-bottom: 3px;
-    }
+  p {
+    padding-top: 3px;
+    padding-bottom: 3px;
+  }
 }
 
 .no-hover {
-    pointer-events: none;
+  pointer-events: none;
 }
 
 div.faq-content {
-    div>ul>li::marker {
-        font-size: 1.5rem;
-        color: $turquoise;
-    }
+  div > ul > li::marker {
+    font-size: 1.5rem;
+    color: $turquoise;
+  }
 }
 
 section.background-image {
-    // background-image is set dynamically inline
-    background-size: cover;
-    background-position: center center;
-    background-size: auto auto;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
+  // background-image is set dynamically inline
+  background-size: cover;
+  background-position: center center;
+  background-size: auto auto;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 /* width */
 ::-webkit-scrollbar {
-    width: 10px;
+  width: 10px;
 }
 
 /* Track */
 ::-webkit-scrollbar-track {
-    background: $grey-darker;
+  background: $grey-darker;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-    background: $white-ter;
+  background: $white-ter;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-    background: $white-ter;
+  background: $white-ter;
 }
