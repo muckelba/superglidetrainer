@@ -588,11 +588,11 @@
         A Superglide needs a jump input first and then a crouch input 1 frame later. You need to do the whole Superglide in the last 0.15 second of a
         mantle.
       </p>
-      <br />
       <p>
         That makes the correct timing of Jump -> Crouch way harder than timing the whole Superglide in the mantle. This trainer will help you learn
         that much harder Jump -> Crouch timing.
       </p>
+      <br />
       <p>
         <a href="https://youtu.be/_cP1YO5Idts?si=w8I9vglYEgI_FvtK" target="_blank">Here</a> is our official companion video to this Trainer. Giving you
         every single tip and trick you could need.
@@ -664,13 +664,22 @@
           </button>
         </div>
         <div class="box">
-          <div class="switch-container is-size-4">
-            <span class:has-text-grey-light={$isController} class="label-left">MnK</span>
-            <label class="switch">
-              <input type="checkbox" on:click={toggleController} />
-              <span class="slider round" />
-            </label>
-            <span class:has-text-grey-light={!$isController} class="label-right">Controller</span>
+          <div class="field">
+            <div class="field-body">
+              <div class="switch-container is-size-4 field has-addons">
+                <span class:has-text-grey-light={$isController} class="label-left">MnK</span>
+                <label class="switch">
+                  <input type="checkbox" on:click={toggleController} />
+                  <span class="slider round" />
+                </label>
+                <span class:has-text-grey-light={!$isController} class="label-right">Controller</span>
+              </div>
+              <a class="button is-primary tutorial-button" href="https://www.youtube.com/watch?v=_cP1YO5Idts" target="_blank">
+                <div class="transparent">
+                  <span class="foo">Superglide Tutorial Video</span>
+                </div>
+              </a>
+            </div>
           </div>
           {#if $isController}
             <br />
