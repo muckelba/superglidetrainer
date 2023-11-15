@@ -559,9 +559,9 @@
       let key = await waitingKeypress();
       console.log(`Pressed key "${key}"`);
 
-      if (key === $settings.mnk.crouch.bind) {
+      if (key.toLowerCase() === $settings.mnk.crouch.bind) {
         handleCrouch();
-      } else if (key === $settings.mnk.jump.bind) {
+      } else if (key.toLowerCase() === $settings.mnk.jump.bind) {
         handleJump();
       } else {
         instructions = `Other key pressed, ignoring`;
