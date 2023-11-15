@@ -8,6 +8,7 @@
 <div class="card">
   <!-- svelte-ignore a11y-click-events-have-key-events -->
   <!-- svelte-ignore a11y-missing-attribute -->
+  <!-- svelte-ignore a11y-no-static-element-interactions -->
   <a class="card-header" on:click={toggleHidden}>
     <button class="button card-header-icon is-large" aria-label="collapse helpful tips">
       <i class="fa fa-angle-{tipsHidden ? 'down' : 'up'}" />

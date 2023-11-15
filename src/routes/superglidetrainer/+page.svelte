@@ -492,6 +492,7 @@
           line: superglideText,
           color: percentageColor(chance),
           finished: true,
+          chance: chance,
         },
       ]);
 
@@ -696,6 +697,7 @@
                 <!-- TODO: style a <button> that looks like link. Currently not possbile with bulma out of the box -->
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
                 <!-- svelte-ignore a11y-missing-attribute -->
+                <!-- svelte-ignore a11y-no-static-element-interactions -->
                 Click <a on:click={toggleSharingModal}>here</a> to see more statistics about it
                 <br />
                 If you are using Firefox, switch to a Chromium based browser as those allow a higher pollingrate. This is a test sentence

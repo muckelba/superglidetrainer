@@ -1,4 +1,4 @@
-import { history, trainingActive, sharingModalActive, gradientArray, analyticsHidden } from "$lib/stores";
+import { history, chartHistory, trainingActive, sharingModalActive, gradientArray, analyticsHidden } from "$lib/stores";
 import { colorScheme } from "$lib/config";
 
 export function percentageColor(value) {
@@ -21,6 +21,9 @@ export function updateHistory(objArr) {
 
     if (obj.finished) {
       gradientArray.update((gradientValue) => [...gradientValue, colorScheme[obj.color]]);
+    }
+    if (obj.chance) {
+      chartHistory.update((chartValue) => [...chartValue, obj.chance]);
     }
   });
 }

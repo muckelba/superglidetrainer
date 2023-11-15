@@ -1,11 +1,13 @@
 <script>
   import { onMount, afterUpdate } from "svelte";
+  import Chart from "chart.js/auto";
 
   import {
     settings,
     loopDelayAvg,
     isController,
     history,
+    chartHistory,
     trainingActive,
     sharingModalActive,
     attempts,
@@ -33,11 +35,60 @@
 
   // This can be improved 100%
   $: averageErrorPerPoll = ($settings.fps / (1000 / $loopDelayAvg)) * 0.5 * 100;
+
+  let ctx;
+  let myChart;
+
+  $: console.log($chartHistory);
+  $: if (myChart) {
+    console.log("foo");
+    const storeValues = $chartHistory;
+    myChart.data.datasets[0].data = storeValues;
+    myChart.data.labels = storeValues.map((_, index) => index + 1); // Use array indices as labels
+    myChart.update();
+  }
   onMount(() => {
     // keep the scrollbar at the bottom
     if (trainingActive) {
       historydiv.scrollTop = historydiv.scrollHeight;
     }
+
+    myChart = new Chart(ctx, {
+      type: "line",
+      data: {
+        labels: [],
+        datasets: [
+          {
+            data: chartHistory,
+            backgroundColor: "rgb(255, 99, 132)",
+            borderColor: "rgb(255, 99, 132)",
+          },
+        ],
+      },
+      options: {
+        plugins: {
+          legend: {
+            display: false,
+          },
+        },
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true,
+            title: {
+              display: true,
+              text: "% Chance",
+            },
+          },
+          x: {
+            title: {
+              display: true,
+              text: "# of tries",
+            },
+          },
+        },
+      },
+    });
   });
 
   afterUpdate(() => {
@@ -51,6 +102,7 @@
 <div class="card">
   <!-- svelte-ignore a11y-click-events-have-key-events -->
   <!-- svelte-ignore a11y-missing-attribute -->
+  <!-- svelte-ignore a11y-no-static-element-interactions -->
   <a class="card-header" on:click={() => toggleAnalytics(!$analyticsHidden)}>
     <button class="button card-header-icon is-large" aria-label="collapse helpful tips">
       <i class="fa fa-angle-{$analyticsHidden ? 'down' : 'up'}" />
@@ -116,6 +168,7 @@
 
     <div class:is-active={$sharingModalActive} class="modal">
       <!-- svelte-ignore a11y-click-events-have-key-events -->
+      <!-- svelte-ignore a11y-no-static-element-interactions -->
       <div class="modal-background" on:click={toggleSharingModal} />
       <div class="modal-content">
         <div class="box">
@@ -153,7 +206,7 @@
                 </p>
               {/if}
             </div>
-            <div class="column history is-one-third">
+            <div class="column history">
               {#each $history as { line, color, finished }}
                 <p>
                   <span class="tag is-{color}">{line}</span>
@@ -163,6 +216,7 @@
                 {/if}
               {/each}
             </div>
+            <div class="column is-half"><canvas bind:this={ctx} id="myChart" /></div>
           </div>
           <div class="box" style="background: linear-gradient(90deg, {$gradientArray.join(',')});" />
           <footer>

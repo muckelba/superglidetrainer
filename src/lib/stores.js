@@ -22,6 +22,7 @@ export const settings = writable({
 });
 
 export let history = writable([]);
+export let chartHistory = writable([]);
 export let trainingActive = writable(false);
 export let sharingModalActive = writable(false);
 
