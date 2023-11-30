@@ -9,14 +9,14 @@
   <!-- svelte-ignore a11y-click-events-have-key-events -->
   <!-- svelte-ignore a11y-missing-attribute -->
   <!-- svelte-ignore a11y-no-static-element-interactions -->
-  <a class="card-header" on:click={toggleHidden}>
+  <a class="card-header darker-bg" on:click={toggleHidden}>
     <p class="card-header-title title is-3 is-centered">
       <i class="fa fa-angle-{tipsHidden ? 'down' : 'up'} icon is-large has-text-primary" />
       Helpful tips to get better
       <i class="fa fa-angle-{tipsHidden ? 'down' : 'up'} icon is-large has-text-primary" />
     </p>
   </a>
-  <div class="card-content {tipsHidden ? 'is-hidden' : ''}">
+  <div class="card-content {tipsHidden ? 'is-hidden' : ''} darker-bg">
     <div class="content">
       <h5 class="title is-4">There are two timings. The input timing and the mantle timing</h5>
       <h5 class="title is-4 is-underlined">Get better at hitting the Jump -> Crouch timing</h5>

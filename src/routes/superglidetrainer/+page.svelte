@@ -597,7 +597,7 @@
   </div>
   <div class="container">
     <div
-      class="box has-text-centered gradient"
+      class="box has-text-centered darker-bg"
       style="border-bottom: 12px solid transparent; border-image: linear-gradient(90deg, rgba(0, 0, 0, 0), {$gradientArray
         .slice(-10)
         .join(',')}, rgba(0, 0, 0, 0)) 1; width: 100%"
