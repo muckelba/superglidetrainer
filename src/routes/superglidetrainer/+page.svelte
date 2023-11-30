@@ -574,16 +574,28 @@
 </script>
 
 <section class="section background-image" style={randomImage ? `background-image: url('${randomImage}');` : ""}>
+  <div class="columns is-vcentered">
+    <div class="column is-narrow">
+      <a class="button" href="/">
+        <span class="icon">
+          <i class="fa fa-arrow-left" />
+        </span>
+        <span>Home</span>
+      </a>
+    </div>
+    <div class="column">
+      <h1 class="title is-1 has-text-centered">
+        <span class="icon is-medium">
+          <img src="/logo.png" alt="superglidetrainer logo" style="transform: scaleX(-1);" />
+        </span>
+        {siteTitle}
+        <span class="icon is-medium">
+          <img src="/logo.png" alt="superglidetrainer logo" />
+        </span>
+      </h1>
+    </div>
+  </div>
   <div class="container">
-    <h1 class="title is-1 has-text-centered">
-      <span class="icon is-medium">
-        <img src="/logo.png" alt="superglidetrainer logo" style="transform: scaleX(-1);" />
-      </span>
-      {siteTitle}
-      <span class="icon is-medium">
-        <img src="/logo.png" alt="superglidetrainer logo" />
-      </span>
-    </h1>
     <div
       class="box has-text-centered gradient"
       style="border-bottom: 12px solid transparent; border-image: linear-gradient(90deg, rgba(0, 0, 0, 0), {$gradientArray
