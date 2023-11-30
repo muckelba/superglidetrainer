@@ -42,6 +42,10 @@ button.setting-button {
   filter: brightness(0.8);
 }
 
+.gradient {
+  background-color: $background !important;
+}
+
 /* Import only what you need from Bulma */
 @import "bulma/sass/utilities/_all";
 @import "bulma/sass/base/_all";
@@ -94,7 +98,7 @@ $divider-margin-size: 0px;
       left: 0;
       right: 0;
       bottom: 0;
-      background-color: $grey-darker;
+      background-color: darken($grey-darker, 4);
       border-radius: 34px;
       transition: 0.4s;
 
