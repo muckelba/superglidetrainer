@@ -1,5 +1,5 @@
-import { history, chartHistory, trainingActive, sharingModalActive, gradientArray, analyticsHidden } from "$lib/stores";
 import { colorScheme } from "$lib/config";
+import { analyticsHidden, changelogModalActive, chartHistory, gradientArray, history, sharingModalActive, trainingActive } from "$lib/stores";
 
 export function percentageColor(value) {
   if (value >= 75) {
@@ -31,6 +31,11 @@ export function updateHistory(objArr) {
 export function toggleSharingModal() {
   trainingActive.set(false);
   sharingModalActive.update((value) => !value);
+}
+
+export function toggleChgangelogModal() {
+  trainingActive.set(false);
+  changelogModalActive.update((value) => !value);
 }
 
 export function toggleAnalytics(state) {

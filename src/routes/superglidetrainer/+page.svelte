@@ -21,6 +21,7 @@
   import Footer from "../../lib/components/Footer.svelte";
   import Tips from "../../lib/components/Tips.svelte";
   import Analytics from "../../lib/components/Analytics.svelte";
+  import Changelog from "../../lib/components/Changelog.svelte";
 
   // Misc
   let isTabActive = true;
@@ -576,11 +577,8 @@
 <section class="section background-image" style={randomImage ? `background-image: url('${randomImage}');` : ""}>
   <div class="columns is-vcentered">
     <div class="column is-narrow">
-      <a class="button" href="/">
-        <span class="icon">
-          <i class="fa fa-arrow-left" />
-        </span>
-        <span>Home</span>
+      <a class="icon is-medium" href="/" title="Home">
+        <i class="fa fa-home fa-lg" />
       </a>
     </div>
     <div class="column">
@@ -745,3 +743,4 @@
   <Faq />
 </section>
 <Footer />
+<Changelog />
