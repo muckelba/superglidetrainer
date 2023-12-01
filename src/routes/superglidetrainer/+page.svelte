@@ -575,13 +575,13 @@
 </script>
 
 <section class="section background-image" style={randomImage ? `background-image: url('${randomImage}');` : ""}>
-  <div class="columns is-vcentered">
-    <div class="column is-narrow">
+  <div class="level">
+    <div class="level-item" style="position: absolute;">
       <a class="icon is-medium" href="/" title="Home">
         <i class="fa fa-home fa-lg" />
       </a>
     </div>
-    <div class="column">
+    <div class="level-item">
       <h1 class="title is-1 has-text-centered">
         <span class="icon is-medium">
           <img src="/logo.png" alt="superglidetrainer logo" style="transform: scaleX(-1);" />
