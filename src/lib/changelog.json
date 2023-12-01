@@ -31,6 +31,10 @@
     {
       "date": "24.11.2023",
       "note": "Fixed scrollwheel binds"
+    },
+    {
+      "date": "01.12.2023",
+      "note": "Improvements to color-contrast. Moved tips and FAQ into the middle. New Home Button. New Changelog. New graph in \"Show all stats\". Small text tweaks."
     }
   ]
 }
