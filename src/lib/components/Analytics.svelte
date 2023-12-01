@@ -37,15 +37,13 @@
   $: averageErrorPerPoll = ($settings.fps / (1000 / $loopDelayAvg)) * 0.5 * 100;
 
   let ctx;
-  let myChart;
+  let chart;
 
-  $: console.log($chartHistory);
-  $: if (myChart) {
-    console.log("foo");
+  $: if (chart) {
     const storeValues = $chartHistory;
-    myChart.data.datasets[0].data = storeValues;
-    myChart.data.labels = storeValues.map((_, index) => index + 1); // Use array indices as labels
-    myChart.update();
+    chart.data.datasets[0].data = storeValues;
+    chart.data.labels = storeValues.map((_, index) => `Attempt #${index + 1}`); // Use array indices as labels
+    chart.update();
   }
   onMount(() => {
     // keep the scrollbar at the bottom
@@ -53,7 +51,7 @@
       historydiv.scrollTop = historydiv.scrollHeight;
     }
 
-    myChart = new Chart(ctx, {
+    chart = new Chart(ctx, {
       type: "line",
       data: {
         labels: [],
@@ -70,6 +68,21 @@
           legend: {
             display: false,
           },
+          tooltip: {
+            callbacks: {
+              // IDK, thats stolen straight from the docs
+              label: function (context) {
+                let label = context.dataset.label || "";
+                if (label) {
+                  label += ": ";
+                }
+                if (context.parsed.y !== null) {
+                  label += `${context.parsed.y.toFixed(2)} %`;
+                }
+                return label;
+              },
+            },
+          },
         },
         responsive: true,
         scales: {
@@ -83,7 +96,7 @@
           x: {
             title: {
               display: true,
-              text: "# of tries",
+              text: "Number of tries",
             },
           },
         },
