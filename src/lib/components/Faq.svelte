@@ -12,9 +12,13 @@
   <!-- svelte-ignore a11y-no-static-element-interactions -->
   <a class="card-header darker-bg" on:click={toggleFaq}>
     <p class="card-header-title title is-3 is-centered">
-      <i class="fa fa-angle-{faqHidden ? 'down' : 'up'} icon is-large has-text-primary" />
+      <span class="icon is-large has-text-primary">
+        <i class="fa fa-angle-{faqHidden ? 'down' : 'up'}" />
+      </span>
       FAQ
-      <i class="fa fa-angle-{faqHidden ? 'down' : 'up'} icon is-large has-text-primary" />
+      <span class="icon is-large has-text-primary">
+        <i class="fa fa-angle-{faqHidden ? 'down' : 'up'}" />
+      </span>
     </p>
   </a>
   <div class="card-content faq-content {faqHidden ? 'is-hidden' : ''} darker-bg">
