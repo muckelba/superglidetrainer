@@ -219,7 +219,7 @@
                 </p>
               {/if}
             </div>
-            <div class="column history">
+            <div class="column history is-one-third">
               {#each $history as { line, color, finished }}
                 <p>
                   <span class="tag is-{color}">{line}</span>

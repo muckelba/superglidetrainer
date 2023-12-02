@@ -1,3 +1,4 @@
+import { history, trainingActive, sharingModalActive, gradientArray, analyticsHidden } from "$lib/stores";
 import { colorScheme } from "$lib/config";
 import { analyticsHidden, changelogModalActive, chartHistory, gradientArray, history, sharingModalActive, trainingActive } from "$lib/stores";
 
