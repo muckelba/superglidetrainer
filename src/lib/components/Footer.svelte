@@ -1,3 +1,7 @@
+<script>
+  import { toggleChgangelogModal } from "$lib/util";
+</script>
+
 <footer class="footer">
   <div class="content has-text-centered">
     <p>
@@ -13,6 +17,11 @@
       .
     </p>
     <p>
+      <span class="icon"> <i class="fas fa-scroll" /></span>
+      <!-- svelte-ignore a11y-click-events-have-key-events -->
+      <!-- svelte-ignore a11y-no-static-element-interactions -->
+      <!-- svelte-ignore a11y-missing-attribute -->
+      <a on:click={toggleChgangelogModal}> Changelog </a>
       <span class="icon"> <i class="fab fa-github" /></span>
       <a href="https://github.com/muckelba/superglidetrainer"> Sourcecode </a>
       <span class="icon"> <i class="fab fa-reddit" /></span>

@@ -1,11 +1,13 @@
 <script>
   import { onMount, afterUpdate } from "svelte";
+  import Chart from "chart.js/auto";
 
   import {
     settings,
     loopDelayAvg,
     isController,
     history,
+    chartHistory,
     trainingActive,
     sharingModalActive,
     attempts,
@@ -33,11 +35,73 @@
 
   // This can be improved 100%
   $: averageErrorPerPoll = ($settings.fps / (1000 / $loopDelayAvg)) * 0.5 * 100;
+
+  let ctx;
+  let chart;
+
+  $: if (chart) {
+    const storeValues = $chartHistory;
+    chart.data.datasets[0].data = storeValues;
+    chart.data.labels = storeValues.map((_, index) => `Attempt #${index + 1}`); // Use array indices as labels
+    chart.update();
+  }
   onMount(() => {
     // keep the scrollbar at the bottom
     if (trainingActive) {
       historydiv.scrollTop = historydiv.scrollHeight;
     }
+
+    chart = new Chart(ctx, {
+      type: "line",
+      data: {
+        labels: [],
+        datasets: [
+          {
+            data: chartHistory,
+            backgroundColor: "rgb(255, 99, 132)",
+            borderColor: "rgb(255, 99, 132)",
+          },
+        ],
+      },
+      options: {
+        plugins: {
+          legend: {
+            display: false,
+          },
+          tooltip: {
+            callbacks: {
+              // IDK, thats stolen straight from the docs
+              label: function (context) {
+                let label = context.dataset.label || "";
+                if (label) {
+                  label += ": ";
+                }
+                if (context.parsed.y !== null) {
+                  label += `${context.parsed.y.toFixed(2)} %`;
+                }
+                return label;
+              },
+            },
+          },
+        },
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true,
+            title: {
+              display: true,
+              text: "% Chance",
+            },
+          },
+          x: {
+            title: {
+              display: true,
+              text: "Number of tries",
+            },
+          },
+        },
+      },
+    });
   });
 
   afterUpdate(() => {
@@ -51,6 +115,7 @@
 <div class="card">
   <!-- svelte-ignore a11y-click-events-have-key-events -->
   <!-- svelte-ignore a11y-missing-attribute -->
+  <!-- svelte-ignore a11y-no-static-element-interactions -->
   <a class="card-header" on:click={() => toggleAnalytics(!$analyticsHidden)}>
     <button class="button card-header-icon is-large" aria-label="collapse helpful tips">
       <i class="fa fa-angle-{$analyticsHidden ? 'down' : 'up'}" />
@@ -116,6 +181,7 @@
 
     <div class:is-active={$sharingModalActive} class="modal">
       <!-- svelte-ignore a11y-click-events-have-key-events -->
+      <!-- svelte-ignore a11y-no-static-element-interactions -->
       <div class="modal-background" on:click={toggleSharingModal} />
       <div class="modal-content">
         <div class="box">
@@ -163,6 +229,7 @@
                 {/if}
               {/each}
             </div>
+            <div class="column is-half"><canvas bind:this={ctx} id="myChart" /></div>
           </div>
           <div class="box" style="background: linear-gradient(90deg, {$gradientArray.join(',')});" />
           <footer>

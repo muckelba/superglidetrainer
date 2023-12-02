@@ -6,16 +6,22 @@
   }
 </script>
 
-<div class="card">
+<div class="card {faqHidden ? 'container' : ''}">
   <!-- svelte-ignore a11y-click-events-have-key-events -->
   <!-- svelte-ignore a11y-missing-attribute -->
-  <a class="card-header" on:click={toggleFaq}>
-    <button class="button card-header-icon is-large" aria-label="collapse the FAQ">
-      <i class="fa fa-angle-{faqHidden ? 'down' : 'up'}" />
-    </button>
-    <p class="card-header-title title is-3">FAQ</p>
+  <!-- svelte-ignore a11y-no-static-element-interactions -->
+  <a class="card-header darker-bg" on:click={toggleFaq}>
+    <p class="card-header-title title is-3 is-centered">
+      <span class="icon is-large has-text-primary">
+        <i class="fa fa-angle-{faqHidden ? 'down' : 'up'}" />
+      </span>
+      FAQ
+      <span class="icon is-large has-text-primary">
+        <i class="fa fa-angle-{faqHidden ? 'down' : 'up'}" />
+      </span>
+    </p>
   </a>
-  <div class="card-content faq-content {faqHidden ? 'is-hidden' : ''}">
+  <div class="card-content faq-content {faqHidden ? 'is-hidden' : ''} darker-bg">
     <h4 class="title is-4 is-underlined">Superglide Trainer questions:</h4>
     <div class="content">
       <ul>
@@ -26,7 +32,12 @@
             <strong>Website Issues:</strong>
           </p>
           <p class="subtitle is-6">
-            By using this web based Superglide trainer you trade accuracy for convenience, compared to the Powershell script.
+            By using this web based Superglide trainer you trade accuracy for convenience, compared to the <a
+              href="https://github.com/AngryGroceries/Apex_Superglide_Practice_Tool"
+              target="_blank"
+            >
+              Powershell script.
+            </a>
           </p>
           <p class="subtitle is-6">
             On the web we can only pull your inputs at a certain frequency. This introduces uncertainty. We are currently working on displaying this
@@ -41,8 +52,9 @@
             But this means this web based Superglide Trainer still fulfills its purpose.<br />
             It helps beginners and intermediates get used to the order of inputs, resolve hardware problems and track their rough progress.<br />
             But if your overall superglide consistency starts to regularly stay above 70% and you want to make sure that your progress towards 90 and 100%
-            is as accurate as possible, you could start using the Powershell script linked at the bottom. It's not limited by browser limitations and doesn't
-            suffer from the same uncertainty problem.
+            is as accurate as possible, you could start using the
+            <a href="https://github.com/AngryGroceries/Apex_Superglide_Practice_Tool" target="_blank"> Powershell script </a>. It's not limited by
+            browser limitations and doesn't suffer from the same uncertainty problem.
           </p>
           <p class="subtitle is-6 is-underlined">
             <strong>Keyboard issues:</strong>
@@ -158,8 +170,10 @@
           <p class="subtitle is-6">
             In general, yes. At 60 FPS you have to time the two inputs 16ms apart at 300 FPS it's just 3ms. So your input window definitely gets
             shorter at higher fps. We had a short moment where we suspected that Superglides might not need a 1 Frame gap. But after some extensive
-            testing we are now very certain that it's always 1 frame. However there are also scenarios where Supergliding becomes easier with higher
-            FPS.
+            testing we are now very certain that it's always 1 frame. However there are also scenarios where Supergliding <a
+              href="https://youtu.be/_cP1YO5Idts?si=vHcEcz77RYe5zeMN&t=969"
+              target="_blank">becomes easier with higher FPS</a
+            >.
           </p>
         </li>
       </ul>

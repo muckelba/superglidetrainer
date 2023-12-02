@@ -1,0 +1,40 @@
+{
+  "changelog": [
+    {
+      "date": "25.03.2023",
+      "note": "Release"
+    },
+    {
+      "date": "06.05.2023",
+      "note": "Warning for browsers with slow scanrate"
+    },
+    {
+      "date": "26.06.2023",
+      "note": "Controller support, new FAQ entries"
+    },
+    {
+      "date": "14.08.2023",
+      "note": "New FAQ entries"
+    },
+    {
+      "date": "09.11.2023",
+      "note": "Revised text and added more info all over the site. Especially in the FAQ and helpful tips. New \"Superglide Tutorial\" button. Hid analytics wit auto expand."
+    },
+    {
+      "date": "15.11.2023",
+      "note": "Holding shift no longer prevents other inputs"
+    },
+    {
+      "date": "16.11.2023",
+      "note": "Fixed ctrl and shift binds"
+    },
+    {
+      "date": "24.11.2023",
+      "note": "Fixed scrollwheel binds"
+    },
+    {
+      "date": "01.12.2023",
+      "note": "Improvements to color-contrast. Moved tips and FAQ into the middle. New Home Button. New Changelog. New graph in \"Show all stats\". Small text tweaks."
+    }
+  ]
+}

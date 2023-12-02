@@ -21,6 +21,7 @@
   import Footer from "../../lib/components/Footer.svelte";
   import Tips from "../../lib/components/Tips.svelte";
   import Analytics from "../../lib/components/Analytics.svelte";
+  import Changelog from "../../lib/components/Changelog.svelte";
 
   // Misc
   let isTabActive = true;
@@ -492,6 +493,7 @@
           line: superglideText,
           color: percentageColor(chance),
           finished: true,
+          chance: chance,
         },
       ]);
 
@@ -573,18 +575,27 @@
 </script>
 
 <section class="section background-image" style={randomImage ? `background-image: url('${randomImage}');` : ""}>
+  <div class="level">
+    <div class="level-item" style="position: absolute;">
+      <a class="icon is-medium" href="/" title="Home">
+        <i class="fa fa-home fa-lg" />
+      </a>
+    </div>
+    <div class="level-item">
+      <h1 class="title is-1 has-text-centered">
+        <span class="icon is-medium">
+          <img src="/logo.png" alt="superglidetrainer logo" style="transform: scaleX(-1);" />
+        </span>
+        {siteTitle}
+        <span class="icon is-medium">
+          <img src="/logo.png" alt="superglidetrainer logo" />
+        </span>
+      </h1>
+    </div>
+  </div>
   <div class="container">
-    <h1 class="title is-1 has-text-centered">
-      <span class="icon is-medium">
-        <img src="/logo.png" alt="superglidetrainer logo" style="transform: scaleX(-1);" />
-      </span>
-      {siteTitle}
-      <span class="icon is-medium">
-        <img src="/logo.png" alt="superglidetrainer logo" />
-      </span>
-    </h1>
     <div
-      class="box has-text-centered gradient"
+      class="box has-text-centered darker-bg"
       style="border-bottom: 12px solid transparent; border-image: linear-gradient(90deg, rgba(0, 0, 0, 0), {$gradientArray
         .slice(-10)
         .join(',')}, rgba(0, 0, 0, 0)) 1; width: 100%"
@@ -696,6 +707,7 @@
                 <!-- TODO: style a <button> that looks like link. Currently not possbile with bulma out of the box -->
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
                 <!-- svelte-ignore a11y-missing-attribute -->
+                <!-- svelte-ignore a11y-no-static-element-interactions -->
                 Click <a on:click={toggleSharingModal}>here</a> to see more statistics about it
                 <br />
                 If you are using Firefox, switch to a Chromium based browser as those allow a higher pollingrate. This is a test sentence
@@ -731,3 +743,4 @@
   <Faq />
 </section>
 <Footer />
+<Changelog />
